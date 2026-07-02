@@ -1,0 +1,47 @@
+{
+  "site": {
+    "fallbackBrand": "InstaDummyTicket",
+    "skipToContent": "Skip to main content"
+  },
+  "nav": {
+    "mainLabel": "Main navigation",
+    "home": "Home",
+    "blog": "Blog",
+    "blogs": "Blogs",
+    "faq": "FAQ",
+    "support": "Support",
+    "contactSupport": "Contact Support",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "refundPolicy": "Refund Policy",
+    "socialLinks": "Social links",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "gmail": "Gmail",
+    "copyright": "2026 InstaDummyTicket"
+  },
+  "footer": {
+    "navigate": "Navigate",
+    "rights": "All rights reserved."
+  },
+  "breadcrumbs": {
+    "label": "Breadcrumb",
+    "home": "Home",
+    "blog": "Blog",
+    "faq": "FAQ"
+  },
+  "aiSeo": {
+    "keyTakeaways": "Key Takeaways"
+  },
+  "draftMode": {
+    "banner": "Draft preview mode",
+    "exit": "exit preview"
+  },
+  "video": {
+    "play": "Play YouTube video",
+    "playWithTitle": "Play video: {title}",
+    "title": "YouTube video"
+  }
+}

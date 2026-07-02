@@ -1,0 +1,58 @@
+{
+  "home": {
+    "heroTitle": "Instant Onward Tickets for Visa Applications",
+    "heroDescription": "Valid flight reservations for just $14. Verified by airlines and accepted by embassies worldwide. Get your PDF in under 60 seconds.",
+    "eyebrow": "Trustworthy & Secure Booking",
+    "title": {
+      "lineOne": "Instant Onward Tickets",
+      "lineTwo": "for Visas"
+    },
+    "description": "Valid flight reservations from just $14.",
+    "proof": {
+      "embassy": "Accepted by Embassies",
+      "airline": "Airline Verified",
+      "delivery": "Instant PDF Delivery"
+    },
+    "form": {
+      "onward": "Onward",
+      "return": "Return",
+      "from": "From",
+      "fromValue": "London (LHR)",
+      "to": "To",
+      "toValue": "Bangkok (BKK)",
+      "departure": "Departure",
+      "departureValue": "01-07-2026",
+      "arrival": "Arrival",
+      "arrivalValue": "15-07-2026",
+      "cta": "Create Dummy Ticket"
+    },
+    "trust": {
+      "ssl": "Secure SSL Encryption",
+      "customers": "Trusted by 10,000+ Customers",
+      "worldwide": "Accepted Worldwide",
+      "payment": "Secure Payment"
+    },
+    "guarantee": {
+      "title": "100% Money-Back Guarantee",
+      "text": "Not accepted by the embassy? Get a full refund, no questions asked."
+    },
+    "features": {
+      "embassy": {
+        "title": "Embassy Accepted",
+        "text": "Our tickets are accepted by embassies worldwide."
+      },
+      "airline": {
+        "title": "Airline Verified",
+        "text": "PNR verified directly with airlines for authenticity."
+      },
+      "delivery": {
+        "title": "Instant Delivery",
+        "text": "Get your valid ticket PDF in under 60 seconds."
+      },
+      "secure": {
+        "title": "Secure & Private",
+        "text": "Your data is encrypted and never shared with anyone."
+      }
+    }
+  }
+}
