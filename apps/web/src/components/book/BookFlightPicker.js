@@ -148,17 +148,6 @@ function PassengerSummary({messages, passengerDetails}) {
   )
 }
 
-export function CostSummary({messages, price, className = ''}) {
-  return (
-    <div className={`rounded-[5px] border border-border bg-white p-4 ${className}`}>
-      <div className="flex items-center justify-between gap-4">
-        <span className="text-[13px] font-[600] text-muted">{t(messages, 'book.summary.totalLabel')}</span>
-        <span className="font-[var(--font-display)] text-[22px] font-[800] text-secondary">{price}</span>
-      </div>
-    </div>
-  )
-}
-
 export function BookingPreview({messages, selectedFlights, passengerDetails, className = ''}) {
   const hasSelection = selectedFlights.length > 0
 

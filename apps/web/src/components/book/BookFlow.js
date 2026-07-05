@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect, useRef, useState} from 'react'
-import BookFlightPicker, {BookingPreview, CostSummary, MobileOrderDetails, MobileOrderDetailsPanel} from '@/components/book/BookFlightPicker'
+import BookFlightPicker, {BookingPreview, MobileOrderDetails, MobileOrderDetailsPanel} from '@/components/book/BookFlightPicker'
 import BookingStepper from '@/components/book/BookingStepper'
 import {MOBILE_AUTO_ADVANCE_DELAY_MS, shouldAutoAdvanceOnMobile} from '@/components/book/mobileAutoAdvance'
 import {capitalizePassengerText, formatPassengerName} from '@/components/book/passengerFormat'
@@ -600,7 +600,6 @@ function BookDetailsStep({messages, selectedFlights, price, onBack}) {
             passengerDetails={passengerDetails}
             className="hidden md:flex lg:static"
           />
-          <CostSummary messages={messages} price={price} className="hidden md:block" />
         </section>
 
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-5 py-4 backdrop-blur">
