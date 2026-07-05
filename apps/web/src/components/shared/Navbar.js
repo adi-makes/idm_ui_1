@@ -33,9 +33,12 @@ export default function Navbar({locale}) {
       return () => cancelAnimationFrame(frame)
     }
 
-    setMobileMenuVisible(false)
+    const frame = requestAnimationFrame(() => setMobileMenuVisible(false))
     const timeout = setTimeout(() => setMobileMenuMounted(false), 260)
-    return () => clearTimeout(timeout)
+    return () => {
+      cancelAnimationFrame(frame)
+      clearTimeout(timeout)
+    }
   }, [mobileMenuMounted, mobileMenuOpen])
 
   useEffect(() => {

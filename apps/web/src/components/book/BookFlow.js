@@ -30,8 +30,15 @@ const EMAIL_DOMAIN_FIXES = {
   'icloud.con': 'icloud.com',
 }
 
+function getInitialStep() {
+  if (typeof window === 'undefined') return 'search'
+
+  const savedStep = window.sessionStorage.getItem(BOOKING_STEP_STORAGE_KEY)
+  return savedStep === 'choice' || savedStep === 'flight' ? 'choice' : 'search'
+}
+
 export default function BookFlow({locale, messages}) {
-  const [step, setStep] = useState('search')
+  const [step, setStep] = useState(getInitialStep)
   const [loading, setLoading] = useState(false)
   const [selectedFlights, setSelectedFlights] = useState([])
   const [selectedPrice, setSelectedPrice] = useState(t(messages, 'book.choice.options.standard.price'))
@@ -41,7 +48,6 @@ export default function BookFlow({locale, messages}) {
     const savedStep = window.sessionStorage.getItem(BOOKING_STEP_STORAGE_KEY)
     if (savedStep === 'choice' || savedStep === 'flight') {
       window.sessionStorage.removeItem(BOOKING_STEP_STORAGE_KEY)
-      setStep('choice')
     }
 
     return undefined

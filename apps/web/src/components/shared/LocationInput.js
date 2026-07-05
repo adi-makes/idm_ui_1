@@ -298,7 +298,7 @@ export default function LocationInput({
   const errorId = error ? `${popupId}-location-error` : undefined
 
   return (
-    <label className={`relative block ${className}`}>
+    <div className={`relative block ${className}`}>
       <span className="sr-only">{label}</span>
       <span
         className={[
@@ -319,6 +319,7 @@ export default function LocationInput({
             onChange(event.target.value)
           }}
           placeholder={label}
+          aria-label={label}
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={errorId}
           className="min-w-0 flex-1 truncate bg-transparent text-[16px] font-[400] leading-6 tracking-normal text-secondary outline-none placeholder:text-[16px] placeholder:font-[400] placeholder:leading-6 placeholder:text-tertiary min-[700px]:text-[17px] min-[700px]:placeholder:text-[17px] md:text-[15px] md:placeholder:text-[15px]"
@@ -369,6 +370,6 @@ export default function LocationInput({
           ))}
         </div>
       ) : null}
-    </label>
+    </div>
   )
 }

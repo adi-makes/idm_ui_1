@@ -44,14 +44,19 @@ export default function DateInput({
 
   useEffect(() => {
     if (open) {
-      setMounted(true)
-      const frame = requestAnimationFrame(() => setVisible(true))
+      const frame = requestAnimationFrame(() => {
+        setMounted(true)
+        setVisible(true)
+      })
       return () => cancelAnimationFrame(frame)
     }
 
-    setVisible(false)
+    const frame = requestAnimationFrame(() => setVisible(false))
     const timeout = setTimeout(() => setMounted(false), CALENDAR_TRANSITION_MS)
-    return () => clearTimeout(timeout)
+    return () => {
+      cancelAnimationFrame(frame)
+      clearTimeout(timeout)
+    }
   }, [open])
 
   const handleClose = () => {
@@ -77,7 +82,6 @@ export default function DateInput({
         disabled={disabled}
         onClick={handleToggle}
         aria-disabled={disabled}
-        aria-invalid={error ? 'true' : undefined}
         aria-describedby={errorId}
         className={[
           'flex h-[50px] w-full items-center rounded-[5px] border bg-white px-4 text-[16px] font-[400] leading-6 tracking-normal transition-colors min-[700px]:h-[58px] min-[700px]:text-[17px] md:h-[48px] md:text-[15px]',

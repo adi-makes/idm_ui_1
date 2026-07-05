@@ -17,37 +17,58 @@ const TRIP_TYPES = [
 const BOOKING_STORAGE_KEY = 'idt.booking.search'
 const BOOKING_STEP_STORAGE_KEY = 'idt.booking.step'
 
-export default function BookingForm({locale, onSubmit}) {
-  const messages = getMessages(locale)
-  const [form, setForm] = useState({
-    from: '',
-    to: '',
-    departure: '',
-    arrival: '',
-  })
-  const [activePopup, setActivePopup] = useState(null)
-  const [tripType, setTripType] = useState('return')
-  const [errors, setErrors] = useState({})
-  const [showPopup, setShowPopup] = useState(false)
-  const returnDateDisabled = tripType === 'onward' || !form.departure
+const DEFAULT_FORM = {
+  from: '',
+  to: '',
+  departure: '',
+  arrival: '',
+}
 
-  useEffect(() => {
-    try {
-      const saved = window.sessionStorage.getItem(BOOKING_STORAGE_KEY)
-      if (!saved) return
+function readSavedBooking() {
+  if (typeof window === 'undefined') {
+    return {
+      form: DEFAULT_FORM,
+      tripType: 'return',
+    }
+  }
 
-      const parsed = JSON.parse(saved)
-      setForm({
+  try {
+    const saved = window.sessionStorage.getItem(BOOKING_STORAGE_KEY)
+    if (!saved) {
+      return {
+        form: DEFAULT_FORM,
+        tripType: 'return',
+      }
+    }
+
+    const parsed = JSON.parse(saved)
+    return {
+      form: {
         from: parsed.from || '',
         to: parsed.to || '',
         departure: parsed.departure || '',
         arrival: parsed.arrival || '',
-      })
-      setTripType(parsed.tripType === 'onward' ? 'onward' : 'return')
-    } catch {
-      window.sessionStorage.removeItem(BOOKING_STORAGE_KEY)
+      },
+      tripType: parsed.tripType === 'onward' ? 'onward' : 'return',
     }
-  }, [])
+  } catch {
+    window.sessionStorage.removeItem(BOOKING_STORAGE_KEY)
+    return {
+      form: DEFAULT_FORM,
+      tripType: 'return',
+    }
+  }
+}
+
+export default function BookingForm({locale, onSubmit}) {
+  const messages = getMessages(locale)
+  const [savedBooking] = useState(readSavedBooking)
+  const [form, setForm] = useState(savedBooking.form)
+  const [activePopup, setActivePopup] = useState(null)
+  const [tripType, setTripType] = useState(savedBooking.tripType)
+  const [errors, setErrors] = useState({})
+  const [showPopup, setShowPopup] = useState(false)
+  const returnDateDisabled = tripType === 'onward' || !form.departure
 
   useEffect(() => {
     if (!showPopup) return undefined
