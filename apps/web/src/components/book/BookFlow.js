@@ -1,8 +1,10 @@
 'use client'
 
-import {useEffect, useState} from 'react'
-import BookFlightPicker, {BookingPreview} from '@/components/book/BookFlightPicker'
+import {useEffect, useRef, useState} from 'react'
+import BookFlightPicker, {BookingPreview, CostSummary, MobileOrderDetails, MobileOrderDetailsPanel} from '@/components/book/BookFlightPicker'
 import BookingStepper from '@/components/book/BookingStepper'
+import {MOBILE_AUTO_ADVANCE_DELAY_MS, shouldAutoAdvanceOnMobile} from '@/components/book/mobileAutoAdvance'
+import {capitalizePassengerText, formatPassengerName} from '@/components/book/passengerFormat'
 import BookingForm from '@/components/shared/BookingForm'
 import {t} from '@/messages'
 
@@ -32,6 +34,7 @@ export default function BookFlow({locale, messages}) {
   const [step, setStep] = useState('search')
   const [loading, setLoading] = useState(false)
   const [selectedFlights, setSelectedFlights] = useState([])
+  const [selectedPrice, setSelectedPrice] = useState(t(messages, 'book.choice.options.standard.price'))
   const defaultSelectedFlights = messages.book.flights.slice(0, 2)
 
   useEffect(() => {
@@ -64,11 +67,13 @@ export default function BookFlow({locale, messages}) {
 
   const goToBook = (flights) => {
     setSelectedFlights(flights)
+    setSelectedPrice(t(messages, 'book.choice.options.standard.price'))
     setStep('book')
   }
 
   const goToVerifiedBook = () => {
     setSelectedFlights(defaultSelectedFlights)
+    setSelectedPrice(t(messages, 'book.choice.options.verifiable.price'))
     setLoading(false)
     setStep('book')
   }
@@ -89,11 +94,11 @@ export default function BookFlow({locale, messages}) {
   }
 
   if (step === 'flight') {
-    return <BookFlightPicker locale={locale} messages={messages} onBack={goToSearch} onContinue={goToBook} />
+    return <BookFlightPicker messages={messages} onBack={goToSearch} onContinue={goToBook} />
   }
 
   if (step === 'book') {
-    return <BookDetailsStep messages={messages} selectedFlights={selectedFlights} onBack={() => setStep('choice')} />
+    return <BookDetailsStep messages={messages} selectedFlights={selectedFlights} price={selectedPrice} onBack={() => setStep('choice')} />
   }
 
   return (
@@ -116,6 +121,8 @@ export default function BookFlow({locale, messages}) {
 
 function TicketTypeChoice({messages, onBack, onStandard, onVerifiable}) {
   const [ticketType, setTicketType] = useState(null)
+  const [autoAdvancing, setAutoAdvancing] = useState(false)
+  const autoAdvanceTimerRef = useRef(null)
   const options = [
     {
       value: 'standard',
@@ -138,9 +145,22 @@ function TicketTypeChoice({messages, onBack, onStandard, onVerifiable}) {
   ]
   const selectedOption = options.find((option) => option.value === ticketType)
 
+  useEffect(() => () => window.clearTimeout(autoAdvanceTimerRef.current), [])
+
+  const handleSelectOption = (option) => {
+    if (autoAdvancing) return
+
+    setTicketType(option.value)
+
+    if (shouldAutoAdvanceOnMobile()) {
+      setAutoAdvancing(true)
+      autoAdvanceTimerRef.current = window.setTimeout(() => option.action(), MOBILE_AUTO_ADVANCE_DELAY_MS)
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[#f4f7fb] text-secondary">
-      <BookingStepper messages={messages} activeIndex={1} />
+      <BookingStepper messages={messages} activeIndex={1} onBack={onBack} />
 
       <section className="mx-auto flex w-full max-w-[1040px] flex-col items-center px-5 pb-24 pt-7 md:px-8 md:pt-9">
         <div
@@ -153,7 +173,15 @@ function TicketTypeChoice({messages, onBack, onStandard, onVerifiable}) {
             <h1 id="ticket-type-title" className="font-[var(--font-display)] text-[24px] font-[650] leading-tight text-secondary md:text-[30px]">
               {t(messages, 'book.choice.panelTitle')}
             </h1>
-            <p className="mt-2 text-[13px] leading-6 text-muted">
+            <p className="mt-2 text-center text-[13px] leading-6 text-muted md:hidden">
+              <span className="block">
+                {t(messages, 'book.trip.fromCity')} ({t(messages, 'book.trip.fromCode')}) to {t(messages, 'book.trip.toCity')} ({t(messages, 'book.trip.toCode')})
+              </span>
+              <span className="block">
+                {t(messages, 'book.trip.departDate')} - Return: {t(messages, 'book.trip.returnDate')}
+              </span>
+            </p>
+            <p className="mt-2 hidden text-[13px] leading-6 text-muted md:block">
               {t(messages, 'book.choice.routeSummary')}
             </p>
           </div>
@@ -165,8 +193,9 @@ function TicketTypeChoice({messages, onBack, onStandard, onVerifiable}) {
                 <button
                   key={option.value}
                   type="button"
-                  onClick={() => setTicketType(option.value)}
+                  onClick={() => handleSelectOption(option)}
                   aria-pressed={selected}
+                  disabled={autoAdvancing}
                   className={[
                     'grid w-full grid-cols-[18px_1fr_auto] items-center gap-3 rounded-[5px] border bg-white px-4 py-3 text-left transition md:px-5',
                     selected ? 'border-primary bg-white' : 'border-border hover:border-primary/25',
@@ -207,25 +236,21 @@ function TicketTypeChoice({messages, onBack, onStandard, onVerifiable}) {
             })}
           </div>
 
-          <div className="mx-auto mt-5 grid max-w-[880px] gap-3 md:grid-cols-[0.32fr_1fr]">
-            <button
-              type="button"
-              onClick={onBack}
-              className="inline-flex h-[44px] items-center justify-center rounded-[5px] border border-border bg-white px-5 text-[13px] font-[400] text-secondary transition hover:border-primary hover:text-primary"
-            >
-              {t(messages, 'book.summary.back')}
-            </button>
-            <button
-              type="button"
-              disabled={!selectedOption}
-              onClick={() => selectedOption?.action()}
-              className="inline-flex h-[44px] items-center justify-center rounded-[5px] bg-primary px-5 text-[14px] font-[400] text-white transition enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-primary/35"
-            >
-              {t(messages, 'book.choice.continue')}
-            </button>
-          </div>
         </div>
       </section>
+
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-5 py-4 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-[1040px] items-center justify-end">
+          <button
+            type="button"
+            disabled={!selectedOption || autoAdvancing}
+            onClick={() => selectedOption?.action()}
+            className="inline-flex h-[46px] min-w-[142px] items-center justify-center rounded-[5px] bg-primary px-6 text-[14px] font-[500] text-white transition enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-surface-tint disabled:text-tertiary"
+          >
+            {t(messages, 'book.choice.continue')}
+          </button>
+        </div>
+      </div>
     </main>
   )
 }
@@ -263,9 +288,8 @@ function getEmailSuggestion(email) {
   return correctedDomain ? `${localPart}@${correctedDomain}` : ''
 }
 
-function EmailField({messages, label, error, onClearError, required = false}) {
-  const [email, setEmail] = useState('')
-  const suggestion = getEmailSuggestion(email)
+function EmailField({messages, label, value, onChange, error, onClearError, required = false}) {
+  const suggestion = getEmailSuggestion(value)
   const errorId = error ? 'passenger-email-error' : undefined
 
   return (
@@ -274,9 +298,9 @@ function EmailField({messages, label, error, onClearError, required = false}) {
         name="email"
         type="email"
         required={required}
-        value={email}
+        value={value}
         onChange={(event) => {
-          setEmail(event.target.value)
+          onChange?.(event.target.value)
           onClearError?.('email')
         }}
         placeholder={label}
@@ -295,7 +319,7 @@ function EmailField({messages, label, error, onClearError, required = false}) {
       {suggestion ? (
         <button
           type="button"
-          onClick={() => setEmail(suggestion)}
+          onClick={() => onChange?.(suggestion)}
           className="mt-2 text-left text-[12px] font-[500] text-muted transition hover:text-primary"
         >
           {t(messages, 'book.details.emailSuggestion')}{' '}
@@ -306,8 +330,22 @@ function EmailField({messages, label, error, onClearError, required = false}) {
   )
 }
 
-function DetailField({label, name, error, onClearError, type = 'text', required = false}) {
+function DetailField({
+  messages,
+  label,
+  name,
+  value,
+  onChange,
+  error,
+  onClearError,
+  type = 'text',
+  required = false,
+  showCapitalizationSuggestion = false,
+}) {
   const errorId = error ? `passenger-${name}-error` : undefined
+  const capitalizedValue = capitalizePassengerText(value)
+  const showSuggestion =
+    showCapitalizationSuggestion && value.trim() && capitalizedValue && value !== capitalizedValue
 
   return (
     <div className="block text-left">
@@ -315,7 +353,11 @@ function DetailField({label, name, error, onClearError, type = 'text', required 
         name={name}
         type={type}
         required={required}
-        onChange={() => onClearError?.(name)}
+        value={value}
+        onChange={(event) => {
+          onChange?.(event.target.value)
+          onClearError?.(name)
+        }}
         placeholder={label}
         aria-label={label}
         aria-invalid={error ? 'true' : undefined}
@@ -328,6 +370,19 @@ function DetailField({label, name, error, onClearError, type = 'text', required 
         <p id={errorId} className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">
           {error}
         </p>
+      ) : null}
+      {showSuggestion ? (
+        <button
+          type="button"
+          onClick={() => {
+            onChange?.(capitalizedValue)
+            onClearError?.(name)
+          }}
+          className="mt-2 text-left text-[12px] font-[500] text-muted transition hover:text-primary"
+        >
+          {t(messages, 'book.details.capitalizationSuggestion')}{' '}
+          <span className="font-[700] text-primary">{capitalizedValue}</span>?
+        </button>
       ) : null}
     </div>
   )
@@ -388,10 +443,83 @@ function TitlePicker({label, name, value, onChange, error, onClearError}) {
   )
 }
 
-function BookDetailsStep({messages, selectedFlights, onBack}) {
+function MobileReviewSummary({messages, selectedFlights, passengerDetails}) {
+  const fullName = formatPassengerName(passengerDetails)
+  const nationality = capitalizePassengerText(passengerDetails.nationality)
+
+  return (
+    <div className="self-start rounded-[5px] bg-white p-4 md:hidden">
+      <div className="grid grid-cols-[1fr_34px_1fr] items-start gap-3">
+        <div>
+          <span className="inline-flex rounded-[3px] bg-surface-muted px-2.5 py-1 text-[10px] font-[600] text-secondary">
+            {t(messages, 'book.trip.type')}
+          </span>
+          <div className="mt-3 font-[var(--font-display)] text-[20px] font-[800] leading-none text-secondary">{t(messages, 'book.trip.fromCode')}</div>
+          <div className="mt-1 text-[12px] font-[500] text-muted">{t(messages, 'book.trip.fromCity')}</div>
+          <div className="mt-1.5 text-[11px] font-[500] text-tertiary">{t(messages, 'book.trip.departDate')}</div>
+        </div>
+        <div className="mt-11 grid place-items-center text-tertiary">→</div>
+        <div className="text-right">
+          <div className="mt-8 font-[var(--font-display)] text-[20px] font-[800] leading-none text-secondary">{t(messages, 'book.trip.toCode')}</div>
+          <div className="mt-1 text-[12px] font-[500] text-muted">{t(messages, 'book.trip.toCity')}</div>
+          <div className="mt-1.5 text-[11px] font-[500] text-tertiary">{t(messages, 'book.trip.returnDate')}</div>
+        </div>
+      </div>
+
+      <div className="mt-3 grid gap-2 border-t border-border pt-3">
+        {selectedFlights.map((flight) => (
+          <div key={`${flight.airline}-${flight.flightNumber}-${flight.kind}`} className="grid grid-cols-[1fr_auto] items-center gap-3">
+            <div className="min-w-0">
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="text-[9px] font-[900] uppercase text-[#e11d48]">{flight.airline === 'Air India' ? 'AIR INDIA' : flight.airline}</span>
+                <span className="truncate text-[12px] font-[700] text-secondary">{flight.flightNumber}</span>
+              </div>
+              <div className="mt-1 text-[12px] font-[600] text-muted">
+                {flight.fromCode} {flight.departTime} → {flight.toCode} {flight.arriveTime}
+              </div>
+            </div>
+            <span className="rounded-[4px] bg-surface-muted px-2 py-1 text-[10px] font-[700] text-secondary">{flight.kind}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-3 border-t border-border pt-3">
+        <h3 className="font-[var(--font-display)] text-[14px] font-[750] text-secondary">{t(messages, 'book.review.passenger')}</h3>
+        <div className="mt-2 grid gap-1.5 text-[12px] leading-5">
+          <div className="flex justify-between gap-3">
+            <span className="text-muted">{t(messages, 'book.review.name')}</span>
+            <span className="text-right font-[700] text-secondary">{fullName}</span>
+          </div>
+          <div className="flex justify-between gap-3">
+            <span className="text-muted">{t(messages, 'book.review.email')}</span>
+            <span className="min-w-0 break-all text-right font-[700] text-secondary">{passengerDetails.email}</span>
+          </div>
+          <div className="flex justify-between gap-3">
+            <span className="text-muted">{t(messages, 'book.review.nationality')}</span>
+            <span className="text-right font-[700] text-secondary">{nationality}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BookDetailsStep({messages, selectedFlights, price, onBack}) {
   const [errors, setErrors] = useState({})
   const [showPopup, setShowPopup] = useState(false)
-  const [title, setTitle] = useState('Mr')
+  const [showOrderDetails, setShowOrderDetails] = useState(false)
+  const [reviewing, setReviewing] = useState(false)
+  const [passengerDetails, setPassengerDetails] = useState({
+    email: '',
+    title: 'Mr',
+    firstName: '',
+    lastName: '',
+    nationality: '',
+  })
+
+  const updatePassengerDetail = (field, value) => {
+    setPassengerDetails((currentDetails) => ({...currentDetails, [field]: value}))
+  }
 
   useEffect(() => {
     if (!showPopup) return undefined
@@ -437,23 +565,73 @@ function BookDetailsStep({messages, selectedFlights, onBack}) {
 
     setErrors({})
     setShowPopup(false)
+    setShowOrderDetails(false)
+    setReviewing(true)
+  }
+
+  const handleBack = () => {
+    if (reviewing) {
+      setReviewing(false)
+      return
+    }
+
+    onBack?.()
+  }
+
+  if (reviewing) {
+    return (
+      <main className="h-[calc(100dvh-64px)] overflow-hidden bg-[#f4f7fb] text-secondary min-[700px]:h-[calc(100dvh-114px)] md:h-auto md:min-h-screen md:overflow-visible">
+        <BookingStepper messages={messages} activeIndex={2} onBack={handleBack} />
+
+        <section className="mx-auto grid h-[calc(100dvh-64px-65px-79px)] w-full max-w-[900px] grid-rows-[auto_auto] content-start gap-3 overflow-hidden px-3 pb-3 pt-4 min-[700px]:h-[calc(100dvh-114px-65px-79px)] md:h-auto md:gap-5 md:overflow-visible md:px-8 md:pb-28 md:pt-6">
+          <div>
+            <h1 className="font-[var(--font-display)] text-[24px] font-[750] leading-tight text-secondary md:text-[32px]">
+              {t(messages, 'book.review.title')}
+            </h1>
+            <p className="mt-1.5 max-w-[560px] text-[12px] leading-5 text-muted md:mt-2 md:text-[13px] md:leading-6">
+              {t(messages, 'book.review.subtitle')}
+            </p>
+          </div>
+
+          <MobileReviewSummary messages={messages} selectedFlights={selectedFlights} passengerDetails={passengerDetails} />
+          <BookingPreview
+            messages={messages}
+            selectedFlights={selectedFlights}
+            passengerDetails={passengerDetails}
+            className="hidden md:flex lg:static"
+          />
+          <CostSummary messages={messages} price={price} className="hidden md:block" />
+        </section>
+
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-5 py-4 backdrop-blur">
+          <div className="mx-auto flex w-full max-w-[900px] items-center justify-end">
+            <button
+              type="button"
+              className="ml-auto inline-flex h-[46px] min-w-[142px] items-center justify-center gap-2 rounded-[5px] bg-primary px-6 text-[14px] font-[500] text-white transition hover:bg-primary/90"
+            >
+              {t(messages, 'book.review.pay')} {price}
+            </button>
+          </div>
+        </div>
+      </main>
+    )
   }
 
   return (
     <main className="min-h-screen bg-[#f4f7fb] text-secondary">
-      <BookingStepper messages={messages} activeIndex={2} />
+      <BookingStepper messages={messages} activeIndex={2} onBack={handleBack} />
 
       {showPopup ? (
         <div
           role="alert"
-          className="fixed right-5 top-[104px] z-50 max-w-[320px] rounded-[6px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-[13px] font-[650] text-[#ff2f2f]"
+          className="fixed left-1/2 top-[64px] z-50 w-[calc(100%-40px)] max-w-[320px] -translate-x-1/2 rounded-[6px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-center text-[13px] font-[650] text-[#ff2f2f] min-[700px]:top-[114px] md:left-auto md:right-5 md:top-5 md:w-auto md:translate-x-0 md:text-left"
         >
           {t(messages, 'book.details.requiredWarning')}
         </div>
       ) : null}
 
       <section className="mx-auto grid w-full max-w-[1220px] gap-6 px-5 pb-24 pt-5 md:px-8 md:pt-6 lg:grid-cols-[390px_minmax(0,1fr)] lg:items-start">
-        <BookingPreview messages={messages} selectedFlights={selectedFlights} />
+        <BookingPreview messages={messages} selectedFlights={selectedFlights} passengerDetails={passengerDetails} className="hidden lg:flex" />
 
         <div className="min-w-0">
           <h1 className="font-[var(--font-display)] text-[26px] font-[750] leading-tight text-secondary md:text-[32px]">
@@ -478,6 +656,8 @@ function BookDetailsStep({messages, selectedFlights, onBack}) {
                   <EmailField
                     messages={messages}
                     label={t(messages, 'book.details.fields.email')}
+                    value={passengerDetails.email}
+                    onChange={(value) => updatePassengerDetail('email', value)}
                     error={errors.email}
                     onClearError={clearFieldError}
                     required
@@ -493,32 +673,44 @@ function BookDetailsStep({messages, selectedFlights, onBack}) {
                 <TitlePicker
                   name="title"
                   label={t(messages, 'book.details.fields.title')}
-                  value={title}
-                  onChange={setTitle}
+                  value={passengerDetails.title}
+                  onChange={(value) => updatePassengerDetail('title', value)}
                   error={errors.title}
                   onClearError={clearFieldError}
                 />
 
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   <DetailField
+                    messages={messages}
                     name="firstName"
                     label={t(messages, 'book.details.fields.firstName')}
+                    value={passengerDetails.firstName}
+                    onChange={(value) => updatePassengerDetail('firstName', value)}
                     error={errors.firstName}
                     onClearError={clearFieldError}
+                    showCapitalizationSuggestion
                     required
                   />
                   <DetailField
+                    messages={messages}
                     name="lastName"
                     label={t(messages, 'book.details.fields.lastName')}
+                    value={passengerDetails.lastName}
+                    onChange={(value) => updatePassengerDetail('lastName', value)}
                     error={errors.lastName}
                     onClearError={clearFieldError}
+                    showCapitalizationSuggestion
                     required
                   />
                   <DetailField
+                    messages={messages}
                     name="nationality"
                     label={t(messages, 'book.details.fields.nationality')}
+                    value={passengerDetails.nationality}
+                    onChange={(value) => updatePassengerDetail('nationality', value)}
                     error={errors.nationality}
                     onClearError={clearFieldError}
+                    showCapitalizationSuggestion
                     required
                   />
                 </div>
@@ -528,19 +720,19 @@ function BookDetailsStep({messages, selectedFlights, onBack}) {
         </div>
       </section>
 
+      <MobileOrderDetailsPanel messages={messages} selectedFlights={selectedFlights} passengerDetails={passengerDetails} open={showOrderDetails} />
+
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-5 py-4 backdrop-blur">
         <div className="mx-auto flex w-full max-w-[1220px] items-center justify-between gap-4">
-          <button
-            type="button"
-            onClick={onBack}
-            className="inline-flex h-[46px] items-center justify-center gap-2 rounded-[5px] border border-border-strong px-5 text-[13px] font-[500] text-secondary transition hover:border-primary hover:text-primary"
-            >
-            {t(messages, 'book.summary.back')}
-          </button>
+          <MobileOrderDetails
+            messages={messages}
+            open={showOrderDetails}
+            onToggle={() => setShowOrderDetails((current) => !current)}
+          />
           <button
             type="submit"
             form="passenger-details-form"
-            className="inline-flex h-[46px] min-w-[160px] items-center justify-center gap-2 rounded-[5px] bg-primary px-6 text-[14px] font-[500] text-white transition hover:bg-primary/90"
+            className="ml-auto inline-flex h-[46px] min-w-[160px] items-center justify-center gap-2 rounded-[5px] bg-primary px-6 text-[14px] font-[500] text-white transition hover:bg-primary/90"
           >
             {t(messages, 'book.details.submit')}
           </button>
@@ -601,32 +793,40 @@ function SkeletonTicket() {
   )
 }
 
+function SkeletonBookingPreview({className = ''}) {
+  return (
+    <aside className={`flex w-full justify-center lg:sticky lg:top-6 ${className}`}>
+      <div className="w-full max-w-[420px] rounded-[5px] bg-white p-4">
+        <SkeletonLine className="h-[30px] w-[96px] rounded-[3px]" />
+        <div className="mt-4 grid grid-cols-[1fr_38px_1fr] items-start gap-3">
+          <div>
+            <SkeletonLine className="h-[18px] w-[42px]" />
+            <SkeletonLine className="mt-2 h-[12px] w-[62px]" />
+            <SkeletonLine className="mt-2 h-[11px] w-[78px]" />
+          </div>
+          <div className="grid place-items-center pt-1">
+            <SkeletonLine className="size-[17px] rounded-[6px]" />
+          </div>
+          <div className="flex flex-col items-end">
+            <SkeletonLine className="h-[18px] w-[42px]" />
+            <SkeletonLine className="mt-2 h-[12px] w-[62px]" />
+            <SkeletonLine className="mt-2 h-[11px] w-[78px]" />
+          </div>
+        </div>
+      </div>
+    </aside>
+  )
+}
+
 function BookLoading({messages}) {
+  const [showOrderDetails, setShowOrderDetails] = useState(false)
+
   return (
     <main className="min-h-screen bg-[#f4f7fb] text-secondary">
       <BookingStepper messages={messages} activeIndex={1} />
 
       <section className="mx-auto grid w-full max-w-[1220px] gap-6 px-5 pb-24 pt-5 md:px-8 md:pt-6 lg:grid-cols-[390px_minmax(0,1fr)] lg:items-start">
-        <aside className="flex w-full justify-center lg:sticky lg:top-6">
-          <div className="w-full max-w-[420px] rounded-[5px] bg-white p-4">
-            <SkeletonLine className="h-[30px] w-[96px] rounded-[3px]" />
-            <div className="mt-4 grid grid-cols-[1fr_38px_1fr] items-start gap-3">
-              <div>
-                <SkeletonLine className="h-[18px] w-[42px]" />
-                <SkeletonLine className="mt-2 h-[12px] w-[62px]" />
-                <SkeletonLine className="mt-2 h-[11px] w-[78px]" />
-              </div>
-              <div className="grid place-items-center pt-1">
-                <SkeletonLine className="size-[17px] rounded-[6px]" />
-              </div>
-              <div className="flex flex-col items-end">
-                <SkeletonLine className="h-[18px] w-[42px]" />
-                <SkeletonLine className="mt-2 h-[12px] w-[62px]" />
-                <SkeletonLine className="mt-2 h-[11px] w-[78px]" />
-              </div>
-            </div>
-          </div>
-        </aside>
+        <SkeletonBookingPreview className="hidden lg:flex" />
 
         <div className="min-w-0">
           <h1 className="font-[var(--font-display)] text-[26px] font-[750] leading-tight text-secondary md:text-[32px]">
@@ -642,6 +842,27 @@ function BookLoading({messages}) {
           </div>
         </div>
       </section>
+
+      <MobileOrderDetailsPanel messages={messages} selectedFlights={[]} open={showOrderDetails}>
+        <SkeletonBookingPreview className="mt-5" />
+      </MobileOrderDetailsPanel>
+
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-5 py-4 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-[1220px] items-center justify-between gap-4">
+          <MobileOrderDetails
+            messages={messages}
+            open={showOrderDetails}
+            onToggle={() => setShowOrderDetails((current) => !current)}
+          />
+          <button
+            type="button"
+            disabled
+            className="ml-auto inline-flex h-[46px] min-w-[142px] cursor-not-allowed items-center justify-center gap-2 rounded-[5px] bg-surface-tint px-6 text-[14px] font-[500] text-tertiary"
+          >
+            {t(messages, 'book.summary.continue')}
+          </button>
+        </div>
+      </div>
     </main>
   )
 }

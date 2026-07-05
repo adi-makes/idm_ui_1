@@ -54,7 +54,7 @@ export default async function Home({params}) {
       <HomeDifferentiators messages={messages} />
       <HomeProcess messages={messages} />
       <HomeUseCases messages={messages} />
-      <HomePricing messages={messages} />
+      <HomePricing locale={locale} messages={messages} />
       <HomeTestimonials messages={messages} />
       <HomeFaq messages={messages} />
       <HomeFinalCta messages={messages} />

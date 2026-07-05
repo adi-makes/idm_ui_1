@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom'
 import Navbar from '@/components/shared/Navbar'
 import JsonLd from '@/components/shared/JsonLd'
 import DraftModeBanner from '@/components/shared/DraftModeBanner'
+import DevPointerCaptureGuard from '@/components/shared/DevPointerCaptureGuard'
 import {Analytics} from '@/analytics'
 
 import {LOCALES} from '@/i18n/config'
@@ -50,6 +51,7 @@ export default async function LocaleLayout({children, params}) {
 
   return (
     <div lang={locale} dir={isRtlLocale(locale) ? 'rtl' : 'ltr'}>
+        <DevPointerCaptureGuard />
         {draft.isEnabled ? <DraftModeBanner locale={locale} /> : null}
         <JsonLd data={[generateOrganizationSchema(s), generateWebsiteSchema(s)]} />
         {/* Skip to main content — helps keyboard/screen-reader users bypass the nav */}

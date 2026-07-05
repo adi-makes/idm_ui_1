@@ -1,19 +1,40 @@
-import {Check} from 'lucide-react'
+import {Check, ChevronLeft} from 'lucide-react'
 import {t} from '@/messages'
 
 const STEP_KEYS = ['search', 'flight', 'book']
 
-export default function BookingStepper({messages, activeIndex = 0}) {
+export default function BookingStepper({messages, activeIndex = 0, onBack, backLabel}) {
+  const mobileProgress = Math.min(Math.max(activeIndex / (STEP_KEYS.length - 1), 0), 1)
+
   return (
     <div className="border-y border-border bg-white">
-      <div className="mx-auto flex w-full justify-center overflow-x-auto px-5 py-4">
-        <div className="flex w-full max-w-[780px] items-center justify-center">
+      <div className="mx-auto grid w-full max-w-[860px] grid-cols-[40px_1fr_40px] items-center px-5 py-4 min-[700px]:block">
+        <div className="flex justify-start min-[700px]:hidden">
+          {onBack ? (
+            <button
+              type="button"
+              onClick={onBack}
+              aria-label={backLabel || t(messages, 'book.summary.back')}
+              className="grid size-[34px] place-items-center rounded-full border border-border-strong bg-white text-secondary transition hover:border-primary hover:text-primary"
+            >
+              <ChevronLeft className="size-[18px]" aria-hidden="true" />
+            </button>
+          ) : null}
+        </div>
+
+        <div className="relative mx-auto flex w-full max-w-[190px] items-center justify-between min-[700px]:max-w-[780px] min-[700px]:justify-center">
+          <span className="absolute left-[15px] right-[15px] top-1/2 h-px -translate-y-1/2 bg-border-strong min-[700px]:hidden" aria-hidden="true" />
+          <span
+            className="absolute left-[15px] top-1/2 h-px -translate-y-1/2 bg-primary/70 min-[700px]:hidden"
+            style={{width: `calc((100% - 30px) * ${mobileProgress})`}}
+            aria-hidden="true"
+          />
           {STEP_KEYS.map((step, index) => {
             const complete = index < activeIndex
             const active = index === activeIndex
 
             return (
-              <div key={step} className="flex min-w-0 items-center">
+              <div key={step} className="relative z-10 flex min-w-0 items-center">
                 <div className="flex shrink-0 items-center gap-2.5">
                   <span
                     className={[
@@ -27,7 +48,7 @@ export default function BookingStepper({messages, activeIndex = 0}) {
                   </span>
                   <span
                     className={[
-                      'whitespace-nowrap font-[var(--font-display)] text-[13px] font-[700]',
+                      'hidden whitespace-nowrap font-[var(--font-display)] text-[13px] font-[700] min-[700px]:inline',
                       active ? 'text-secondary' : 'text-tertiary',
                     ].join(' ')}
                   >

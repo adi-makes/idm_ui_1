@@ -57,6 +57,7 @@
       "traveler": "Traveler details",
       "submit": "Review and pay",
       "emailSuggestion": "Did you mean",
+      "capitalizationSuggestion": "Did you mean",
       "requiredWarning": "Please fill in all passenger details before continuing.",
       "fields": {
         "email": "Email address",
@@ -90,9 +91,19 @@
       "verified": "Stripe Verified",
       "encrypted": "Your payment information is encrypted and securely processed.",
       "selectPrompt": "Select a flight to preview the reservation details.",
+      "orderDetails": "Order details",
       "totalLabel": "Total",
       "continue": "Continue",
       "back": "Back"
+    },
+    "review": {
+      "title": "Review your order",
+      "subtitle": "Check the reservation and passenger details before payment.",
+      "passenger": "Passenger details",
+      "name": "Name",
+      "email": "Email",
+      "nationality": "Nationality",
+      "pay": "Pay"
     },
     "pricing": {
       "flight": "Flight reservation",

@@ -1,8 +1,18 @@
+'use client'
+
+import Link from 'next/link'
 import {Check} from 'lucide-react'
 import {t} from '@/messages'
+import {localizedPath} from '@/i18n/routing'
 import {PRICING_PLANS} from './homeData'
 
-export default function HomePricing({messages}) {
+const BOOKING_STEP_STORAGE_KEY = 'idt.booking.step'
+
+export default function HomePricing({locale, messages}) {
+  const resetBookingStep = () => {
+    window.sessionStorage.removeItem(BOOKING_STEP_STORAGE_KEY)
+  }
+
   return (
     <section id="pricing" className="bg-white px-6 py-16 min-[700px]:px-8 min-[700px]:py-24 md:px-6">
       <div className="mx-auto w-full max-w-[1160px]">
@@ -29,9 +39,9 @@ export default function HomePricing({messages}) {
                   </li>
                 ))}
               </ul>
-              <a href="#main-content" className={['mt-6 flex h-[46px] items-center justify-center rounded-[5px] font-[var(--font-display)] text-[15px] font-[800] transition-colors', plan.featured ? 'bg-primary text-white hover:bg-primary/90' : 'border border-border text-secondary hover:border-primary hover:text-primary'].join(' ')}>
+              <Link href={localizedPath(locale, '/book')} onClick={resetBookingStep} className={['mt-6 flex h-[46px] items-center justify-center rounded-[5px] font-[var(--font-display)] text-[15px] font-[800] transition-colors', plan.featured ? 'bg-primary text-white hover:bg-primary/90' : 'border border-border text-secondary hover:border-primary hover:text-primary'].join(' ')}>
                 {t(messages, plan.ctaKey)}
-              </a>
+              </Link>
             </article>
           ))}
         </div>

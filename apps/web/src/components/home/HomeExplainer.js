@@ -5,7 +5,7 @@ export default function HomeExplainer({messages}) {
   return (
     <section className="bg-white px-6 py-16 min-[700px]:px-8 min-[700px]:py-24 md:px-6">
       <div className="mx-auto grid w-full max-w-[1160px] gap-10 md:grid-cols-[0.95fr_1.05fr] md:items-center">
-        <div>
+        <div className="mx-auto max-w-[520px] text-center md:mx-0 md:max-w-none md:text-left">
           <p className="font-[var(--font-display)] text-[13px] font-[700] leading-none tracking-[0.04em] text-primary min-[700px]:text-[16px] md:text-[14px]">{t(messages, 'home.explainer.eyebrow')}</p>
           <h2 className="mt-4 font-[var(--font-display)] text-[34px] font-[750] leading-[1.08] tracking-normal text-secondary min-[700px]:text-[48px]">
             {t(messages, 'home.explainer.title')}

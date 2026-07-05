@@ -1,10 +1,10 @@
 'use client'
 
-import {useMemo, useState} from 'react'
-import Link from 'next/link'
-import {ArrowRight} from 'lucide-react'
+import {useEffect, useMemo, useRef, useState} from 'react'
+import {ArrowRight, ChevronDown, ChevronUp} from 'lucide-react'
 import BookingStepper from '@/components/book/BookingStepper'
-import {localizedPath} from '@/i18n/routing'
+import {MOBILE_AUTO_ADVANCE_DELAY_MS, shouldAutoAdvanceOnMobile} from '@/components/book/mobileAutoAdvance'
+import {capitalizePassengerText, formatPassengerName} from '@/components/book/passengerFormat'
 import {t} from '@/messages'
 
 function AirlineMark({airline}) {
@@ -112,11 +112,58 @@ function SummaryFlightRow({flight}) {
   )
 }
 
-export function BookingPreview({messages, selectedFlights}) {
+function PassengerSummary({messages, passengerDetails}) {
+  const fullName = formatPassengerName(passengerDetails)
+  const nationality = capitalizePassengerText(passengerDetails?.nationality)
+  const hasDetails = fullName || passengerDetails?.email || nationality
+
+  if (!hasDetails) return null
+
+  return (
+    <div className="mt-4 border-t border-border pt-4">
+      <h3 className="font-[var(--font-display)] text-[14px] font-[750] text-secondary">
+        {t(messages, 'book.review.passenger')}
+      </h3>
+      <dl className="mt-3 grid gap-2 text-[12px] leading-5">
+        {fullName ? (
+          <div className="flex items-start justify-between gap-4">
+            <dt className="font-[500] text-muted">{t(messages, 'book.review.name')}</dt>
+            <dd className="text-right font-[650] text-secondary">{fullName}</dd>
+          </div>
+        ) : null}
+        {passengerDetails?.email ? (
+          <div className="flex items-start justify-between gap-4">
+            <dt className="font-[500] text-muted">{t(messages, 'book.review.email')}</dt>
+            <dd className="min-w-0 break-all text-right font-[650] text-secondary">{passengerDetails.email}</dd>
+          </div>
+        ) : null}
+        {nationality ? (
+          <div className="flex items-start justify-between gap-4">
+            <dt className="font-[500] text-muted">{t(messages, 'book.review.nationality')}</dt>
+            <dd className="text-right font-[650] text-secondary">{nationality}</dd>
+          </div>
+        ) : null}
+      </dl>
+    </div>
+  )
+}
+
+export function CostSummary({messages, price, className = ''}) {
+  return (
+    <div className={`rounded-[5px] border border-border bg-white p-4 ${className}`}>
+      <div className="flex items-center justify-between gap-4">
+        <span className="text-[13px] font-[600] text-muted">{t(messages, 'book.summary.totalLabel')}</span>
+        <span className="font-[var(--font-display)] text-[22px] font-[800] text-secondary">{price}</span>
+      </div>
+    </div>
+  )
+}
+
+export function BookingPreview({messages, selectedFlights, passengerDetails, className = ''}) {
   const hasSelection = selectedFlights.length > 0
 
   return (
-    <aside className="flex w-full justify-center lg:sticky lg:top-6">
+    <aside className={`flex w-full justify-center lg:sticky lg:top-6 ${className}`}>
       <div className="w-full max-w-[420px] rounded-[5px] bg-white p-4">
         <span className="inline-flex rounded-[3px] bg-surface-muted px-3 py-1.5 text-[11px] font-[500] text-secondary">
           {t(messages, 'book.trip.type')}
@@ -151,14 +198,52 @@ export function BookingPreview({messages, selectedFlights}) {
             {t(messages, 'book.summary.selectPrompt')}
           </div>
         )}
+
+        <PassengerSummary messages={messages} passengerDetails={passengerDetails} />
       </div>
     </aside>
   )
 }
 
-export default function BookFlightPicker({locale, messages, onBack, onContinue}) {
+export function MobileOrderDetailsPanel({messages, selectedFlights, passengerDetails, open, children}) {
+  return (
+    <div className="lg:hidden">
+      {open ? (
+        <div className="fixed inset-x-0 bottom-[79px] top-[64px] z-[10000] overflow-y-auto bg-[#f4f7fb] px-5 py-6 min-[700px]:top-[114px] lg:hidden">
+          <div className="mx-auto w-full max-w-[420px]">
+            <h2 className="font-[var(--font-display)] text-[24px] font-[750] leading-tight text-secondary">
+              {t(messages, 'book.summary.orderDetails')}
+            </h2>
+            {children || <BookingPreview messages={messages} selectedFlights={selectedFlights} passengerDetails={passengerDetails} className="mt-5" />}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+export function MobileOrderDetails({messages, open, onToggle}) {
+  const ToggleIcon = open ? ChevronDown : ChevronUp
+
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-expanded={open}
+      className="inline-flex items-center gap-1.5 text-left text-[13px] font-[500] leading-none text-muted transition hover:text-primary lg:hidden"
+    >
+      <span>{t(messages, 'book.summary.orderDetails')}</span>
+      <ToggleIcon className="size-[14px] shrink-0" aria-hidden="true" />
+    </button>
+  )
+}
+
+export default function BookFlightPicker({messages, onBack, onContinue}) {
   const flights = messages.book.flights
   const [selectedPairIndex, setSelectedPairIndex] = useState(null)
+  const [showOrderDetails, setShowOrderDetails] = useState(false)
+  const [autoAdvancing, setAutoAdvancing] = useState(false)
+  const autoAdvanceTimerRef = useRef(null)
   const flightPairs = useMemo(() => {
     const pairs = []
     for (let index = 0; index < flights.length; index += 2) {
@@ -172,12 +257,26 @@ export default function BookFlightPicker({locale, messages, onBack, onContinue})
     return flights.slice(start, start + 2)
   }, [flights, selectedPairIndex])
 
+  useEffect(() => () => window.clearTimeout(autoAdvanceTimerRef.current), [])
+
+  const handleSelectFlights = (pairIndex, pair) => {
+    if (autoAdvancing) return
+
+    setSelectedPairIndex(pairIndex)
+
+    if (shouldAutoAdvanceOnMobile()) {
+      setAutoAdvancing(true)
+      setShowOrderDetails(false)
+      autoAdvanceTimerRef.current = window.setTimeout(() => onContinue?.(pair), MOBILE_AUTO_ADVANCE_DELAY_MS)
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[#f4f7fb] text-secondary">
-        <BookingStepper messages={messages} activeIndex={1} />
+      <BookingStepper messages={messages} activeIndex={1} onBack={onBack} />
 
       <section className="mx-auto grid w-full max-w-[1220px] gap-6 px-5 pb-24 pt-5 md:px-8 md:pt-6 lg:grid-cols-[390px_minmax(0,1fr)] lg:items-start">
-        <BookingPreview messages={messages} selectedFlights={selectedFlights} />
+        <BookingPreview messages={messages} selectedFlights={selectedFlights} className="hidden lg:flex" />
 
         <div className="min-w-0">
           <div className="max-w-[620px]">
@@ -193,7 +292,7 @@ export default function BookFlightPicker({locale, messages, onBack, onContinue})
                 key={pair.map((flight) => `${flight.airline}-${flight.flightNumber}`).join('-')}
                 flights={pair}
                 selected={selectedPairIndex === pairIndex}
-                onSelect={() => setSelectedPairIndex(pairIndex)}
+                onSelect={() => handleSelectFlights(pairIndex, pair)}
                 messages={messages}
               />
             ))}
@@ -201,31 +300,22 @@ export default function BookFlightPicker({locale, messages, onBack, onContinue})
         </div>
       </section>
 
+      <MobileOrderDetailsPanel messages={messages} selectedFlights={selectedFlights} open={showOrderDetails} />
+
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-5 py-4 backdrop-blur">
         <div className="mx-auto flex w-full max-w-[1220px] items-center justify-between gap-4">
-          {onBack ? (
-            <button
-              type="button"
-              onClick={onBack}
-              className="inline-flex h-[46px] items-center justify-center gap-2 rounded-[5px] border border-border-strong px-5 text-[13px] font-[500] text-secondary transition hover:border-primary hover:text-primary"
-            >
-              {t(messages, 'book.summary.back')}
-            </button>
-          ) : (
-            <Link
-              href={localizedPath(locale, '/book')}
-              className="inline-flex h-[46px] items-center justify-center gap-2 rounded-[5px] border border-border-strong px-5 text-[13px] font-[500] text-secondary transition hover:border-primary hover:text-primary"
-            >
-              {t(messages, 'book.summary.back')}
-            </Link>
-          )}
+          <MobileOrderDetails
+            messages={messages}
+            open={showOrderDetails}
+            onToggle={() => setShowOrderDetails((current) => !current)}
+          />
           <button
             type="button"
-            disabled={selectedPairIndex === null}
+            disabled={selectedPairIndex === null || autoAdvancing}
             onClick={() => {
               if (selectedFlights.length > 0) onContinue?.(selectedFlights)
             }}
-            className="inline-flex h-[46px] min-w-[142px] items-center justify-center gap-2 rounded-[5px] bg-primary px-6 text-[14px] font-[500] text-white transition enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-surface-tint disabled:text-tertiary"
+            className="ml-auto inline-flex h-[46px] min-w-[142px] items-center justify-center gap-2 rounded-[5px] bg-primary px-6 text-[14px] font-[500] text-white transition enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-surface-tint disabled:text-tertiary"
           >
             {t(messages, 'book.summary.continue')}
           </button>
