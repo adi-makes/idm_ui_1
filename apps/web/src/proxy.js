@@ -12,7 +12,8 @@
 import {NextResponse} from 'next/server'
 import {LOCALES, DEFAULT_LOCALE} from './i18n/config'
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+const rawProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim()
+const projectId = /^[a-z0-9-]+$/.test(rawProjectId || '') ? rawProjectId : undefined
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL
 

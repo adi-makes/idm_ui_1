@@ -283,7 +283,7 @@ function EmailField({messages, label, error, onClearError, required = false}) {
         aria-label={label}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={errorId}
-        className={`h-[48px] w-full rounded-[5px] border bg-white px-4 text-[14px] font-[500] text-secondary shadow-[0_8px_18px_rgba(15,23,42,0.025)] outline-none transition placeholder:text-tertiary ${
+        className={`h-[48px] w-full rounded-[5px] border bg-white px-4 text-[14px] font-[500] text-secondary outline-none transition placeholder:text-tertiary ${
           error ? 'border-[#ff3b3b] focus:border-[#ff3b3b]' : 'border-transparent focus:border-primary'
         }`}
       />
@@ -320,7 +320,7 @@ function DetailField({label, name, error, onClearError, type = 'text', required 
         aria-label={label}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={errorId}
-        className={`h-[48px] w-full rounded-[5px] border bg-white px-4 text-[14px] font-[500] text-secondary shadow-[0_8px_18px_rgba(15,23,42,0.025)] outline-none transition placeholder:text-tertiary ${
+        className={`h-[48px] w-full rounded-[5px] border bg-white px-4 text-[14px] font-[500] text-secondary outline-none transition placeholder:text-tertiary ${
           error ? 'border-[#ff3b3b] focus:border-[#ff3b3b]' : 'border-transparent focus:border-primary'
         }`}
       />
@@ -366,7 +366,7 @@ function TitlePicker({label, name, value, onChange, error, onClearError}) {
                   onClearError?.(name)
                 }}
                 className={[
-                  'h-[46px] rounded-[5px] border bg-white text-[14px] font-[700] shadow-[0_8px_18px_rgba(15,23,42,0.025)] transition',
+                  'h-[46px] rounded-[5px] border bg-white text-[14px] font-[700] transition',
                   active
                     ? 'border-secondary text-secondary'
                     : 'border-transparent text-muted hover:border-primary/30 hover:text-secondary',
@@ -446,7 +446,7 @@ function BookDetailsStep({messages, selectedFlights, onBack}) {
       {showPopup ? (
         <div
           role="alert"
-          className="fixed right-5 top-5 z-50 max-w-[320px] rounded-[6px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-[13px] font-[650] text-[#ff2f2f] shadow-[0_14px_34px_rgba(15,23,42,0.12)]"
+          className="fixed right-5 top-[104px] z-50 max-w-[320px] rounded-[6px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-[13px] font-[650] text-[#ff2f2f]"
         >
           {t(messages, 'book.details.requiredWarning')}
         </div>
@@ -593,7 +593,7 @@ function SkeletonSegment() {
 
 function SkeletonTicket() {
   return (
-    <div className="overflow-hidden rounded-[6px] border border-border bg-white shadow-[0_8px_22px_rgba(15,23,42,0.035)]">
+    <div className="overflow-hidden rounded-[6px] border border-border bg-white">
       <SkeletonSegment />
       <div className="mx-4 h-px bg-border md:mx-5" aria-hidden="true" />
       <SkeletonSegment />
@@ -608,7 +608,7 @@ function BookLoading({messages}) {
 
       <section className="mx-auto grid w-full max-w-[1220px] gap-6 px-5 pb-24 pt-5 md:px-8 md:pt-6 lg:grid-cols-[390px_minmax(0,1fr)] lg:items-start">
         <aside className="flex w-full justify-center lg:sticky lg:top-6">
-          <div className="w-full max-w-[420px] rounded-[5px] bg-white p-4 shadow-[0_8px_22px_rgba(15,23,42,0.035)]">
+          <div className="w-full max-w-[420px] rounded-[5px] bg-white p-4">
             <SkeletonLine className="h-[30px] w-[96px] rounded-[3px]" />
             <div className="mt-4 grid grid-cols-[1fr_38px_1fr] items-start gap-3">
               <div>

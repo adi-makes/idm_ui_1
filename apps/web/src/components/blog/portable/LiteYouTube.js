@@ -45,7 +45,7 @@ export default function LiteYouTube({id, title, url, locale = 'en'}) {
       />
       <span className="absolute inset-0 bg-black/25" aria-hidden="true" />
       <span className="absolute inset-0 flex items-center justify-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white">
           <Play className="h-6 w-6 translate-x-0.5 fill-current" aria-hidden="true" />
         </span>
       </span>

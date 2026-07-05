@@ -66,7 +66,7 @@ function FlightOption({flights, selected, onSelect, messages}) {
       aria-pressed={selected}
       className={[
         'w-full overflow-hidden rounded-[6px] border bg-white text-left transition',
-        selected ? 'border-primary shadow-[0_10px_28px_rgba(11,99,246,0.09)]' : 'border-border hover:border-primary/45',
+        selected ? 'border-primary' : 'border-border hover:border-primary/45',
       ].join(' ')}
     >
       <FlightSegment flight={onwardFlight} messages={messages} />
@@ -117,7 +117,7 @@ export function BookingPreview({messages, selectedFlights}) {
 
   return (
     <aside className="flex w-full justify-center lg:sticky lg:top-6">
-      <div className="w-full max-w-[420px] rounded-[5px] bg-white p-4 shadow-[0_8px_22px_rgba(15,23,42,0.035)]">
+      <div className="w-full max-w-[420px] rounded-[5px] bg-white p-4">
         <span className="inline-flex rounded-[3px] bg-surface-muted px-3 py-1.5 text-[11px] font-[500] text-secondary">
           {t(messages, 'book.trip.type')}
         </span>

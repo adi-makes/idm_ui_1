@@ -24,7 +24,7 @@ export default function BlogCard({post, locale = 'en', priority = false}) {
   const cover = imageUrl(post.featuredImage, {width: 600, height: 360, fit: 'crop'})
 
   return (
-    <article className="group flex flex-col rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
+    <article className="group flex flex-col rounded-xl border border-slate-200 overflow-hidden transition-colors">
       <Link
         href={href}
         className="block relative h-44 bg-slate-100 shrink-0"
