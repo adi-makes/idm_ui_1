@@ -8,7 +8,6 @@ import {notFound} from 'next/navigation'
 import {draftMode} from 'next/headers'
 import {VisualEditing} from 'next-sanity/visual-editing'
 import ReactDOM from 'react-dom'
-import '../globals.css'
 
 import Navbar from '@/components/shared/Navbar'
 import JsonLd from '@/components/shared/JsonLd'
@@ -50,11 +49,7 @@ export default async function LocaleLayout({children, params}) {
   ReactDOM.preconnect('https://cdn.sanity.io')
 
   return (
-    <html lang={locale} dir={isRtlLocale(locale) ? 'rtl' : 'ltr'}>
-      <body
-        suppressHydrationWarning
-        className="min-h-screen bg-white text-slate-900 font-sans antialiased"
-      >
+    <div lang={locale} dir={isRtlLocale(locale) ? 'rtl' : 'ltr'}>
         {draft.isEnabled ? <DraftModeBanner locale={locale} /> : null}
         <JsonLd data={[generateOrganizationSchema(s), generateWebsiteSchema(s)]} />
         {/* Skip to main content — helps keyboard/screen-reader users bypass the nav */}
@@ -71,7 +66,6 @@ export default async function LocaleLayout({children, params}) {
         </div>
         <Analytics analytics={s.analytics} />
         {draft.isEnabled ? <VisualEditing /> : null}
-      </body>
-    </html>
+    </div>
   )
 }

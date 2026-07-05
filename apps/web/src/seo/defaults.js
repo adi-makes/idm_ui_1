@@ -12,5 +12,5 @@ import {SITE_NAME} from '@/constants/site'
 export const seoDefaults = {
   siteName: SITE_NAME,
   titleTemplate: '%s',
-  description: '',
+  description: 'Create clean, embassy-ready onward ticket reservations for visa applications and travel documentation.',
 }

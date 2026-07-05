@@ -1,0 +1,183 @@
+{
+  "policies": {
+    "common": {
+      "lastUpdated": "Last updated: March 2026",
+      "backHome": "Back to home",
+      "ctaEyebrow": "Need a reservation for your file?",
+      "ctaTitle": "Create a visa-ready reservation without buying the final ticket.",
+      "ctaText": "Use the booking form to prepare a clean PDF for visa applications, onward travel proof, and travel documentation.",
+      "ctaButton": "Book reservation",
+      "notice": "Reservations are for visa applications and proof of onward travel only. They are not paid tickets and cannot be used to board a flight."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "headline": "Your privacy, handled with care.",
+      "description": "How InstaDummyTicket collects, uses, retains, and protects your personal data when you order a dummy ticket.",
+      "summary": "We collect only what we need to issue your flight reservation, never sell your data, and never share it for marketing.",
+      "sections": [
+        {
+          "title": "1. Who We Are",
+          "paragraphs": [
+            "InstaDummyTicket is an online service that provides temporary flight reservations for visa applications, onward travel proof, and similar documentation needs. You can reach us at support@instadummyticket.com."
+          ]
+        },
+        {
+          "title": "2. What We Collect",
+          "paragraphs": [
+            "To issue and deliver your reservation, we may collect your full name, email address, phone number, nationality, date of birth, route, and travel dates.",
+            "We do not ask for passport numbers, financial documents, or sensitive government identifiers unless a future service clearly requires it and explains why."
+          ]
+        },
+        {
+          "title": "3. How We Use Your Data",
+          "paragraphs": [
+            "Your information is used to create your reservation, deliver the PDF, process corrections, and respond to support queries related to your order.",
+            "We do not use your information for unrelated marketing, profiling, or resale."
+          ]
+        },
+        {
+          "title": "4. Payments",
+          "paragraphs": [
+            "Payments are handled by third-party payment processors. We do not store card details or have access to full payment credentials."
+          ]
+        },
+        {
+          "title": "5. Data Sharing",
+          "paragraphs": [
+            "We may share only the minimum required information with airline reservation systems, fulfillment partners, or payment processors so your order can be completed securely."
+          ]
+        },
+        {
+          "title": "6. Retention and Security",
+          "paragraphs": [
+            "Order data may be retained for up to 12 months so we can support corrections, re-delivery, and order questions. After that, personal data is removed from active systems where practical.",
+            "Data is transmitted over encrypted HTTPS connections and handled with reasonable technical safeguards."
+          ]
+        },
+        {
+          "title": "7. Your Rights",
+          "paragraphs": [
+            "You can request a copy of your data, ask us to correct inaccurate information, or request deletion where legally possible. Email support@instadummyticket.com with your order reference."
+          ]
+        },
+        {
+          "title": "8. Cookies and Updates",
+          "paragraphs": [
+            "The site may use essential cookies for basic functionality. We may update this policy from time to time, and the updated date on this page will reflect the latest version."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "headline": "Clear terms, no surprises.",
+      "description": "The terms that apply when you use InstaDummyTicket to order a temporary flight reservation.",
+      "summary": "By using InstaDummyTicket, you agree to use reservations only for lawful documentation purposes and not as paid flight tickets.",
+      "sections": [
+        {
+          "title": "1. What We Do",
+          "paragraphs": [
+            "InstaDummyTicket issues temporary flight reservations, often called dummy tickets or flight itineraries, for visa applications, embassy submissions, onward travel proof, and similar uses.",
+            "We are not an airline and do not sell paid airline tickets. Reservations are not valid for check-in, boarding, or actual travel."
+          ]
+        },
+        {
+          "title": "2. Eligibility and Accuracy",
+          "paragraphs": [
+            "By ordering, you confirm that you are allowed to use the service, will provide truthful information, and will use the reservation for lawful purposes.",
+            "You are responsible for entering accurate passenger details, route information, and travel dates. If a correction is needed, contact support with your order reference."
+          ]
+        },
+        {
+          "title": "3. Permitted Use",
+          "paragraphs": [
+            "Reservations may be used for visa applications, consulate submissions, immigration document requests, employer travel files, or other official proof-of-itinerary needs.",
+            "They may not be used to mislead airlines, check in, board a flight, or represent that you purchased a full airline ticket."
+          ]
+        },
+        {
+          "title": "4. No Visa Guarantee",
+          "paragraphs": [
+            "We provide a reservation document only. Visa decisions are made by embassies, consulates, or immigration authorities, and we cannot guarantee approval."
+          ]
+        },
+        {
+          "title": "5. Payment and Delivery",
+          "paragraphs": [
+            "Payment is required before fulfillment. Pricing is shown before checkout and payments are processed securely.",
+            "Completed reservations are delivered to the email address provided at checkout. If you do not receive the PDF, check spam first and then contact support."
+          ]
+        },
+        {
+          "title": "6. Corrections",
+          "paragraphs": [
+            "If your reservation contains an error or needs a reasonable correction, we will help re-issue it. Errors on our side are corrected free of charge."
+          ]
+        },
+        {
+          "title": "7. Limitation of Liability",
+          "paragraphs": [
+            "InstaDummyTicket is not responsible for visa rejections, immigration decisions, misuse of reservations, delays by third parties, or indirect losses. Our liability is limited to the amount paid for the affected order."
+          ]
+        },
+        {
+          "title": "8. Changes to Terms",
+          "paragraphs": [
+            "We may update these terms periodically. Continued use of the service after an update means you accept the revised terms."
+          ]
+        }
+      ]
+    },
+    "refund": {
+      "title": "Refund Policy",
+      "headline": "Fair refunds, no runaround.",
+      "description": "When you are entitled to a refund from InstaDummyTicket and how to request one.",
+      "summary": "If we fail to deliver your reservation or cannot complete your order, you get a refund. If details need fixing, we correct them.",
+      "sections": [
+        {
+          "title": "1. Our Commitment",
+          "paragraphs": [
+            "We take every order seriously. If something goes wrong on our end, we will correct it quickly or refund the order where appropriate."
+          ]
+        },
+        {
+          "title": "2. When Refunds Apply",
+          "paragraphs": [
+            "You are entitled to a refund if we fail to deliver the reservation, cannot complete your order after payment, or issue a reservation that is invalid or unusable because of our error."
+          ]
+        },
+        {
+          "title": "3. Free Corrections",
+          "paragraphs": [
+            "If your delivered ticket has an incorrect name, route, date, or other detail, contact us with your order reference. We will correct and re-issue the document where possible."
+          ]
+        },
+        {
+          "title": "4. When Refunds Do Not Apply",
+          "paragraphs": [
+            "Refunds are generally not available after a valid digital reservation has been issued and delivered for reasons such as visa rejection, change of mind, incorrect information you chose not to correct, or changes to travel plans after delivery."
+          ]
+        },
+        {
+          "title": "5. How to Request a Refund",
+          "paragraphs": [
+            "Email support@instadummyticket.com with your order reference, the email used at checkout, and a short description of the issue. We usually respond within 1-2 business days.",
+            "Approved refunds are returned to the original payment method. Bank or payment-provider timelines may vary."
+          ]
+        },
+        {
+          "title": "6. Disputes",
+          "paragraphs": [
+            "Please contact us before opening a payment dispute. Most delivery, correction, and refund issues can be resolved faster through support."
+          ]
+        },
+        {
+          "title": "7. Contact",
+          "paragraphs": [
+            "For refund questions, email support@instadummyticket.com and include your order reference for faster help."
+          ]
+        }
+      ]
+    }
+  }
+}

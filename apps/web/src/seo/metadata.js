@@ -9,7 +9,7 @@
 import {resolveSeo} from './resolve'
 import {buildRobots} from './robots'
 import {buildLanguageAlternates} from './hreflang'
-import {SITE_URL, SITE_NAME} from '@/constants/site'
+import {SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE} from '@/constants/site'
 import {localizedPath} from '@/i18n/routing'
 import {imageUrl} from '@/sanity/lib/image'
 
@@ -47,7 +47,7 @@ export function buildMetadata({
   const canonicalPath = localizedPath(locale, path)
   const canonical = seo.canonicalUrl || `${SITE_URL}${canonicalPath}`
 
-  const ogImg = imageUrl(seo.ogImage, {width: 1200, height: 630, fit: 'crop'})
+  const ogImg = imageUrl(seo.ogImage, {width: 1200, height: 630, fit: 'crop'}) || DEFAULT_OG_IMAGE
   const twImg = imageUrl(seo.twitterImage, {width: 1200, height: 630, fit: 'crop'}) || ogImg
 
   /** @type {import('next').Metadata} */
@@ -55,6 +55,10 @@ export function buildMetadata({
     title,
     description,
     metadataBase: new URL(SITE_URL),
+    icons: {
+      icon: '/icon.png',
+      apple: '/apple-icon.png',
+    },
     alternates: {canonical, languages: languageAlternates || buildLanguageAlternates(path)},
     robots: buildRobots(seo.robots),
     openGraph: {

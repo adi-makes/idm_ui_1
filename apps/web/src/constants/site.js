@@ -7,7 +7,7 @@
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/+$/, '')
 
 /** Fallback brand name when Site Settings has none. */
-export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || 'YourBrand'
+export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || 'InstaDummyTicket'
 
 /** Default OG image path (relative to SITE_URL) when nothing is configured. */
-export const DEFAULT_OG_IMAGE = process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE || ''
+export const DEFAULT_OG_IMAGE = process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE || '/logo/logo_rd1.png'

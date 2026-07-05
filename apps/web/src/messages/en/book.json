@@ -1,0 +1,166 @@
+{
+  "book": {
+    "metadata": {
+      "title": "Select Flight | InstaDummyTicket",
+      "description": "Choose a flight reservation and review your secure booking summary."
+    },
+    "steps": {
+      "search": "Search",
+      "flight": "Select Flight",
+      "book": "Passenger Details"
+    },
+    "title": "Select your flight",
+    "subtitle": "Pick one of the available reservations. Your final PDF will use the same clean details shown in the summary.",
+    "loading": "Finding available reservations for your route.",
+    "choice": {
+      "title": "Choose your ticket type",
+      "subtitle": "Select how you want this reservation prepared before we continue.",
+      "panelTitle": "Select Ticket Type",
+      "routeSummary": "Delhi (DEL) to Dubai (DXB) • 6 Jul 2026 — Return: 7 Jul 2026",
+      "modalTitle": "What do you need?",
+      "modalSubtitle": "Standard lets you choose from available flights. Verifiable prepares a selected itinerary for passenger details.",
+      "standardTitle": "Standard ticket",
+      "standardText": "Search available reservations and choose the flight shown on your final PDF.",
+      "standardCta": "Search flights",
+      "verifiableTitle": "Verifiable ticket",
+      "verifiableText": "Skip flight selection and continue with a ready verifiable itinerary preview.",
+      "verifiableCta": "Continue",
+      "continue": "Continue",
+      "badges": {
+        "verifiable": "Verifiable"
+      },
+      "options": {
+        "standard": {
+          "title": "Standard Round Trip",
+          "text": "PDF itinerary, not verifiable online • Valid for 48 hrs",
+          "price": "AED 55"
+        },
+        "verifiable": {
+          "title": "Verifiable Round Trip",
+          "text": "Real PNR, CheckMyTrip verified • Valid for 48 hrs",
+          "price": "AED 90"
+        }
+      }
+    },
+    "search": {
+      "metadata": {
+        "title": "Search Flight | InstaDummyTicket",
+        "description": "Enter your route and travel dates to create a dummy ticket."
+      },
+      "title": "Search your trip",
+      "subtitle": "Enter the route and dates for your visa-ready reservation. You can choose a matching flight on the next step."
+    },
+    "details": {
+      "title": "Passenger details",
+      "subtitle": "Enter the passenger information exactly as it should appear on the reservation.",
+      "emailDelivery": "Email for ticket delivery",
+      "traveler": "Traveler details",
+      "submit": "Review and pay",
+      "emailSuggestion": "Did you mean",
+      "requiredWarning": "Please fill in all passenger details before continuing.",
+      "fields": {
+        "email": "Email address",
+        "title": "Title",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "nationality": "Nationality"
+      },
+      "errors": {
+        "email": "Email address is required.",
+        "title": "Title is required.",
+        "firstName": "First name is required.",
+        "lastName": "Last name is required.",
+        "nationality": "Nationality is required."
+      }
+    },
+    "badges": {
+      "onward": "Onward",
+      "return": "Return",
+      "nonstop": "Nonstop",
+      "selected": "Selected"
+    },
+    "summary": {
+      "eyebrow": "Booking summary",
+      "title": "Dummy flight ticket",
+      "route": "Delhi to Dubai",
+      "deliveryLabel": "Delivery",
+      "delivery": "Instant PDF by email",
+      "coupon": "Apply coupon code",
+      "secure": "Secure Payment",
+      "verified": "Stripe Verified",
+      "encrypted": "Your payment information is encrypted and securely processed.",
+      "selectPrompt": "Select a flight to preview the reservation details.",
+      "totalLabel": "Total",
+      "continue": "Continue",
+      "back": "Back"
+    },
+    "pricing": {
+      "flight": "Flight reservation",
+      "roundTrip": "Round trip",
+      "service": "Processing"
+    },
+    "trip": {
+      "type": "Round trip",
+      "fromCode": "DEL",
+      "fromCity": "Delhi",
+      "toCode": "DXB",
+      "toCity": "Dubai",
+      "departDate": "6 Jul 2026",
+      "returnDate": "7 Jul 2026"
+    },
+    "flights": [
+      {
+        "airline": "Emirates",
+        "flightNumber": "EK 517",
+        "kind": "Onward",
+        "fromCode": "DEL",
+        "fromCity": "New Delhi",
+        "toCode": "DXB",
+        "toCity": "Dubai",
+        "departTime": "16:25",
+        "arriveTime": "18:25",
+        "date": "6 Jul 2026",
+        "duration": "3h 30m"
+      },
+      {
+        "airline": "Emirates",
+        "flightNumber": "EK 516",
+        "kind": "Return",
+        "fromCode": "DXB",
+        "fromCity": "Dubai",
+        "toCode": "DEL",
+        "toCity": "New Delhi",
+        "departTime": "09:50",
+        "arriveTime": "14:45",
+        "date": "7 Jul 2026",
+        "duration": "3h 25m"
+      },
+      {
+        "airline": "Air India",
+        "flightNumber": "AI 4307",
+        "kind": "Onward",
+        "fromCode": "DEL",
+        "fromCity": "New Delhi",
+        "toCode": "DXB",
+        "toCity": "Dubai",
+        "departTime": "01:25",
+        "arriveTime": "04:00",
+        "date": "6 Jul 2026",
+        "duration": "4h 5m"
+      },
+      {
+        "airline": "Air India",
+        "flightNumber": "AI 4210",
+        "kind": "Return",
+        "fromCode": "DXB",
+        "fromCity": "Dubai",
+        "toCode": "DEL",
+        "toCity": "New Delhi",
+        "departTime": "15:30",
+        "arriveTime": "21:00",
+        "date": "7 Jul 2026",
+        "duration": "4h"
+      }
+    ]
+  }
+}

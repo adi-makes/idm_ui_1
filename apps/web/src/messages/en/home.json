@@ -1,13 +1,13 @@
 {
   "home": {
     "heroTitle": "Instant Onward Tickets for Visa Applications",
-    "heroDescription": "Valid flight reservations for just $14. Verified by airlines and accepted by embassies worldwide. Get your PDF in under 60 seconds.",
+    "heroDescription": "Create clean, embassy-ready flight reservations for visa applications and onward travel. Get a polished PDF without booking a full-price ticket.",
     "eyebrow": "Trustworthy & Secure Booking",
     "title": {
       "lineOne": "Instant Onward Tickets",
-      "lineTwo": "for Visas"
+      "lineTwo": "for Visa Travel"
     },
-    "description": "Valid flight reservations from just $14.",
+    "description": "Create clean, embassy-ready flight reservations for visa applications and onward travel. Get a polished PDF without booking a full-price ticket.",
     "proof": {
       "embassy": "Accepted by Embassies",
       "airline": "Airline Verified",
@@ -16,20 +16,31 @@
     "form": {
       "onward": "Onward",
       "return": "Return",
-      "from": "From",
+      "from": "From where?",
       "fromValue": "London (LHR)",
-      "to": "To",
+      "to": "To where?",
       "toValue": "Bangkok (BKK)",
-      "departure": "Departure",
+      "departure": "Departure date",
       "departureValue": "01-07-2026",
-      "arrival": "Arrival",
+      "arrival": "Return date",
+      "arrivalDisabled": "Select onward date first",
       "arrivalValue": "15-07-2026",
-      "cta": "Create Dummy Ticket"
+      "cta": "Create Dummy Ticket",
+      "requiredWarning": "Please fill in the required trip details before continuing.",
+      "errors": {
+        "from": "Origin is required.",
+        "to": "Destination is required.",
+        "departure": "Departure date is required.",
+        "arrival": "Return date is required for a round-trip."
+      }
     },
     "trust": {
       "ssl": "Secure SSL Encryption",
+      "sslMobile": "SSL Secure",
       "customers": "Trusted by 10,000+ Customers",
+      "customersMobile": "10,000+ Customers",
       "worldwide": "Accepted Worldwide",
+      "worldwideMobile": "Accepted Worldwide",
       "payment": "Secure Payment"
     },
     "guarantee": {
@@ -52,6 +63,337 @@
       "secure": {
         "title": "Secure & Private",
         "text": "Your data is encrypted and never shared with anyone."
+      }
+    },
+    "airlineTrust": {
+      "eyebrow": "Tickets issued with real airline reservation details",
+      "text": "Every reservation includes a verifiable PNR and complete itinerary details, formatted for visa files, onward travel proof, and immigration documentation."
+    },
+    "explainer": {
+      "eyebrow": "Quick explanation",
+      "title": "What is a dummy ticket?",
+      "text": "A dummy ticket is a temporary flight reservation with passenger details, route, dates, airline information, and a live booking reference. It helps you show travel intent without paying for a full ticket before your visa or travel plan is approved.",
+      "cards": {
+        "pnr": {
+          "title": "Live PNR",
+          "text": "Use the booking reference to verify the reservation on the airline website."
+        },
+        "format": {
+          "title": "Looks official",
+          "text": "Clean PDF format with passenger, flight, route, and date details."
+        },
+        "cost": {
+          "title": "Lower cost",
+          "text": "Avoid locking money into a full airfare before your decision is final."
+        },
+        "accepted": {
+          "title": "Globally useful",
+          "text": "Prepared for Schengen, UK, US, UAE, Canada, and onward travel needs."
+        }
+      }
+    },
+    "differentiators": {
+      "eyebrow": "Why travelers choose us",
+      "title": "Fast, verifiable, and clear from the start",
+      "text": "The service is built around the moments that matter: getting a usable document quickly, verifying it confidently, and knowing exactly what you are paying for.",
+      "items": {
+        "delivery": {
+          "title": "Delivered in minutes",
+          "text": "Your ticket lands in your inbox quickly, ready to attach to your travel file."
+        },
+        "verification": {
+          "title": "Live PNR verification",
+          "text": "Each ticket includes a real booking reference that can be checked directly."
+        },
+        "accepted": {
+          "title": "Embassy-ready format",
+          "text": "The document is structured for visa appointments, consulates, and travel proof."
+        },
+        "pricing": {
+          "title": "Transparent pricing",
+          "text": "Simple plans with no confusing premium tiers or surprise upsells."
+        },
+        "support": {
+          "title": "Human support",
+          "text": "Get help by email when your route, date, or visa file needs attention."
+        },
+        "security": {
+          "title": "Secure checkout",
+          "text": "Your personal details are handled privately with encrypted payment flow."
+        }
+      }
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "title": "Book your dummy ticket in 3 simple steps",
+      "text": "No account setup, no waiting room, and no complex travel-agent process. Enter the trip details, preview the essentials, and receive the PDF.",
+      "steps": {
+        "search": {
+          "title": "Search your flight",
+          "text": "Enter departure city, destination, date, and trip type."
+        },
+        "details": {
+          "title": "Add passenger details",
+          "text": "Use the exact name and travel information from your passport."
+        },
+        "receive": {
+          "title": "Receive your ticket",
+          "text": "Get a polished PDF with a verifiable reservation reference."
+        }
+      }
+    },
+    "useCases": {
+      "eyebrow": "Use cases",
+      "title": "When do you need a dummy ticket?",
+      "text": "Use a temporary reservation when you need to prove travel intent without committing to an expensive flight too early.",
+      "items": {
+        "visa": {
+          "title": "Visa applications",
+          "text": "Submit flight proof for Schengen, UK, US, UAE, Canada, Japan, Australia, and more."
+        },
+        "onward": {
+          "title": "Proof of onward travel",
+          "text": "Show airlines or immigration that you plan to leave the destination country."
+        },
+        "passport": {
+          "title": "Passport renewals",
+          "text": "Support urgent renewal or travel-document files with itinerary proof."
+        },
+        "student": {
+          "title": "Student visas",
+          "text": "Prepare F1, Tier 4, and other student visa files before buying a real ticket."
+        },
+        "business": {
+          "title": "Business travel",
+          "text": "Use for HR approvals, sponsor letters, and internal travel budgeting."
+        },
+        "renewals": {
+          "title": "Extensions and renewals",
+          "text": "Prove exit intent for visa extensions, residency renewals, and long stays."
+        }
+      }
+    },
+    "legal": {
+      "eyebrow": "Trust and clarity",
+      "title": "Is a dummy ticket legal?",
+      "text": "A dummy ticket is a real temporary reservation used as travel documentation. It is not a boarding pass and should not be used for airport check-in or actual travel.",
+      "rows": {
+        "illegal": {
+          "myth": "Myth: dummy tickets are illegal.",
+          "truth": "Truth: temporary reservations are widely used as proof of travel intent for visa and travel documentation."
+        },
+        "fake": {
+          "myth": "Myth: dummy tickets are fake.",
+          "truth": "Truth: a proper reservation includes a real booking reference and itinerary details."
+        },
+        "rejected": {
+          "myth": "Myth: embassies always reject them.",
+          "truth": "Truth: many visa processes ask for a reservation instead of a fully paid ticket."
+        },
+        "fraud": {
+          "myth": "Myth: using one is fraud.",
+          "truth": "Truth: misleading or forged documents are the problem. A transparent temporary reservation is different."
+        }
+      }
+    },
+    "sample": {
+      "eyebrow": "What you receive",
+      "title": "A clean PDF built for visa files",
+      "text": "Your reservation is formatted so the important details are easy to scan: passenger name, route, dates, flight number, airline, and booking reference.",
+      "items": {
+        "format": "Official-style airline reservation format",
+        "pnr": "Live PNR that can be checked online",
+        "passenger": "Full passenger, flight, route, and date details",
+        "delivery": "PDF delivery by email",
+        "validity": "Reservation validity window suitable for documentation"
+      },
+      "mockup": {
+        "label": "Sample ticket preview",
+        "title": "Flight Reservation",
+        "fromLabel": "From",
+        "from": "London LHR",
+        "toLabel": "To",
+        "to": "Bangkok BKK",
+        "pnrLabel": "PNR",
+        "pnr": "IDT4829",
+        "statusLabel": "Status",
+        "status": "Verifiable",
+        "note": "This preview is illustrative. Your delivered ticket includes your real route, dates, passenger details, and reservation reference."
+      }
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "Simple, transparent pricing",
+      "text": "Choose the document package you need. No hidden fees, no surprise premium upgrade, and no confusing checkout tiers.",
+      "plans": {
+        "flight": {
+          "title": "Dummy Flight Ticket",
+          "price": "$8",
+          "badge": "Most used",
+          "cta": "Book flight",
+          "features": {
+            "pnr": "Verifiable live PNR",
+            "delivery": "Fast PDF delivery",
+            "validity": "Valid reservation window",
+            "trip": "One-way or round-trip"
+          }
+        },
+        "combo": {
+          "title": "Flight + Hotel Combo",
+          "price": "$12",
+          "badge": "Best for visa files",
+          "cta": "Book combo",
+          "features": {
+            "flight": "Everything in flight ticket",
+            "hotel": "Verifiable hotel booking",
+            "docs": "Best for full documentation",
+            "support": "Priority support"
+          }
+        },
+        "hotel": {
+          "title": "Dummy Hotel Booking",
+          "price": "$5",
+          "badge": "Hotel proof",
+          "cta": "Book hotel",
+          "features": {
+            "reservation": "Verifiable hotel reservation",
+            "stay": "Up to 30 days per stay",
+            "delivery": "Delivered quickly",
+            "email": "Email PDF copy"
+          }
+        }
+      }
+    },
+    "testimonials": {
+      "eyebrow": "Traveler proof",
+      "title": "Trusted by travelers preparing visa files",
+      "text": "Real-world travel paperwork can be stressful. The experience is designed to make the reservation step feel clear, fast, and controlled.",
+      "items": {
+        "priya": {
+          "quote": "Needed a ticket urgently for my Schengen appointment. It arrived in minutes and the file looked clean.",
+          "name": "Priya M.",
+          "tag": "Schengen visa",
+          "proof": "Submitted with Schengen visa documents",
+          "status": "Verified customer"
+        },
+        "omar": {
+          "quote": "I checked the booking reference before submitting my documents. That made the whole process easier.",
+          "name": "Omar K.",
+          "tag": "UK visa",
+          "proof": "Submitted to UK visa checklist",
+          "status": "Verified booking"
+        },
+        "marcus": {
+          "quote": "Used it for onward travel proof at Bangkok airport. The PDF had everything I needed ready.",
+          "name": "Marcus L.",
+          "tag": "Onward travel",
+          "proof": "Accepted as onward travel proof",
+          "status": "Verified traveler"
+        },
+        "elena": {
+          "quote": "The reservation matched my visa dates and looked clean in my appointment file.",
+          "name": "Elena R.",
+          "tag": "Spain visa",
+          "proof": "Submitted to Spain Embassy",
+          "status": "Verified customer"
+        },
+        "ahmed": {
+          "quote": "Support helped me correct a route detail before I sent my documents. Very straightforward.",
+          "name": "Ahmed S.",
+          "tag": "UAE travel",
+          "proof": "Updated before document submission",
+          "status": "Verified booking"
+        },
+        "nina": {
+          "quote": "I needed proof quickly for a consulate checklist. The ticket arrived faster than expected.",
+          "name": "Nina K.",
+          "tag": "Visa documents",
+          "proof": "Submitted with consulate checklist",
+          "status": "Verified customer"
+        }
+      }
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Frequently asked questions",
+      "text": "Answers to the questions travelers usually ask before buying a temporary reservation.",
+      "items": {
+        "what": {
+          "question": "What is a dummy ticket?",
+          "answer": "It is a temporary flight reservation with passenger and route details, usually used as proof of travel for visa applications or onward travel."
+        },
+        "legal": {
+          "question": "Is a dummy ticket legal?",
+          "answer": "A real temporary reservation is commonly used for travel documentation. It is not a paid ticket and should not be used as a boarding pass."
+        },
+        "valid": {
+          "question": "How long is it valid?",
+          "answer": "Validity depends on the reservation and route. The document is intended for short-term documentation windows."
+        },
+        "verify": {
+          "question": "Can I verify the PNR?",
+          "answer": "Yes. A verifiable reservation includes a booking reference that can be checked through the relevant airline system."
+        },
+        "accept": {
+          "question": "Which countries accept it?",
+          "answer": "Travelers use reservations for Schengen, UK, US, UAE, Canada, and many other visa or onward-travel situations."
+        },
+        "refund": {
+          "question": "What if my visa is rejected?",
+          "answer": "The reservation supports your documentation file, but visa approval is decided by the embassy or authority reviewing your application."
+        }
+      }
+    },
+    "finalCta": {
+      "title": "Your visa appointment is close. Your ticket can be ready fast.",
+      "text": "Create a clean, verifiable reservation PDF for visa files, onward travel proof, and travel documentation.",
+      "primary": "Create dummy ticket",
+      "secondary": "Contact support",
+      "trust": {
+        "ssl": "SSL secured",
+        "payment": "Secure payment",
+        "delivery": "Fast delivery"
+      }
+    },
+    "footer": {
+      "description": "Clean, verifiable flight reservations for visa applications, onward travel proof, and travel documentation.",
+      "support": "Email support",
+      "disclaimer": "InstaDummyTicket provides verifiable temporary flight reservations and hotel bookings for visa applications and proof of onward travel only. These are not confirmed paid air tickets and cannot be used for actual boarding.",
+      "copyright": "© {year} InstaDummyTicket. All rights reserved.",
+      "badges": {
+        "ssl": "SSL secured",
+        "privacy": "Private data handling"
+      },
+      "product": {
+        "title": "Product",
+        "links": {
+          "book": "Book dummy ticket",
+          "sample": "Sample ticket",
+          "pricing": "Pricing",
+          "faq": "FAQ"
+        }
+      },
+      "resources": {
+        "title": "Visa resources",
+        "links": {
+          "schengen": "Schengen visa",
+          "uk": "UK visa",
+          "us": "US visa",
+          "onward": "Onward travel proof"
+        }
+      },
+      "company": {
+        "title": "Company",
+        "links": {
+          "blog": "Blog",
+          "support": "Support",
+          "email": "Email",
+          "refund": "Refund policy"
+        }
+      },
+      "legal": {
+        "privacy": "Privacy",
+        "terms": "Terms"
       }
     }
   }

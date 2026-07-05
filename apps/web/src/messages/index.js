@@ -9,6 +9,8 @@ import enFaq from './en/faq.json'
 import enCategory from './en/category.json'
 import enAuthor from './en/author.json'
 import enNotFound from './en/not-found.json'
+import enPolicies from './en/policies.json'
+import enBook from './en/book.json'
 
 const MESSAGES = {
   en: {
@@ -19,6 +21,8 @@ const MESSAGES = {
     ...enCategory,
     ...enAuthor,
     ...enNotFound,
+    ...enPolicies,
+    ...enBook,
   },
 }
 

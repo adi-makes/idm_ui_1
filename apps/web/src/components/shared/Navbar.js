@@ -1,9 +1,10 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import {usePathname} from 'next/navigation'
 import {useEffect, useState} from 'react'
-import {Check, Mail, MessageCircle} from 'lucide-react'
+import {Mail} from 'lucide-react'
 import SocialBrandIcon from '@/components/shared/BrandIcons'
 import {localizedPath} from '@/i18n/routing'
 import {getMessages, t} from '@/messages'
@@ -37,6 +38,26 @@ export default function Navbar({locale}) {
     return () => clearTimeout(timeout)
   }, [mobileMenuMounted, mobileMenuOpen])
 
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      return undefined
+    }
+
+    const previousHtmlOverflow = document.documentElement.style.overflow
+    const previousBodyOverflow = document.body.style.overflow
+    const previousBodyTouchAction = document.body.style.touchAction
+
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+    document.body.style.touchAction = 'none'
+
+    return () => {
+      document.documentElement.style.overflow = previousHtmlOverflow
+      document.body.style.overflow = previousBodyOverflow
+      document.body.style.touchAction = previousBodyTouchAction
+    }
+  }, [mobileMenuOpen])
+
   const openMobileMenu = () => {
     setMobileMenuMounted(true)
     setMobileMenuOpen(true)
@@ -61,11 +82,15 @@ export default function Navbar({locale}) {
         aria-label={t(messages, 'nav.mainLabel')}
         className="mx-auto flex h-full w-full max-w-[1422px] items-start justify-between px-[24px] pt-[20px] min-[700px]:px-[25px] min-[700px]:pt-[39px] md:items-center md:px-10 md:pt-0 lg:px-[64px]"
       >
-        <Link href={localizedPath(locale, '/')} className="flex min-w-0 items-center gap-[8px] min-[360px]:gap-[10px] min-[700px]:gap-[17px] md:gap-[10px]" aria-label={brand}>
-          <span className="flex size-[25px] shrink-0 items-center justify-center rounded-full bg-primary text-white min-[700px]:size-[50px] md:size-[30px]">
-            <Check className="size-[17px] stroke-[3] min-[700px]:size-[32px] md:size-[18px]" aria-hidden="true" />
-          </span>
-          <span className="truncate text-[16px] font-[800] tracking-[-0.02em] text-ink min-[700px]:text-[28px] md:text-[19px] md:font-[650] md:tracking-[-0.01em]">{brand}</span>
+        <Link href={localizedPath(locale, '/')} className="flex min-w-0 items-center" aria-label={brand}>
+          <Image
+            src="/logo/logo_rd1.png"
+            alt={brand}
+            width={1728}
+            height={260}
+            priority
+            className="h-[28px] w-auto min-[700px]:h-[50px] md:h-[34px]"
+          />
         </Link>
 
         <div className="flex shrink-0 items-center md:h-full md:gap-0">
@@ -77,10 +102,31 @@ export default function Navbar({locale}) {
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
           >
-            <span className="relative block size-[24px] min-[700px]:size-[43px]" aria-hidden="true">
-              <span className="absolute left-[2px] top-[5px] h-[2px] w-[19px] rounded-full bg-current min-[700px]:left-[2px] min-[700px]:top-[9px] min-[700px]:h-[3px] min-[700px]:w-[35px]" />
-              <span className="absolute left-[2px] top-[11px] h-[2px] w-[16px] rounded-full bg-current min-[700px]:left-[2px] min-[700px]:top-[20px] min-[700px]:h-[3px] min-[700px]:w-[29px]" />
-              <span className="absolute left-[2px] top-[17px] h-[2px] w-[19px] rounded-full bg-current min-[700px]:left-[2px] min-[700px]:top-[31px] min-[700px]:h-[3px] min-[700px]:w-[35px]" />
+            <span className="relative block size-[24px] transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-active:scale-95 min-[700px]:size-[43px]" aria-hidden="true">
+              <span
+                className={[
+                  'absolute left-[2px] h-[2px] w-[19px] origin-center rounded-full bg-current transition-[top,transform,width] duration-300 min-[700px]:left-[2px] min-[700px]:h-[3px] min-[700px]:w-[35px]',
+                  mobileMenuOpen
+                    ? 'top-[11px] w-[21px] rotate-45 ease-[cubic-bezier(.16,1,.3,1)] min-[700px]:top-[20px] min-[700px]:w-[37px]'
+                    : 'top-[5px] rotate-0 ease-[cubic-bezier(.7,0,.84,0)] min-[700px]:top-[9px]',
+                ].join(' ')}
+              />
+              <span
+                className={[
+                  'absolute left-[2px] top-[11px] h-[2px] origin-left rounded-full bg-current transition-[opacity,transform,width] duration-200 min-[700px]:left-[2px] min-[700px]:top-[20px] min-[700px]:h-[3px]',
+                  mobileMenuOpen
+                    ? 'w-[16px] scale-x-0 opacity-0 ease-[cubic-bezier(.16,1,.3,1)] min-[700px]:w-[29px]'
+                    : 'w-[16px] opacity-100 ease-[cubic-bezier(.7,0,.84,0)] min-[700px]:w-[29px]',
+                ].join(' ')}
+              />
+              <span
+                className={[
+                  'absolute left-[2px] h-[2px] w-[19px] origin-center rounded-full bg-current transition-[top,transform,width] duration-300 min-[700px]:left-[2px] min-[700px]:h-[3px] min-[700px]:w-[35px]',
+                  mobileMenuOpen
+                    ? 'top-[11px] w-[21px] -rotate-45 ease-[cubic-bezier(.16,1,.3,1)] min-[700px]:top-[20px] min-[700px]:w-[37px]'
+                    : 'top-[17px] rotate-0 ease-[cubic-bezier(.7,0,.84,0)] min-[700px]:top-[31px]',
+                ].join(' ')}
+              />
             </span>
           </button>
 
@@ -99,9 +145,6 @@ export default function Navbar({locale}) {
                     ].join(' ')}
                   >
                     {t(messages, labelKey)}
-                    {isActive ? (
-                      <span className="absolute bottom-[9px] left-1/2 h-[3px] w-[42px] -translate-x-1/2 rounded-full bg-primary" />
-                    ) : null}
                   </Link>
                 </li>
               )
@@ -114,7 +157,6 @@ export default function Navbar({locale}) {
             href={localizedPath(locale, '/#support')}
             className="ml-[36px] hidden items-center gap-[12px] text-[14px] font-[600] tracking-[-0.01em] text-secondary md:flex"
           >
-            <MessageCircle className="size-[20px] stroke-[2.2]" aria-hidden="true" />
             {t(messages, 'nav.support')}
           </Link>
         </div>
@@ -125,8 +167,10 @@ export default function Navbar({locale}) {
           id="mobile-menu"
           data-open={mobileMenuVisible}
           className={[
-            'fixed inset-x-0 bottom-0 top-[64px] z-[10000] flex flex-col bg-white px-[13px] pt-[48px] text-secondary transition-[opacity,transform] min-[700px]:top-[114px] md:hidden',
-            mobileMenuVisible ? 'pointer-events-auto translate-y-0 opacity-100 duration-[180ms] ease-[cubic-bezier(.16,1,.3,1)]' : 'pointer-events-none -translate-y-full opacity-0 duration-[160ms] ease-[cubic-bezier(.7,0,.84,0)]',
+            'fixed inset-x-0 bottom-0 top-[64px] z-[10000] flex flex-col overflow-hidden bg-white px-[13px] pt-[48px] text-secondary transition-[clip-path,opacity,transform] min-[700px]:top-[114px] md:hidden',
+            mobileMenuVisible
+              ? 'pointer-events-auto translate-y-0 opacity-100 duration-300 ease-[cubic-bezier(.16,1,.3,1)] [clip-path:inset(0_0_0_0)]'
+              : 'pointer-events-none -translate-y-2 opacity-0 duration-200 ease-[cubic-bezier(.7,0,.84,0)] [clip-path:inset(0_0_100%_0)]',
           ].join(' ')}
         >
           <div className="mx-auto flex w-full max-w-[320px] flex-col items-stretch text-center">
