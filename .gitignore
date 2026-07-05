@@ -50,6 +50,8 @@ next-env.d.ts
 *.md~
 !apps/web/src/app/icon.png
 !apps/web/src/app/apple-icon.png
+!apps/web/public/
+!apps/web/public/**
 
 # Local dev notes
 *-setup.md
