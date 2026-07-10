@@ -1,26 +1,43 @@
 'use client'
 
-import {useEffect, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {CalendarDays, ChevronLeft, ChevronRight, X} from 'lucide-react'
 
-const CALENDAR_DAYS = Array.from({length: 31}, (_, index) => index + 1)
-const CALENDAR_YEAR = 2026
-const CALENDAR_MONTH_INDEX = 6
 const CALENDAR_TRANSITION_MS = 160
+const DEFAULT_TRAVEL_MONTH = new Date(2026, 6, 1)
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
-function getMinSelectableDay() {
-  const today = new Date()
-  const calendarEnd = new Date(CALENDAR_YEAR, CALENDAR_MONTH_INDEX, 31)
+function startOfDay(date) {
+  const nextDate = new Date(date)
+  nextDate.setHours(0, 0, 0, 0)
+  return nextDate
+}
 
-  if (today.getFullYear() === CALENDAR_YEAR && today.getMonth() === CALENDAR_MONTH_INDEX) {
-    return today.getDate()
-  }
+function startOfMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1)
+}
 
-  if (today > calendarEnd) {
-    return 32
-  }
+function addMonths(date, amount) {
+  return new Date(date.getFullYear(), date.getMonth() + amount, 1)
+}
 
-  return 1
+function parseDateValue(value) {
+  if (!value) return null
+
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? null : date
+}
+
+function formatDateValue(date) {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(date)
+}
+
+function datesEqual(a, b) {
+  return a && b && startOfDay(a).getTime() === startOfDay(b).getTime()
 }
 
 export default function DateInput({
@@ -35,11 +52,30 @@ export default function DateInput({
   title,
   disabled = false,
   calendarAlign = 'left',
+  minDate,
+  maxDate,
+  initialMonthDate,
+  quickSelect = false,
+  controlClassName = '',
   className = '',
 }) {
   const [mounted, setMounted] = useState(open)
   const [visible, setVisible] = useState(false)
-  const minSelectableDay = getMinSelectableDay()
+  const selectedDate = parseDateValue(value)
+  const today = useMemo(() => startOfDay(new Date()), [])
+  const minSelectableDate = minDate ? startOfDay(minDate) : today
+  const maxSelectableDate = maxDate ? startOfDay(maxDate) : null
+  const initialCalendarMonth = startOfMonth(selectedDate || initialMonthDate || DEFAULT_TRAVEL_MONTH)
+  const [calendarMonth, setCalendarMonth] = useState(initialCalendarMonth)
+  const daysInMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate()
+  const leadingBlankDays = calendarMonth.getDay()
+  const previousMonth = addMonths(calendarMonth, -1)
+  const nextMonth = addMonths(calendarMonth, 1)
+  const canGoPrevious = !minSelectableDate || new Date(previousMonth.getFullYear(), previousMonth.getMonth() + 1, 0) >= minSelectableDate
+  const canGoNext = !maxSelectableDate || nextMonth <= startOfMonth(maxSelectableDate)
+  const firstYear = minSelectableDate ? minSelectableDate.getFullYear() : calendarMonth.getFullYear() - 100
+  const lastYear = maxSelectableDate ? maxSelectableDate.getFullYear() : calendarMonth.getFullYear() + 2
+  const years = Array.from({length: lastYear - firstYear + 1}, (_, index) => lastYear - index)
   const errorId = error ? `${title.toLowerCase().replaceAll(' ', '-')}-error` : undefined
 
   useEffect(() => {
@@ -59,6 +95,12 @@ export default function DateInput({
     }
   }, [open])
 
+  useEffect(() => {
+    if (selectedDate) {
+      setCalendarMonth(startOfMonth(selectedDate))
+    }
+  }, [value])
+
   const handleClose = () => {
     setVisible(false)
     onClose()
@@ -75,6 +117,20 @@ export default function DateInput({
     onClear()
   }
 
+  const selectDate = (day) => {
+    const selected = startOfDay(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day))
+    if (minSelectableDate && selected < minSelectableDate) return
+    if (maxSelectableDate && selected > maxSelectableDate) return
+    onChange(formatDateValue(selected))
+  }
+
+  const updateCalendarMonth = (month, year = calendarMonth.getFullYear()) => {
+    const nextDate = startOfMonth(new Date(year, month, 1))
+    if (minSelectableDate && new Date(nextDate.getFullYear(), nextDate.getMonth() + 1, 0) < minSelectableDate) return
+    if (maxSelectableDate && nextDate > startOfMonth(maxSelectableDate)) return
+    setCalendarMonth(nextDate)
+  }
+
   return (
     <div className={`relative ${className}`}>
       <button
@@ -85,6 +141,7 @@ export default function DateInput({
         aria-describedby={errorId}
         className={[
           'flex h-[50px] w-full items-center rounded-[5px] border bg-white px-4 text-[16px] font-[400] leading-6 tracking-normal transition-colors min-[700px]:h-[58px] min-[700px]:text-[17px] md:h-[48px] md:text-[15px]',
+          controlClassName,
           error
             ? 'border-[#ff3b3b]'
             : disabled
@@ -160,11 +217,56 @@ export default function DateInput({
             </div>
 
             <div className="flex items-center justify-between px-[29px] pb-[20px] pt-[25px] md:mb-[22px] md:px-0 md:pb-0 md:pt-0">
-              <button type="button" disabled className="flex size-[22px] cursor-not-allowed items-center justify-center text-slate-300" aria-label="Previous month unavailable">
+              <button
+                type="button"
+                disabled={!canGoPrevious}
+                onClick={() => setCalendarMonth(previousMonth)}
+                className={[
+                  'flex size-[22px] items-center justify-center',
+                  canGoPrevious ? 'text-tertiary hover:text-secondary' : 'cursor-not-allowed text-slate-300',
+                ].join(' ')}
+                aria-label="Previous month"
+              >
                 <ChevronLeft className="size-[20px]" aria-hidden="true" />
               </button>
-              <div className="text-[20px] font-[500] leading-none text-secondary md:text-[16px]">July 2026</div>
-              <button type="button" className="flex size-[22px] items-center justify-center text-tertiary hover:text-secondary" aria-label="Next month">
+              {quickSelect ? (
+                <div className="grid grid-cols-[1fr_86px] gap-2">
+                  <select
+                    value={calendarMonth.getMonth()}
+                    onChange={(event) => updateCalendarMonth(Number(event.target.value))}
+                    className="h-[34px] rounded-[5px] border border-border bg-white px-2 text-[13px] font-[600] text-secondary outline-none"
+                    aria-label="Select month"
+                  >
+                    {MONTH_NAMES.map((month, index) => (
+                      <option key={month} value={index}>{month}</option>
+                    ))}
+                  </select>
+                  <select
+                    value={calendarMonth.getFullYear()}
+                    onChange={(event) => updateCalendarMonth(calendarMonth.getMonth(), Number(event.target.value))}
+                    className="h-[34px] rounded-[5px] border border-border bg-white px-2 text-[13px] font-[600] text-secondary outline-none"
+                    aria-label="Select year"
+                  >
+                    {years.map((year) => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <div className="text-[20px] font-[500] leading-none text-secondary md:text-[16px]">
+                  {MONTH_NAMES[calendarMonth.getMonth()]} {calendarMonth.getFullYear()}
+                </div>
+              )}
+              <button
+                type="button"
+                disabled={!canGoNext}
+                onClick={() => setCalendarMonth(nextMonth)}
+                className={[
+                  'flex size-[22px] items-center justify-center',
+                  canGoNext ? 'text-tertiary hover:text-secondary' : 'cursor-not-allowed text-slate-300',
+                ].join(' ')}
+                aria-label="Next month"
+              >
                 <ChevronRight className="size-[20px]" aria-hidden="true" />
               </button>
             </div>
@@ -175,18 +277,19 @@ export default function DateInput({
                   {day}
                 </div>
               ))}
-              {Array.from({length: 3}).map((_, index) => (
+              {Array.from({length: leadingBlankDays}).map((_, index) => (
                 <div key={`blank-${index}`} />
               ))}
-              {CALENDAR_DAYS.map((day) => {
-                const disabledDay = day < minSelectableDay
-                const selected = value === `July ${day}, 2026`
+              {Array.from({length: daysInMonth}, (_, index) => index + 1).map((day) => {
+                const date = startOfDay(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day))
+                const disabledDay = (minSelectableDate && date < minSelectableDate) || (maxSelectableDate && date > maxSelectableDate)
+                const selected = datesEqual(selectedDate, date)
                 return (
                   <button
                     key={day}
                     type="button"
                     disabled={disabledDay}
-                    onClick={() => onChange(`July ${day}, 2026`)}
+                    onClick={() => selectDate(day)}
                     className={[
                       'mx-auto flex size-[20px] items-center justify-center rounded-[5px] text-[18px] font-[400] leading-none md:size-[20px] md:text-[13px]',
                       disabledDay ? 'cursor-not-allowed text-slate-300' : 'text-secondary hover:border hover:border-secondary',

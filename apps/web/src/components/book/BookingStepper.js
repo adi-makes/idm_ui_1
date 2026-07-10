@@ -8,21 +8,19 @@ export default function BookingStepper({messages, activeIndex = 0, onBack, backL
 
   return (
     <div className="border-y border-border bg-white">
-      <div className="mx-auto grid w-full max-w-[860px] grid-cols-[40px_1fr_40px] items-center px-5 py-4 min-[700px]:block">
-        <div className="flex justify-start min-[700px]:hidden">
-          {onBack ? (
-            <button
-              type="button"
-              onClick={onBack}
-              aria-label={backLabel || t(messages, 'book.summary.back')}
-              className="grid size-[34px] place-items-center rounded-full border border-border-strong bg-white text-secondary transition hover:border-primary hover:text-primary"
-            >
-              <ChevronLeft className="size-[18px]" aria-hidden="true" />
-            </button>
-          ) : null}
-        </div>
+      <div className="relative mx-auto grid w-full max-w-[1040px] grid-cols-[40px_1fr_40px] items-center px-5 py-4 min-[700px]:block">
+        {onBack ? (
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label={backLabel || t(messages, 'book.summary.back')}
+            className="absolute left-3 top-1/2 grid size-[34px] -translate-y-1/2 place-items-center rounded-full border border-border-strong bg-white text-secondary transition hover:border-primary hover:text-primary min-[700px]:left-6 lg:left-0"
+          >
+            <ChevronLeft className="size-[18px]" aria-hidden="true" />
+          </button>
+        ) : null}
 
-        <div className="relative mx-auto flex w-full max-w-[190px] items-center justify-between min-[700px]:max-w-[780px] min-[700px]:justify-center">
+        <div className="relative col-start-2 mx-auto flex w-full max-w-[190px] items-center justify-between min-[700px]:max-w-[780px] min-[700px]:justify-center">
           <span className="absolute left-[15px] right-[15px] top-1/2 h-px -translate-y-1/2 bg-border-strong min-[700px]:hidden" aria-hidden="true" />
           <span
             className="absolute left-[15px] top-1/2 h-px -translate-y-1/2 bg-primary/70 min-[700px]:hidden"

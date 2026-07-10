@@ -55,15 +55,17 @@
       "subtitle": "Enter the passenger information exactly as it should appear on the reservation.",
       "emailDelivery": "Email for ticket delivery",
       "traveler": "Traveler details",
-      "submit": "Review and pay",
+      "submit": "Proceed to pay",
       "emailSuggestion": "Did you mean",
       "capitalizationSuggestion": "Did you mean",
       "requiredWarning": "Please fill in all passenger details before continuing.",
+      "paymentReady": "Passenger details are ready. Continue to secure payment.",
       "fields": {
         "email": "Email address",
         "title": "Title",
         "firstName": "First name",
         "lastName": "Last name",
+        "dateOfBirth": "Date of birth",
         "nationality": "Nationality"
       },
       "errors": {
@@ -71,6 +73,7 @@
         "title": "Title is required.",
         "firstName": "First name is required.",
         "lastName": "Last name is required.",
+        "dateOfBirth": "Date of birth is required.",
         "nationality": "Nationality is required."
       }
     },
@@ -88,8 +91,12 @@
       "delivery": "Instant PDF by email",
       "coupon": "Apply coupon code",
       "secure": "Secure Payment",
+      "trusted": "Secure & trusted booking",
       "verified": "Stripe Verified",
       "encrypted": "Your payment information is encrypted and securely processed.",
+      "totalAmount": "Total amount",
+      "priceBreakdown": "Price breakdown",
+      "total": "Total",
       "selectPrompt": "Select a flight to preview the reservation details.",
       "orderDetails": "Order details",
       "continue": "Continue",

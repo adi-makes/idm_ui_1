@@ -162,7 +162,7 @@ export default function BookingForm({locale, onSubmit}) {
   }
 
   return (
-    <div className="relative mt-6 w-full max-w-[calc(100vw-48px)] min-w-0 overflow-visible rounded-[5px] border-0 bg-white text-left min-[700px]:mt-10 min-[700px]:max-w-[1080px] min-[700px]:border min-[700px]:border-border md:mt-8">
+    <div className="relative mt-6 w-full max-w-[calc(100vw-48px)] min-w-0 overflow-visible rounded-[5px] border border-border bg-white text-left min-[700px]:mt-10 min-[700px]:max-w-[1080px] md:mt-8">
       {showPopup ? (
         <div
           role="alert"
@@ -172,7 +172,7 @@ export default function BookingForm({locale, onSubmit}) {
         </div>
       ) : null}
 
-      <div className="px-0 pb-0 pt-0 min-[700px]:px-7 min-[700px]:pb-5 min-[700px]:pt-8 md:px-[30px] md:pb-4 md:pt-[28px]">
+      <div className="px-3 pb-3 pt-3 min-[700px]:px-7 min-[700px]:pb-5 min-[700px]:pt-8 md:px-[30px] md:pb-4 md:pt-[28px]">
         <div className="mx-auto grid h-[48px] w-full max-w-[330px] min-w-0 grid-cols-2 rounded-[5px] bg-surface-tint p-[5px] text-center font-[var(--font-display)] text-[14px] font-[500] text-muted min-[700px]:h-[58px] min-[700px]:max-w-[380px] min-[700px]:text-[16px] md:h-[52px] md:text-[15px]">
           {TRIP_TYPES.map((item) => {
             const active = tripType === item.value
@@ -274,7 +274,7 @@ export default function BookingForm({locale, onSubmit}) {
         </div>
       </div>
 
-      <div className="mt-4 grid min-h-[52px] w-full min-w-0 grid-cols-1 overflow-hidden rounded-[5px] border border-border text-[10px] font-[500] leading-none text-muted min-[700px]:mt-0 min-[700px]:grid-cols-2 min-[700px]:rounded-none min-[700px]:border-0 min-[700px]:border-t min-[700px]:border-border min-[700px]:text-[11px] md:grid-cols-[1fr_1fr_1fr_1.35fr]">
+      <div className="mx-3 mb-3 mt-1 grid min-h-[52px] min-w-0 grid-cols-1 overflow-hidden rounded-[5px] border border-border text-[10px] font-[500] leading-none text-muted min-[700px]:mx-0 min-[700px]:mb-0 min-[700px]:mt-0 min-[700px]:w-full min-[700px]:grid-cols-2 min-[700px]:rounded-none min-[700px]:border-0 min-[700px]:border-t min-[700px]:border-border min-[700px]:text-[11px] md:grid-cols-[1fr_1fr_1fr_1.35fr]">
         <div className="hidden min-w-0 items-center justify-center gap-1.5 border-b border-r border-border px-2 py-3 min-[700px]:flex min-[700px]:gap-2 min-[700px]:px-4 min-[700px]:border-r md:border-b-0">
           <Lock className="size-[14px] shrink-0 text-success" aria-hidden="true" />
           <span className="truncate min-[700px]:hidden">{t(messages, 'home.trust.sslMobile')}</span>
