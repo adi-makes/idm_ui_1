@@ -62,13 +62,18 @@ function readSavedBooking() {
 
 export default function BookingForm({locale, onSubmit}) {
   const messages = getMessages(locale)
-  const [savedBooking] = useState(readSavedBooking)
-  const [form, setForm] = useState(savedBooking.form)
+  const [form, setForm] = useState(DEFAULT_FORM)
   const [activePopup, setActivePopup] = useState(null)
-  const [tripType, setTripType] = useState(savedBooking.tripType)
+  const [tripType, setTripType] = useState('return')
   const [errors, setErrors] = useState({})
   const [showPopup, setShowPopup] = useState(false)
   const returnDateDisabled = tripType === 'onward' || !form.departure
+
+  useEffect(() => {
+    const savedBooking = readSavedBooking()
+    setForm(savedBooking.form)
+    setTripType(savedBooking.tripType)
+  }, [])
 
   useEffect(() => {
     if (!showPopup) return undefined

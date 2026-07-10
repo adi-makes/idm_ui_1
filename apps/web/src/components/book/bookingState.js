@@ -17,6 +17,10 @@ function fallbackTrip(messages) {
   }
 }
 
+export function getDefaultBookingTrip(messages) {
+  return fallbackTrip(messages)
+}
+
 function parseLocation(value, fallbackCode, fallbackCity) {
   const trimmed = String(value || '').trim()
   if (!trimmed) {

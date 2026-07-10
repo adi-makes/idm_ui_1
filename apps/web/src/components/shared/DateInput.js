@@ -3,7 +3,7 @@
 import {useEffect, useMemo, useState} from 'react'
 import {CalendarDays, ChevronLeft, ChevronRight, X} from 'lucide-react'
 
-const CALENDAR_TRANSITION_MS = 160
+const CALENDAR_TRANSITION_MS = 320
 const DEFAULT_TRAVEL_MONTH = new Date(2026, 6, 1)
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
@@ -80,11 +80,15 @@ export default function DateInput({
 
   useEffect(() => {
     if (open) {
+      setMounted(true)
+      let secondFrame = null
       const frame = requestAnimationFrame(() => {
-        setMounted(true)
-        setVisible(true)
+        secondFrame = requestAnimationFrame(() => setVisible(true))
       })
-      return () => cancelAnimationFrame(frame)
+      return () => {
+        cancelAnimationFrame(frame)
+        if (secondFrame) cancelAnimationFrame(secondFrame)
+      }
     }
 
     const frame = requestAnimationFrame(() => setVisible(false))
@@ -205,8 +209,10 @@ export default function DateInput({
           />
           <div
             className={[
-              'relative z-[9999] w-full overflow-hidden rounded-[5px] bg-white transition-[transform,opacity] duration-150 ease-[cubic-bezier(.16,1,.3,1)] md:max-w-none md:overflow-visible',
-              visible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-full scale-[0.985] opacity-0 md:translate-y-0',
+              'relative z-[9999] max-h-[90vh] w-full overflow-y-auto rounded-t-[8px] bg-white transition-transform duration-300 ease-out md:max-h-none md:overflow-visible md:rounded-[5px] md:transition-[opacity,transform]',
+              visible
+                ? 'translate-y-0 md:opacity-100'
+                : 'translate-y-full md:translate-y-2 md:opacity-0',
             ].join(' ')}
           >
             <div className="flex h-[66px] items-center justify-between border-b border-border px-[14px] md:hidden">
@@ -230,11 +236,11 @@ export default function DateInput({
                 <ChevronLeft className="size-[20px]" aria-hidden="true" />
               </button>
               {quickSelect ? (
-                <div className="grid grid-cols-[1fr_86px] gap-2">
+                <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_84px] items-center gap-1 text-[20px] font-[500] leading-none text-secondary md:grid-cols-[1fr_86px] md:gap-2 md:text-[13px]">
                   <select
                     value={calendarMonth.getMonth()}
                     onChange={(event) => updateCalendarMonth(Number(event.target.value))}
-                    className="h-[34px] rounded-[5px] border border-border bg-white px-2 text-[13px] font-[600] text-secondary outline-none"
+                    className="h-[34px] min-w-0 rounded-[5px] border-0 bg-transparent px-1 text-center font-[500] text-secondary outline-none md:border md:border-border md:bg-white md:px-2 md:text-[13px] md:font-[600]"
                     aria-label="Select month"
                   >
                     {MONTH_NAMES.map((month, index) => (
@@ -244,7 +250,7 @@ export default function DateInput({
                   <select
                     value={calendarMonth.getFullYear()}
                     onChange={(event) => updateCalendarMonth(calendarMonth.getMonth(), Number(event.target.value))}
-                    className="h-[34px] rounded-[5px] border border-border bg-white px-2 text-[13px] font-[600] text-secondary outline-none"
+                    className="h-[34px] min-w-0 rounded-[5px] border-0 bg-transparent px-1 text-center font-[500] text-secondary outline-none md:border md:border-border md:bg-white md:px-2 md:text-[13px] md:font-[600]"
                     aria-label="Select year"
                   >
                     {years.map((year) => (

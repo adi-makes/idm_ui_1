@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react'
 import {Globe2, Lock, Mail, ShieldCheck, UserRound} from 'lucide-react'
 import BookFlightPicker, {BookingPreview, MobileOrderDetails, MobileOrderDetailsPanel} from '@/components/book/BookFlightPicker'
 import BookingStepper from '@/components/book/BookingStepper'
-import {getFlightsForTrip, getSavedBookingTrip} from '@/components/book/bookingState'
+import {getDefaultBookingTrip, getFlightsForTrip, getSavedBookingTrip} from '@/components/book/bookingState'
 import {capitalizePassengerText, formatPassengerName} from '@/components/book/passengerFormat'
 import BookingForm from '@/components/shared/BookingForm'
 import DateInput from '@/components/shared/DateInput'
@@ -13,6 +13,18 @@ import {t} from '@/messages'
 
 const BOOKING_STEP_STORAGE_KEY = 'idt.booking.step'
 const COMMON_EMAIL_DOMAINS = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'icloud.com']
+const NATIONALITY_SUGGESTIONS = [
+  'India',
+  'United States',
+  'United Arab Emirates',
+  'United Kingdom',
+  'Canada',
+  'Australia',
+  'Germany',
+  'France',
+  'Saudi Arabia',
+  'Singapore',
+]
 const EMAIL_DOMAIN_FIXES = {
   'gmai.com': 'gmail.com',
   'gmail.co': 'gmail.com',
@@ -33,17 +45,10 @@ const EMAIL_DOMAIN_FIXES = {
   'icloud.con': 'icloud.com',
 }
 
-function getInitialStep() {
-  if (typeof window === 'undefined') return 'search'
-
-  const savedStep = window.sessionStorage.getItem(BOOKING_STEP_STORAGE_KEY)
-  return savedStep === 'choice' || savedStep === 'flight' ? 'flight' : 'search'
-}
-
 export default function BookFlow({locale, messages}) {
-  const [step, setStep] = useState(getInitialStep)
+  const [step, setStep] = useState('search')
   const [loading, setLoading] = useState(false)
-  const [trip, setTrip] = useState(() => getSavedBookingTrip(messages))
+  const [trip, setTrip] = useState(() => getDefaultBookingTrip(messages))
   const [selectedFlights, setSelectedFlights] = useState([])
   const [selectedPrice, setSelectedPrice] = useState(t(messages, 'book.choice.options.standard.price'))
   const [selectedModeTitle, setSelectedModeTitle] = useState(t(messages, 'book.choice.options.standard.title'))
@@ -211,11 +216,23 @@ function DetailField({
   trailingIcon: TrailingIcon,
   required = false,
   showCapitalizationSuggestion = false,
+  suggestions = [],
 }) {
   const errorId = error ? `passenger-${name}-error` : undefined
+  const [focused, setFocused] = useState(false)
+  const typedValue = value.trim().toLowerCase()
+  const matchedSuggestions = typedValue
+    ? suggestions
+      .filter((suggestion) => {
+        const normalizedSuggestion = suggestion.toLowerCase()
+        return normalizedSuggestion !== typedValue && normalizedSuggestion.includes(typedValue)
+      })
+      .slice(0, 5)
+    : []
+  const showSuggestions = focused && matchedSuggestions.length > 0
 
   return (
-    <div className="block text-left">
+    <div className="relative block text-left">
       <div
         className={`flex h-[54px] items-center rounded-[5px] border bg-white px-4 transition focus-within:border-primary ${
           error ? 'border-[#ff3b3b]' : 'border-border-strong'
@@ -234,14 +251,36 @@ function DetailField({
             onChange?.(nextValue)
             onClearError?.(name)
           }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => window.setTimeout(() => setFocused(false), 120)}
           placeholder={label}
           aria-label={label}
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={errorId}
+          autoComplete={suggestions.length > 0 ? 'off' : undefined}
           className="min-w-0 flex-1 bg-transparent text-[15px] font-[500] text-secondary outline-none placeholder:text-tertiary"
         />
         {TrailingIcon ? <TrailingIcon className="ml-3 size-[16px] shrink-0 text-tertiary" aria-hidden="true" /> : null}
       </div>
+      {showSuggestions ? (
+        <div className="absolute left-0 right-0 top-[60px] z-40 overflow-hidden rounded-[5px] border border-border bg-white">
+          {matchedSuggestions.map((suggestion) => (
+            <button
+              key={suggestion}
+              type="button"
+              onMouseDown={(event) => {
+                event.preventDefault()
+                onChange?.(suggestion)
+                onClearError?.(name)
+                setFocused(false)
+              }}
+              className="block w-full px-4 py-3 text-left text-[14px] font-[600] text-secondary transition-colors hover:bg-surface-muted"
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
+      ) : null}
       {error ? (
         <p id={errorId} className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">
           {error}
@@ -567,6 +606,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onB
                         onClearError={clearFieldError}
                         icon={Globe2}
                         showCapitalizationSuggestion
+                        suggestions={NATIONALITY_SUGGESTIONS}
                         required
                       />
                     </div>
