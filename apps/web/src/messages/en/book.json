@@ -10,7 +10,7 @@
       "book": "Passenger Details"
     },
     "title": "Select your flight",
-    "subtitle": "Pick one of the available reservations. Your final PDF will use the same clean details shown in the summary.",
+    "subtitle": "Choose a reservation for your final PDF.",
     "loading": "Finding available reservations for your route.",
     "choice": {
       "title": "Choose your ticket type",

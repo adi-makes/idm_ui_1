@@ -57,6 +57,8 @@ export default function BookFlow({locale, messages}) {
   useEffect(() => {
     const savedStep = window.sessionStorage.getItem(BOOKING_STEP_STORAGE_KEY)
     if (savedStep === 'choice' || savedStep === 'flight') {
+      setTrip(getSavedBookingTrip(messages))
+      setStep('flight')
       window.sessionStorage.removeItem(BOOKING_STEP_STORAGE_KEY)
     }
 
