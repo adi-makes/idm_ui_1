@@ -1,30 +1,42 @@
 'use client'
 
 import {useEffect, useState} from 'react'
-import {Globe2, Lock, Mail, ShieldCheck, UserRound} from 'lucide-react'
+import {CalendarDays, ChevronDown, Globe2, Mail, Plus, ShieldCheck, Trash2, UserRound} from 'lucide-react'
 import BookFlightPicker, {BookingPreview, MobileOrderDetails, MobileOrderDetailsPanel} from '@/components/book/BookFlightPicker'
+import BookReservationChoice from '@/components/book/BookReservationChoice'
+import BookReviewStep from '@/components/book/BookReviewStep'
 import BookingStepper from '@/components/book/BookingStepper'
 import {getDefaultBookingTrip, getFlightsForTrip, getSavedBookingTrip} from '@/components/book/bookingState'
 import {capitalizePassengerText, formatPassengerName} from '@/components/book/passengerFormat'
 import BookingForm from '@/components/shared/BookingForm'
-import DateInput from '@/components/shared/DateInput'
 import {localizedPath} from '@/i18n/routing'
 import {t} from '@/messages'
 
 const BOOKING_STEP_STORAGE_KEY = 'idt.booking.step'
 const COMMON_EMAIL_DOMAINS = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'icloud.com']
 const NATIONALITY_SUGGESTIONS = [
-  'India',
-  'United States',
-  'United Arab Emirates',
-  'United Kingdom',
-  'Canada',
-  'Australia',
-  'Germany',
-  'France',
-  'Saudi Arabia',
-  'Singapore',
+  {name: 'India', flagCode: 'in'},
+  {name: 'Indonesia', flagCode: 'id'},
+  {name: 'United States', flagCode: 'us'},
+  {name: 'United Arab Emirates', flagCode: 'ae'},
+  {name: 'United Kingdom', flagCode: 'gb'},
+  {name: 'Canada', flagCode: 'ca'},
+  {name: 'Australia', flagCode: 'au'},
+  {name: 'Germany', flagCode: 'de'},
+  {name: 'France', flagCode: 'fr'},
+  {name: 'Saudi Arabia', flagCode: 'sa'},
+  {name: 'Singapore', flagCode: 'sg'},
 ]
+const TRAVEL_PURPOSE_KEYS = ['visa', 'onward', 'immigration', 'embassy', 'personal', 'other']
+
+const createEmptyTraveler = () => ({
+  title: 'Mr',
+  firstName: '',
+  lastName: '',
+  dateOfBirth: '',
+  nationality: '',
+  travelPurpose: '',
+})
 const EMAIL_DOMAIN_FIXES = {
   'gmai.com': 'gmail.com',
   'gmail.co': 'gmail.com',
@@ -52,13 +64,15 @@ export default function BookFlow({locale, messages}) {
   const [selectedFlights, setSelectedFlights] = useState([])
   const [selectedPrice, setSelectedPrice] = useState(t(messages, 'book.choice.options.standard.price'))
   const [selectedModeTitle, setSelectedModeTitle] = useState(t(messages, 'book.choice.options.standard.title'))
+  const [passengerDetails, setPassengerDetails] = useState(null)
+  const [deliveryDetails, setDeliveryDetails] = useState(null)
   const flights = getFlightsForTrip(messages, trip)
 
   useEffect(() => {
     const savedStep = window.sessionStorage.getItem(BOOKING_STEP_STORAGE_KEY)
     if (savedStep === 'choice' || savedStep === 'flight') {
       setTrip(getSavedBookingTrip(messages))
-      setStep('flight')
+      setStep('passenger')
       window.sessionStorage.removeItem(BOOKING_STEP_STORAGE_KEY)
     }
 
@@ -79,17 +93,30 @@ export default function BookFlow({locale, messages}) {
     window.location.href = localizedPath(locale, '/')
   }
 
-  const goToFlight = () => {
+  const goToPassenger = () => {
     setTrip(getSavedBookingTrip(messages))
     setLoading(false)
-    setStep('flight')
+    setStep('passenger')
   }
 
-  const goToBook = (flights, price, modeTitle) => {
+  const goToChoice = (details) => {
+    setPassengerDetails(details)
+    setStep('choice')
+  }
+
+  const goToReservation = (selection) => {
+    setSelectedPrice(selection.price)
+    setSelectedModeTitle(selection.title)
+    setDeliveryDetails(selection)
+    setSelectedFlights([])
+    setStep(selection.option === 'standard' ? 'flight' : 'review')
+  }
+
+  const goToReview = (flights, price, modeTitle) => {
     setSelectedFlights(flights)
     setSelectedPrice(price || t(messages, 'book.choice.options.standard.price'))
     setSelectedModeTitle(modeTitle || t(messages, 'book.choice.options.standard.title'))
-    setStep('book')
+    setStep('review')
   }
 
   if (loading) {
@@ -97,15 +124,23 @@ export default function BookFlow({locale, messages}) {
   }
 
   if (step === 'flight') {
-    return <BookFlightPicker messages={messages} trip={trip} flights={flights} onBack={goToSearch} onContinue={goToBook} />
+    return <BookFlightPicker messages={messages} trip={trip} flights={flights} onBack={() => setStep('choice')} onContinue={goToReview} />
   }
 
-  if (step === 'book') {
-    return <BookDetailsStep messages={messages} trip={trip} selectedFlights={selectedFlights} price={selectedPrice} modeTitle={selectedModeTitle} onBack={() => setStep('flight')} />
+  if (step === 'passenger') {
+    return <BookDetailsStep messages={messages} trip={trip} selectedFlights={[]} price={selectedPrice} modeTitle={selectedModeTitle} initialPassengerDetails={passengerDetails} onBack={goToSearch} onContinue={goToChoice} />
+  }
+
+  if (step === 'choice') {
+    return <BookReservationChoice messages={messages} trip={trip} onBack={() => setStep('passenger')} onChoose={goToReservation} />
+  }
+
+  if (step === 'review') {
+    return <BookReviewStep messages={messages} trip={trip} selectedFlights={selectedFlights} passengerDetails={passengerDetails} modeTitle={selectedModeTitle} price={selectedPrice} deliveryDetails={deliveryDetails} onBack={() => setStep(selectedFlights.length > 0 ? 'flight' : 'choice')} />
   }
 
   return (
-    <main className="min-h-screen bg-[#f4f7fb] text-secondary">
+    <main className="min-h-[calc(100vh-96px)] bg-[#f4f7fb] text-secondary">
       <BookingStepper messages={messages} activeIndex={0} onBack={goBackFromSearch} />
 
       <section className="mx-auto flex w-full max-w-[1160px] flex-col items-center px-5 pb-24 pt-10 text-center md:px-8 md:pt-14">
@@ -116,7 +151,7 @@ export default function BookFlow({locale, messages}) {
           {t(messages, 'book.search.subtitle')}
         </p>
 
-        <BookingForm locale={locale} onSubmit={goToFlight} />
+        <BookingForm locale={locale} onSubmit={goToPassenger} />
       </section>
     </main>
   )
@@ -150,22 +185,38 @@ function getEmailSuggestion(email) {
 
   const correctedDomain =
     EMAIL_DOMAIN_FIXES[domain] ||
+    COMMON_EMAIL_DOMAINS.find((commonDomain) => commonDomain.replace(/\.com$/, '') === domain) ||
     COMMON_EMAIL_DOMAINS.find((commonDomain) => getEditDistance(domain, commonDomain) <= 2)
 
   return correctedDomain ? `${localPart}@${correctedDomain}` : ''
 }
 
+function isValidEmailAddress(email) {
+  const normalizedEmail = email.trim()
+  return /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(normalizedEmail) && !getEmailSuggestion(normalizedEmail)
+}
+
 function SectionMarker({icon: Icon}) {
   return (
-    <div className="hidden size-[42px] shrink-0 place-items-center rounded-full bg-primary/10 text-primary md:grid">
-      <Icon className="size-[18px]" aria-hidden="true" />
+    <div className="hidden size-8 shrink-0 place-items-center rounded-full bg-[#EFF6FF] text-primary md:grid">
+      <Icon className="size-[14px]" aria-hidden="true" />
     </div>
   )
 }
 
-function EmailField({messages, label, value, onChange, error, onClearError, required = false}) {
+function CountryFlag({code}) {
+  return <img src={`https://flagcdn.com/w40/${code}.png`} alt="" width="20" height="15" className="h-[15px] w-[20px] shrink-0 rounded-[2px] object-cover" />
+}
+
+function EmailField({messages, label, value, onChange, onBlur, error, onClearError, required = false}) {
   const suggestion = getEmailSuggestion(value)
   const errorId = error ? 'passenger-email-error' : undefined
+  const applySuggestion = () => {
+    if (!suggestion) return
+
+    onChange?.(suggestion)
+    onClearError?.('email')
+  }
 
   return (
     <div className="text-left">
@@ -178,12 +229,13 @@ function EmailField({messages, label, value, onChange, error, onClearError, requ
           onChange?.(event.target.value)
           onClearError?.('email')
         }}
+        onBlur={(event) => onBlur?.(event.target.value)}
         placeholder={label}
         aria-label={label}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={errorId}
-        className={`h-[54px] w-full rounded-[5px] border bg-white px-4 text-[15px] font-[500] text-secondary outline-none transition placeholder:text-tertiary ${
-          error ? 'border-[#ff3b3b] focus:border-[#ff3b3b]' : 'border-border-strong focus:border-primary'
+        className={`h-[48px] w-full rounded-xl border bg-white px-5 text-[14px] font-[400] outline-none transition placeholder:text-tertiary ${value ? 'text-secondary' : 'text-muted'} ${
+          error ? 'border-[#ff3b3b] focus:border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'
         }`}
       />
       {error ? (
@@ -194,13 +246,54 @@ function EmailField({messages, label, value, onChange, error, onClearError, requ
       {suggestion ? (
         <button
           type="button"
-          onClick={() => onChange?.(suggestion)}
-          className="mt-2 text-left text-[12px] font-[500] text-muted transition hover:text-primary"
+          onPointerDown={(event) => {
+            event.preventDefault()
+          }}
+          onClick={applySuggestion}
+          className="mt-2 block text-left text-[12px] font-[500] text-muted transition hover:text-primary"
         >
           {t(messages, 'book.details.emailSuggestion')}{' '}
           <span className="font-[700] text-primary">{suggestion}</span>?
         </button>
       ) : null}
+    </div>
+  )
+}
+
+function formatDateOfBirth(value) {
+  const digits = value.replace(/\D/g, '').slice(0, 8)
+
+  if (digits.length <= 2) return digits
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`
+}
+
+function DateOfBirthField({name = 'dateOfBirth', label, value, error, onChange, onClearError}) {
+  const errorId = error ? `passenger-${name}-error` : undefined
+
+  return (
+    <div className="text-left">
+      <div className={`flex h-[48px] items-center rounded-xl border bg-white px-4 transition focus-within:border-primary ${error ? 'border-[#ff3b3b] focus-within:border-[#ff3b3b]' : 'border-[#D7E0EC]'}`}>
+        <CalendarDays className="mr-3 size-[15px] shrink-0 text-tertiary" aria-hidden="true" />
+        <input
+          name={name}
+          type="text"
+          inputMode="numeric"
+          autoComplete="bday"
+          maxLength={10}
+          value={value}
+          onChange={(event) => {
+            onChange?.(formatDateOfBirth(event.target.value))
+            onClearError?.(name)
+          }}
+          placeholder={label}
+          aria-label={label}
+          aria-invalid={error ? 'true' : undefined}
+          aria-describedby={errorId}
+          className={`min-w-0 flex-1 bg-transparent text-[14px] font-[450] outline-none placeholder:text-tertiary ${value ? 'text-secondary' : 'text-muted'}`}
+        />
+      </div>
+      {error ? <p id={errorId} className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">{error}</p> : null}
     </div>
   )
 }
@@ -223,24 +316,29 @@ function DetailField({
   const errorId = error ? `passenger-${name}-error` : undefined
   const [focused, setFocused] = useState(false)
   const typedValue = value.trim().toLowerCase()
+  const getSuggestionName = (suggestion) => typeof suggestion === 'string' ? suggestion : suggestion.name
+  const getSuggestionFlagCode = (suggestion) => typeof suggestion === 'string' ? '' : suggestion.flagCode
   const matchedSuggestions = typedValue
     ? suggestions
       .filter((suggestion) => {
-        const normalizedSuggestion = suggestion.toLowerCase()
+        const normalizedSuggestion = getSuggestionName(suggestion).toLowerCase()
         return normalizedSuggestion !== typedValue && normalizedSuggestion.includes(typedValue)
       })
       .slice(0, 5)
     : []
+  const selectedSuggestion = suggestions.find((suggestion) => getSuggestionName(suggestion).toLowerCase() === typedValue)
   const showSuggestions = focused && matchedSuggestions.length > 0
 
   return (
     <div className="relative block text-left">
       <div
-        className={`flex h-[54px] items-center rounded-[5px] border bg-white px-4 transition focus-within:border-primary ${
-          error ? 'border-[#ff3b3b]' : 'border-border-strong'
+        className={`flex h-[48px] items-center rounded-xl border bg-white px-4 transition focus-within:border-primary ${
+          error ? 'border-[#ff3b3b]' : 'border-[#D7E0EC]'
         }`}
       >
-        {Icon ? <Icon className="mr-3 size-[16px] shrink-0 text-tertiary" aria-hidden="true" /> : null}
+        {selectedSuggestion && getSuggestionFlagCode(selectedSuggestion) ? (
+          <span className="mr-3"><CountryFlag code={getSuggestionFlagCode(selectedSuggestion)} /></span>
+        ) : Icon ? <Icon className="mr-3 size-[15px] shrink-0 text-tertiary" aria-hidden="true" /> : null}
         <input
           name={name}
           type={type}
@@ -260,84 +358,30 @@ function DetailField({
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={errorId}
           autoComplete={suggestions.length > 0 ? 'off' : undefined}
-          className="min-w-0 flex-1 bg-transparent text-[15px] font-[500] text-secondary outline-none placeholder:text-tertiary"
+          className={`min-w-0 flex-1 bg-transparent text-[14px] font-[400] outline-none placeholder:text-tertiary ${value ? 'text-secondary' : 'text-muted'}`}
         />
-        {TrailingIcon ? <TrailingIcon className="ml-3 size-[16px] shrink-0 text-tertiary" aria-hidden="true" /> : null}
+        {TrailingIcon ? <TrailingIcon className="ml-3 size-[15px] shrink-0 text-tertiary" aria-hidden="true" /> : null}
       </div>
       {showSuggestions ? (
         <div className="absolute left-0 right-0 top-[60px] z-40 overflow-hidden rounded-[5px] border border-border bg-white">
           {matchedSuggestions.map((suggestion) => (
             <button
-              key={suggestion}
-              type="button"
-              onMouseDown={(event) => {
-                event.preventDefault()
-                onChange?.(suggestion)
+            key={getSuggestionName(suggestion)}
+            type="button"
+            onMouseDown={(event) => {
+              event.preventDefault()
+                onChange?.(getSuggestionName(suggestion))
                 onClearError?.(name)
                 setFocused(false)
               }}
-              className="block w-full px-4 py-3 text-left text-[14px] font-[600] text-secondary transition-colors hover:bg-surface-muted"
+              className="flex w-full items-center gap-2.5 px-4 py-3 text-left text-[14px] font-[400] text-muted transition-colors hover:bg-surface-muted"
             >
-              {suggestion}
+              {getSuggestionFlagCode(suggestion) ? <CountryFlag code={getSuggestionFlagCode(suggestion)} /> : null}
+              <span>{getSuggestionName(suggestion)}</span>
             </button>
           ))}
         </div>
       ) : null}
-      {error ? (
-        <p id={errorId} className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">
-          {error}
-        </p>
-      ) : null}
-    </div>
-  )
-}
-
-function TitlePicker({label, name, value, onChange, error, onClearError}) {
-  const errorId = error ? `passenger-${name}-error` : undefined
-  const titles = ['Mr', 'Ms', 'Mrs']
-
-  return (
-    <div className="block text-left">
-      <input
-        type="hidden"
-        name={name}
-        value={value}
-        readOnly
-        aria-label={label}
-      />
-      <div
-        role="radiogroup"
-        aria-label={label}
-        aria-invalid={error ? 'true' : undefined}
-        aria-describedby={errorId}
-      >
-        <div className="grid grid-cols-3 gap-2 sm:max-w-[360px]">
-          {titles.map((titleOption) => {
-            const active = value === titleOption
-            return (
-              <button
-                key={titleOption}
-                type="button"
-                role="radio"
-                aria-checked={active}
-                onClick={() => {
-                  onChange(titleOption)
-                  onClearError?.(name)
-                }}
-                className={[
-                  'h-[50px] rounded-[5px] border bg-white text-[14px] font-[700] transition',
-                  active
-                    ? 'border-primary text-primary'
-                    : 'border-border-strong text-muted hover:border-primary/30 hover:text-secondary',
-                  error ? 'border-[#ff3b3b]' : '',
-                ].join(' ')}
-              >
-                {titleOption}
-              </button>
-            )
-          })}
-        </div>
-      </div>
       {error ? (
         <p id={errorId} className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">
           {error}
@@ -408,23 +452,49 @@ function MobileReviewSummary({messages, trip, selectedFlights, passengerDetails}
   )
 }
 
-function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onBack}) {
+function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, initialPassengerDetails, onBack, onContinue}) {
   const [errors, setErrors] = useState({})
   const [showPopup, setShowPopup] = useState(false)
   const [showOrderDetails, setShowOrderDetails] = useState(false)
-  const [activeDatePicker, setActiveDatePicker] = useState(null)
   const [paymentReady, setPaymentReady] = useState(false)
-  const [passengerDetails, setPassengerDetails] = useState({
+  const [passengerDetails, setPassengerDetails] = useState(() => ({
     email: '',
-    title: 'Mr',
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
-    nationality: '',
-  })
+    ...createEmptyTraveler(),
+    ...initialPassengerDetails,
+    additionalTravelers: initialPassengerDetails?.additionalTravelers || [],
+  }))
 
   const updatePassengerDetail = (field, value) => {
     setPassengerDetails((currentDetails) => ({...currentDetails, [field]: value}))
+    setPaymentReady(false)
+  }
+
+  const updateAdditionalTraveler = (index, field, value) => {
+    setPassengerDetails((currentDetails) => ({
+      ...currentDetails,
+      additionalTravelers: currentDetails.additionalTravelers.map((traveler, travelerIndex) => (
+        travelerIndex === index ? {...traveler, [field]: value} : traveler
+      )),
+    }))
+    setPaymentReady(false)
+  }
+
+  const addTraveler = () => {
+    setPassengerDetails((currentDetails) => ({
+      ...currentDetails,
+      additionalTravelers: [...currentDetails.additionalTravelers, createEmptyTraveler()],
+    }))
+    setPaymentReady(false)
+  }
+
+  const removeTraveler = (index) => {
+    setPassengerDetails((currentDetails) => ({
+      ...currentDetails,
+      additionalTravelers: currentDetails.additionalTravelers.filter((_, travelerIndex) => travelerIndex !== index),
+    }))
+    setErrors((currentErrors) => Object.fromEntries(
+      Object.entries(currentErrors).filter(([key]) => !key.startsWith('additional-')),
+    ))
     setPaymentReady(false)
   }
 
@@ -450,19 +520,33 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onB
     const formData = new FormData(event.currentTarget)
     const requiredFields = [
       ['email', t(messages, 'book.details.errors.email')],
-      ['title', t(messages, 'book.details.errors.title')],
       ['firstName', t(messages, 'book.details.errors.firstName')],
       ['lastName', t(messages, 'book.details.errors.lastName')],
       ['dateOfBirth', t(messages, 'book.details.errors.dateOfBirth')],
       ['nationality', t(messages, 'book.details.errors.nationality')],
+      ['travelPurpose', t(messages, 'book.details.errors.travelPurpose')],
     ]
-    const nextErrors = requiredFields.reduce((fieldErrors, [field, message]) => {
-      if (!String(formData.get(field) || '').trim()) {
+    let nextErrors = requiredFields.reduce((fieldErrors, [field, message]) => {
+      const fieldValue = String(formData.get(field) || '').trim()
+
+      if (!fieldValue) {
         return {...fieldErrors, [field]: message}
+      }
+
+      if (field === 'email' && !isValidEmailAddress(fieldValue)) {
+        return {...fieldErrors, [field]: t(messages, 'book.details.errors.invalidEmail')}
       }
 
       return fieldErrors
     }, {})
+
+    passengerDetails.additionalTravelers.forEach((traveler, index) => {
+      requiredFields.slice(1).forEach(([field, message]) => {
+        if (!String(traveler[field] || '').trim()) {
+          nextErrors = {...nextErrors, [`additional-${index}-${field}`]: message}
+        }
+      })
+    })
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors)
@@ -474,7 +558,26 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onB
     setErrors({})
     setShowPopup(false)
     setShowOrderDetails(false)
-    setPaymentReady(true)
+    setPaymentReady(false)
+    onContinue?.(passengerDetails)
+  }
+
+  const validateEmail = (value) => {
+    const email = String(value || '').trim()
+    const message = !email
+      ? t(messages, 'book.details.errors.email')
+      : !isValidEmailAddress(email)
+        ? t(messages, 'book.details.errors.invalidEmail')
+        : ''
+
+    setErrors((currentErrors) => {
+      if (!message && !currentErrors.email) return currentErrors
+
+      const nextErrors = {...currentErrors}
+      if (message) nextErrors.email = message
+      else delete nextErrors.email
+      return nextErrors
+    })
   }
 
   const handleBack = () => {
@@ -482,25 +585,25 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onB
   }
 
   return (
-    <main className="min-h-screen bg-[#f4f7fb] text-secondary">
-      <BookingStepper messages={messages} activeIndex={2} onBack={handleBack} />
+    <main className="min-h-[calc(100vh-68px)] bg-[#f4f7fb] text-secondary">
+      <BookingStepper messages={messages} activeIndex={1} onBack={handleBack} />
 
       {showPopup ? (
         <div
           role="alert"
-          className="fixed left-1/2 top-[64px] z-50 w-[calc(100%-40px)] max-w-[320px] -translate-x-1/2 rounded-[6px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-center text-[13px] font-[650] text-[#ff2f2f] min-[700px]:top-[114px] md:left-auto md:right-5 md:top-5 md:w-auto md:translate-x-0 md:text-left"
+          className="fixed left-1/2 top-[64px] z-[10002] w-[calc(100%-40px)] max-w-[320px] -translate-x-1/2 rounded-[6px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-center text-[13px] font-[650] text-[#ff2f2f] min-[700px]:top-[114px] md:left-auto md:right-5 md:top-5 md:w-auto md:translate-x-0 md:text-left"
         >
           {t(messages, 'book.details.requiredWarning')}
         </div>
       ) : null}
 
-      <section className="mx-auto grid w-full max-w-[1220px] gap-6 px-5 pb-24 pt-6 md:px-8 md:pt-7 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start">
-        <div className="min-w-0 lg:max-w-[820px]">
-          <div className="text-center md:text-left">
-            <h1 className="font-[var(--font-display)] text-[26px] font-[750] leading-tight text-secondary md:text-[32px]">
+      <section className="mx-auto flex w-full max-w-[960px] flex-col gap-6 px-5 pb-20 pt-6 md:px-8 md:pt-8">
+        <div className="min-w-0">
+          <div className="text-center">
+            <h1 className="font-[var(--font-display)] text-[28px] font-[500] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
               {t(messages, 'book.details.title')}
             </h1>
-            <p className="mx-auto mt-2 max-w-[560px] text-[13px] leading-6 text-muted md:mx-0">
+            <p className="mx-auto mt-2 max-w-[500px] text-[13px] font-[400] leading-5 text-muted">
               {t(messages, 'book.details.subtitle')}
             </p>
           </div>
@@ -509,21 +612,22 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onB
             id="passenger-details-form"
             noValidate
             onSubmit={handleSubmit}
-            className="mt-6 max-w-[820px] rounded-[7px] border border-border bg-white p-5 md:p-7"
+            className="mt-5 rounded-2xl border border-[#E7EDF6] bg-white p-5 md:p-6"
           >
-            <div className="space-y-7">
-              <div className="flex gap-5">
+            <div className="space-y-5">
+              <div className="flex gap-4">
                 <SectionMarker icon={Mail} />
                 <div className="min-w-0 flex-1">
-                    <p className="mb-3 text-[13px] font-[800] text-secondary">
+                    <p className="mb-2 text-[14px] font-[500] text-secondary">
                     {t(messages, 'book.details.emailDelivery')}
                   </p>
-                  <div className="max-w-[570px]">
+                  <div>
                   <EmailField
                     messages={messages}
                     label={t(messages, 'book.details.fields.email')}
                     value={passengerDetails.email}
                     onChange={(value) => updatePassengerDetail('email', value)}
+                    onBlur={validateEmail}
                     error={errors.email}
                     onClearError={clearFieldError}
                     required
@@ -532,25 +636,16 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onB
                 </div>
               </div>
 
-              <div className="border-t border-border pt-7">
-                <div className="flex gap-5">
+              <div className="border-t border-[#EEF2F7] pt-5">
+                <div className="flex gap-4">
                   <SectionMarker icon={UserRound} />
                   <div className="min-w-0 flex-1">
-                    <p className="mb-4 text-[16px] font-[800] text-secondary">
+                    <p className="mb-3 text-[14px] font-[500] text-secondary">
                       {t(messages, 'book.details.traveler')}
                     </p>
 
-                    <TitlePicker
-                      name="title"
-                      label={t(messages, 'book.details.fields.title')}
-                      value={passengerDetails.title}
-                      onChange={(value) => updatePassengerDetail('title', value)}
-                      error={errors.title}
-                      onClearError={clearFieldError}
-                    />
-
-                    <div className="mt-5 grid gap-4 md:grid-cols-2">
-                      <input type="hidden" name="dateOfBirth" value={passengerDetails.dateOfBirth} readOnly />
+                    <input type="hidden" name="title" value={passengerDetails.title} readOnly />
+                    <div className="grid gap-4 md:grid-cols-2">
                       <DetailField
                         messages={messages}
                         name="firstName"
@@ -575,28 +670,15 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onB
                         showCapitalizationSuggestion
                         required
                       />
-                      <DateInput
-                        label={t(messages, 'book.details.fields.dateOfBirth')}
+                      <DateOfBirthField
+                        label={t(messages, 'book.details.fields.dateOfBirthPlaceholder')}
                         value={passengerDetails.dateOfBirth}
                         error={errors.dateOfBirth}
                         onChange={(value) => {
                           updatePassengerDetail('dateOfBirth', value)
                           clearFieldError('dateOfBirth')
-                          setActiveDatePicker(null)
                         }}
-                        onClear={() => {
-                          updatePassengerDetail('dateOfBirth', '')
-                          clearFieldError('dateOfBirth')
-                        }}
-                        open={activeDatePicker === 'dateOfBirth'}
-                        onToggle={() => setActiveDatePicker((current) => (current === 'dateOfBirth' ? null : 'dateOfBirth'))}
-                        onClose={() => setActiveDatePicker(null)}
-                        title={t(messages, 'book.details.fields.dateOfBirth')}
-                        minDate={new Date(1900, 0, 1)}
-                        maxDate={new Date()}
-                        initialMonthDate={new Date(1996, 0, 1)}
-                        quickSelect
-                        controlClassName="md:h-[54px] md:text-[15px]"
+                        onClearError={clearFieldError}
                       />
                       <DetailField
                         messages={messages}
@@ -607,10 +689,133 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onB
                         error={errors.nationality}
                         onClearError={clearFieldError}
                         icon={Globe2}
+                        trailingIcon={ChevronDown}
                         showCapitalizationSuggestion
                         suggestions={NATIONALITY_SUGGESTIONS}
                         required
                       />
+                      <div className="relative text-left md:col-span-2">
+                        <label className="sr-only" htmlFor="travelPurpose">{t(messages, 'book.details.fields.travelPurpose')}</label>
+                        <select
+                          id="travelPurpose"
+                          name="travelPurpose"
+                          value={passengerDetails.travelPurpose}
+                          onChange={(event) => {
+                            updatePassengerDetail('travelPurpose', event.target.value)
+                            clearFieldError('travelPurpose')
+                          }}
+                          aria-invalid={errors.travelPurpose ? 'true' : undefined}
+                          className={`h-[48px] w-full appearance-none rounded-xl border bg-white px-4 pr-11 text-[14px] outline-none transition ${errors.travelPurpose ? 'border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'} ${passengerDetails.travelPurpose ? 'font-[400] text-secondary' : 'font-[400] text-tertiary'}`}
+                        >
+                          <option value="">{t(messages, 'book.details.fields.travelPurpose')}</option>
+                          {TRAVEL_PURPOSE_KEYS.map((purpose) => <option key={purpose} value={purpose}>{t(messages, `book.details.travelPurposes.${purpose}`)}</option>)}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-[16px] -translate-y-1/2 text-tertiary" aria-hidden="true" />
+                        {errors.travelPurpose ? <p className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">{errors.travelPurpose}</p> : null}
+                      </div>
+
+                      {passengerDetails.additionalTravelers.map((traveler, index) => {
+                        const travelerNumber = index + 2
+                        const fieldName = (field) => `additional-${index}-${field}`
+
+                        return (
+                          <section key={`additional-traveler-${index}`} className="border-t border-[#EEF2F7] pt-5 md:col-span-2">
+                            <div className="mb-3 flex items-center justify-between gap-4">
+                              <p className="text-[14px] font-[500] text-secondary">
+                                {t(messages, 'book.details.additionalTraveler')} {travelerNumber}
+                              </p>
+                              <button
+                                type="button"
+                                onClick={() => removeTraveler(index)}
+                                className="inline-flex items-center gap-1.5 text-[12px] font-[500] text-tertiary transition hover:text-secondary"
+                              >
+                                <Trash2 className="size-[14px]" aria-hidden="true" />
+                                {t(messages, 'book.details.removeTraveler')}
+                              </button>
+                            </div>
+
+                            <input type="hidden" name={fieldName('title')} value={traveler.title} readOnly />
+                            <div className="grid gap-4 md:grid-cols-2">
+                              <DetailField
+                                messages={messages}
+                                name={fieldName('firstName')}
+                                label={t(messages, 'book.details.fields.firstName')}
+                                value={traveler.firstName}
+                                onChange={(value) => updateAdditionalTraveler(index, 'firstName', value)}
+                                error={errors[fieldName('firstName')]}
+                                onClearError={clearFieldError}
+                                icon={UserRound}
+                                showCapitalizationSuggestion
+                                required
+                              />
+                              <DetailField
+                                messages={messages}
+                                name={fieldName('lastName')}
+                                label={t(messages, 'book.details.fields.lastName')}
+                                value={traveler.lastName}
+                                onChange={(value) => updateAdditionalTraveler(index, 'lastName', value)}
+                                error={errors[fieldName('lastName')]}
+                                onClearError={clearFieldError}
+                                icon={UserRound}
+                                showCapitalizationSuggestion
+                                required
+                              />
+                              <DateOfBirthField
+                                name={fieldName('dateOfBirth')}
+                                label={t(messages, 'book.details.fields.dateOfBirthPlaceholder')}
+                                value={traveler.dateOfBirth}
+                                error={errors[fieldName('dateOfBirth')]}
+                                onChange={(value) => updateAdditionalTraveler(index, 'dateOfBirth', value)}
+                                onClearError={clearFieldError}
+                              />
+                              <DetailField
+                                messages={messages}
+                                name={fieldName('nationality')}
+                                label={t(messages, 'book.details.fields.nationality')}
+                                value={traveler.nationality}
+                                onChange={(value) => updateAdditionalTraveler(index, 'nationality', value)}
+                                error={errors[fieldName('nationality')]}
+                                onClearError={clearFieldError}
+                                icon={Globe2}
+                                trailingIcon={ChevronDown}
+                                showCapitalizationSuggestion
+                                suggestions={NATIONALITY_SUGGESTIONS}
+                                required
+                              />
+                              <div className="relative text-left md:col-span-2">
+                                <label className="sr-only" htmlFor={fieldName('travelPurpose')}>
+                                  {t(messages, 'book.details.fields.travelPurpose')}
+                                </label>
+                                <select
+                                  id={fieldName('travelPurpose')}
+                                  name={fieldName('travelPurpose')}
+                                  value={traveler.travelPurpose}
+                                  onChange={(event) => {
+                                    updateAdditionalTraveler(index, 'travelPurpose', event.target.value)
+                                    clearFieldError(fieldName('travelPurpose'))
+                                  }}
+                                  aria-invalid={errors[fieldName('travelPurpose')] ? 'true' : undefined}
+                                  className={`h-[48px] w-full appearance-none rounded-xl border bg-white px-4 pr-11 text-[14px] outline-none transition ${errors[fieldName('travelPurpose')] ? 'border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'} ${traveler.travelPurpose ? 'font-[400] text-secondary' : 'font-[400] text-tertiary'}`}
+                                >
+                                  <option value="">{t(messages, 'book.details.fields.travelPurpose')}</option>
+                                  {TRAVEL_PURPOSE_KEYS.map((purpose) => <option key={purpose} value={purpose}>{t(messages, `book.details.travelPurposes.${purpose}`)}</option>)}
+                                </select>
+                                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-[16px] -translate-y-1/2 text-tertiary" aria-hidden="true" />
+                                {errors[fieldName('travelPurpose')] ? <p className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">{errors[fieldName('travelPurpose')]}</p> : null}
+                              </div>
+                            </div>
+                          </section>
+                        )
+                      })}
+
+                      <button
+                        type="button"
+                        onClick={addTraveler}
+                        className="inline-flex h-[44px] items-center justify-center gap-2 self-start rounded-xl border border-[#D7E0EC] px-4 text-[13px] font-[500] text-secondary transition hover:border-primary hover:text-primary md:col-span-2"
+                      >
+                        <Plus className="size-[16px]" aria-hidden="true" />
+                        {t(messages, 'book.details.addTraveler')}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -619,25 +824,24 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onB
           </form>
           {paymentReady ? (
             <p className="mt-4 max-w-[520px] rounded-[5px] border border-success/20 bg-success/10 px-4 py-3 text-[13px] font-[600] text-success">
-              {t(messages, 'book.details.paymentReady')}
+            {t(messages, 'book.details.paymentReady')}
             </p>
           ) : null}
         </div>
 
-        <BookingPreview messages={messages} trip={trip} selectedFlights={selectedFlights} passengerDetails={passengerDetails} modeTitle={modeTitle} price={price} compact className="hidden lg:flex" />
       </section>
 
       <MobileOrderDetailsPanel messages={messages} trip={trip} selectedFlights={selectedFlights} passengerDetails={passengerDetails} modeTitle={modeTitle} price={price} open={showOrderDetails} />
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-5 py-3 backdrop-blur">
-        <div className="mx-auto grid w-full max-w-[1220px] grid-cols-[auto_1fr] items-center gap-3 md:grid-cols-[1fr_auto_auto] md:gap-4">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[#E7EDF6] bg-white/95 px-6 py-3 backdrop-blur md:px-[7.5vw]">
+        <div className="grid w-full grid-cols-[auto_1fr] items-center gap-3 md:grid-cols-[1fr_auto] md:gap-6">
           <div className="hidden min-w-0 items-center gap-3 md:flex">
-            <span className="grid size-[40px] shrink-0 place-items-center rounded-full bg-success/10 text-success">
-              <ShieldCheck className="size-[18px]" aria-hidden="true" />
+            <span className="grid size-[42px] shrink-0 place-items-center rounded-full bg-success/10 text-success">
+              <ShieldCheck className="size-[17px]" aria-hidden="true" />
             </span>
             <span className="min-w-0">
-              <span className="block text-[13px] font-[800] text-secondary">{t(messages, 'book.summary.trusted')}</span>
-              <span className="mt-0.5 block text-[11px] font-[500] text-tertiary">{t(messages, 'book.summary.encrypted')}</span>
+                <span className="block text-[14px] font-[500] text-secondary">{t(messages, 'book.summary.trusted')}</span>
+                <span className="mt-0.5 block text-[11px] font-[400] text-tertiary">{t(messages, 'book.summary.encrypted')}</span>
             </span>
           </div>
           <MobileOrderDetails
@@ -645,17 +849,12 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, onB
             open={showOrderDetails}
             onToggle={() => setShowOrderDetails((current) => !current)}
           />
-          <div className="hidden min-w-[120px] text-right md:block">
-            <div className="font-[var(--font-display)] text-[20px] font-[800] text-secondary">{price}</div>
-            <div className="mt-0.5 text-[11px] font-[500] text-tertiary">{t(messages, 'book.summary.totalAmount')}</div>
-          </div>
           <button
             type="submit"
             form="passenger-details-form"
-            className="ml-auto inline-flex h-[50px] w-full min-w-0 items-center justify-center gap-2 rounded-[5px] bg-primary px-5 text-[15px] font-[700] text-white transition hover:bg-primary/90 md:w-auto md:min-w-[210px] md:px-7"
+            className="ml-auto inline-flex h-[52px] w-full min-w-0 items-center justify-center rounded-xl bg-primary px-5 text-[14px] font-[500] text-white transition hover:bg-primary/90 md:w-auto md:min-w-[220px] md:px-7"
           >
-            <Lock className="size-[15px]" aria-hidden="true" />
-            {t(messages, 'book.details.submit')}
+            {t(messages, 'book.details.continue')}
           </button>
         </div>
       </div>
@@ -744,15 +943,15 @@ function BookLoading({messages}) {
 
   return (
     <main className="min-h-screen bg-[#f4f7fb] text-secondary">
-      <BookingStepper messages={messages} activeIndex={1} />
+       <BookingStepper messages={messages} activeIndex={3} />
 
       <section className="mx-auto grid w-full max-w-[1220px] gap-6 px-5 pb-24 pt-5 md:px-8 md:pt-6 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start">
         <div className="min-w-0 text-center md:text-left">
           <h1 className="font-[var(--font-display)] text-[26px] font-[750] leading-tight text-secondary md:text-[32px]">
-            {t(messages, 'book.title')}
+             {t(messages, 'book.flight.title')}
           </h1>
           <p className="mx-auto mt-2 max-w-[520px] text-[13px] leading-6 text-muted md:mx-0">
-            {t(messages, 'book.loading')}
+             {t(messages, 'book.flight.loading')}
           </p>
 
           <div className="mt-5 grid gap-3">

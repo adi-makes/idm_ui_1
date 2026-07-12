@@ -1,30 +1,30 @@
 import {Check, ChevronLeft} from 'lucide-react'
 import {t} from '@/messages'
 
-const STEP_KEYS = ['search', 'flight', 'book']
+const STEP_KEYS = ['journey', 'passenger', 'reservation', 'flight', 'review']
 
 export default function BookingStepper({messages, activeIndex = 0, onBack, backLabel}) {
   const mobileProgress = Math.min(Math.max(activeIndex / (STEP_KEYS.length - 1), 0), 1)
 
   return (
     <div className="border-y border-border bg-white">
-      <div className="relative mx-auto grid w-full max-w-[1040px] grid-cols-[40px_1fr_40px] items-center px-5 py-4 min-[700px]:block">
+      <div className="relative grid w-full grid-cols-[32px_1fr_32px] items-center px-5 py-2 min-[700px]:grid-cols-[32px_minmax(0,1fr)] min-[700px]:gap-12 md:px-8 lg:px-[8.4vw] lg:py-3">
         {onBack ? (
           <button
             type="button"
             onClick={onBack}
             aria-label={backLabel || t(messages, 'book.summary.back')}
-            className="absolute left-3 top-1/2 grid size-[34px] -translate-y-1/2 place-items-center rounded-full border border-border-strong bg-white text-secondary transition hover:border-primary hover:text-primary min-[700px]:left-6 lg:left-0"
+            className="absolute left-5 top-1/2 grid size-[32px] -translate-y-1/2 place-items-center rounded-full border border-border-strong bg-white text-secondary transition hover:border-primary hover:text-primary min-[700px]:static min-[700px]:translate-y-0 md:left-8 lg:left-[8.4vw]"
           >
-            <ChevronLeft className="size-[18px]" aria-hidden="true" />
+            <ChevronLeft className="size-[15px]" aria-hidden="true" />
           </button>
         ) : null}
 
-        <div className="relative col-start-2 mx-auto flex w-full max-w-[190px] items-center justify-between min-[700px]:max-w-[780px] min-[700px]:justify-center">
-          <span className="absolute left-[15px] right-[15px] top-1/2 h-px -translate-y-1/2 bg-border-strong min-[700px]:hidden" aria-hidden="true" />
+        <div className="relative col-start-2 mx-auto flex w-full max-w-[190px] items-center justify-between min-[700px]:max-w-none">
+          <span className="absolute left-[13px] right-[13px] top-1/2 h-px -translate-y-1/2 bg-border-strong min-[700px]:hidden" aria-hidden="true" />
           <span
-            className="absolute left-[15px] top-1/2 h-px -translate-y-1/2 bg-primary/70 min-[700px]:hidden"
-            style={{width: `calc((100% - 30px) * ${mobileProgress})`}}
+            className="absolute left-[13px] top-1/2 h-px -translate-y-1/2 bg-primary/70 min-[700px]:hidden"
+            style={{width: `calc((100% - 26px) * ${mobileProgress})`}}
             aria-hidden="true"
           />
           {STEP_KEYS.map((step, index) => {
@@ -36,17 +36,17 @@ export default function BookingStepper({messages, activeIndex = 0, onBack, backL
                 <div className="flex shrink-0 items-center gap-2.5">
                   <span
                     className={[
-                      'grid size-[30px] shrink-0 place-items-center rounded-full border text-[12px] font-[800]',
+                      'grid size-[28px] shrink-0 place-items-center rounded-full border text-[11px] font-[800] lg:size-[32px]',
                       complete || active
                         ? 'border-primary bg-primary text-white'
                         : 'border-border-strong bg-surface-muted text-tertiary',
                     ].join(' ')}
                   >
-                    {complete ? <Check className="size-[15px]" aria-hidden="true" /> : index + 1}
+                    {complete ? <Check className="size-[13px]" aria-hidden="true" /> : index + 1}
                   </span>
                   <span
                     className={[
-                      'hidden whitespace-nowrap font-[var(--font-display)] text-[13px] font-[700] min-[700px]:inline',
+                      'hidden whitespace-nowrap font-[var(--font-display)] text-[12px] font-[500] min-[700px]:inline lg:text-[13px]',
                       active ? 'text-secondary' : 'text-tertiary',
                     ].join(' ')}
                   >
@@ -56,7 +56,7 @@ export default function BookingStepper({messages, activeIndex = 0, onBack, backL
                 {index < STEP_KEYS.length - 1 ? (
                   <span
                     className={[
-                      'mx-4 hidden h-px w-[150px] md:block lg:w-[180px]',
+                      'mx-2.5 hidden h-px w-[64px] flex-1 md:block lg:w-[104px]',
                       complete || active ? 'bg-primary/70' : 'bg-border-strong',
                     ].join(' ')}
                     aria-hidden="true"

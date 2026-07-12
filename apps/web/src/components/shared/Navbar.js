@@ -80,7 +80,7 @@ export default function Navbar({locale}) {
   }
 
   return (
-    <header className="relative z-[10001] h-[64px] max-w-full bg-white/95 min-[700px]:h-[114px] md:h-[76px]">
+    <header className="relative z-[10001] h-[64px] max-w-full bg-white/95 min-[700px]:h-[114px] md:h-[68px]">
       <nav
         aria-label={t(messages, 'nav.mainLabel')}
         className="mx-auto flex h-full w-full max-w-[1422px] items-start justify-between px-[24px] pt-[20px] min-[700px]:px-[25px] min-[700px]:pt-[39px] md:items-center md:px-10 md:pt-0 lg:px-[64px]"
@@ -92,7 +92,7 @@ export default function Navbar({locale}) {
             width={1728}
             height={260}
             priority
-            className="h-[28px] w-auto min-[700px]:h-[50px] md:h-[34px]"
+            className="h-[28px] w-auto min-[700px]:h-[50px] md:h-[30px]"
           />
         </Link>
 
@@ -143,7 +143,7 @@ export default function Navbar({locale}) {
                     href={localizedHref}
                     aria-current={isActive ? 'page' : undefined}
                     className={[
-                      'relative flex h-full items-center text-[14px] font-[600] tracking-[-0.01em] transition-colors',
+                      'relative flex h-full items-center text-[14px] font-[500] tracking-[-0.01em] transition-colors',
                       isActive ? 'text-primary' : 'text-secondary hover:text-primary',
                     ].join(' ')}
                   >
@@ -158,7 +158,7 @@ export default function Navbar({locale}) {
 
           <Link
             href={localizedPath(locale, '/#support')}
-            className="ml-[36px] hidden items-center gap-[12px] text-[14px] font-[600] tracking-[-0.01em] text-secondary md:flex"
+            className="ml-[36px] hidden items-center gap-[12px] text-[14px] font-[500] tracking-[-0.01em] text-secondary md:flex"
           >
             {t(messages, 'nav.support')}
           </Link>

@@ -1,30 +1,34 @@
 'use client'
 
 import {useEffect, useMemo, useRef, useState} from 'react'
+import Image from 'next/image'
 import {ArrowRight, ChevronDown, ChevronUp, Lock, ShieldCheck, Tag} from 'lucide-react'
 import BookingStepper from '@/components/book/BookingStepper'
 import {MOBILE_AUTO_ADVANCE_DELAY_MS, shouldAutoAdvanceOnMobile} from '@/components/book/mobileAutoAdvance'
 import {capitalizePassengerText, formatPassengerName} from '@/components/book/passengerFormat'
 import {t} from '@/messages'
 
-function AirlineMark({airline}) {
-  const shortName = airline === 'Air India' ? 'AIR INDIA' : airline.toUpperCase()
+const AIRLINE_LOGOS = {
+  Emirates: '/airlineLogos/Emirates_logo.png',
+  'Air India': '/airlineLogos/air_india_logo.png',
+}
 
-  return (
-    <span className="shrink-0 text-[8px] font-[900] uppercase tracking-normal text-[#e11d48]">
-      {shortName}
-    </span>
-  )
+function AirlineLogo({airline}) {
+  const src = AIRLINE_LOGOS[airline]
+
+  if (!src) return <span className="text-[13px] font-[500] text-secondary">{airline}</span>
+
+  return <Image src={src} alt={airline} width={90} height={24} className="h-[18px] w-auto max-w-[74px] object-contain object-left" />
 }
 
 function FlightSegment({flight, messages}) {
   return (
     <div className="px-3.5 py-4 md:px-5 md:py-4">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-1">
-          <AirlineMark airline={flight.airline} />
-          <span className="font-[var(--font-display)] text-[15px] font-[800] text-secondary">{flight.airline}</span>
-          <span className="text-[13px] font-[500] text-tertiary">{flight.flightNumber}</span>
+        <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1">
+          <AirlineLogo airline={flight.airline} />
+          <span className="text-[14px] font-[500] text-secondary">{flight.airline}</span>
+          <span className="text-[13px] font-[500] text-primary">{flight.flightNumber}</span>
         </div>
         <span className="rounded-full border border-primary/10 bg-primary/5 px-3 py-1 text-[12px] font-[700] text-primary">
           {flight.kind}
@@ -81,19 +85,19 @@ function SummaryFlightRow({flight}) {
   return (
     <div className="border-t border-border pt-4">
       <div className="flex items-center justify-between gap-4">
-        <div className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-1">
-          <AirlineMark airline={flight.airline} />
-          <span className="font-[var(--font-display)] text-[14px] font-[800] text-secondary">{flight.airline}</span>
-          <span className="text-[13px] font-[500] text-tertiary">{flight.flightNumber}</span>
+        <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1">
+          <AirlineLogo airline={flight.airline} />
+          <span className="text-[14px] font-[500] text-secondary">{flight.airline}</span>
+          <span className="text-[13px] font-[500] text-primary">{flight.flightNumber}</span>
         </div>
-        <span className="rounded-[5px] bg-surface-muted px-2.5 py-1 text-[12px] font-[600] text-secondary">{flight.kind}</span>
+        <span className="rounded-full border border-primary/10 bg-primary/5 px-3 py-1 text-[12px] font-[500] text-primary">{flight.kind}</span>
       </div>
 
       <div className="mt-4 grid grid-cols-[1fr_72px_1fr] items-center gap-3">
         <div className="min-w-0">
-          <div className="font-[var(--font-display)] text-[22px] font-[800] leading-none text-secondary">{flight.departTime}</div>
-          <div className="mt-1 text-[16px] font-[800] leading-none text-secondary">{flight.fromCode}</div>
-          <div className="mt-0.5 truncate text-[13px] font-[600] text-secondary">{flight.fromCity}</div>
+          <div className="font-[var(--font-display)] text-[21px] font-[700] leading-none text-secondary">{flight.departTime}</div>
+          <div className="mt-1 text-[15px] font-[800] leading-none text-secondary">{flight.fromCode}</div>
+          <div className="mt-1 truncate text-[13px] font-[500] text-muted">{flight.fromCity}</div>
           <div className="mt-1 text-[12px] font-[500] text-tertiary">{flight.date}</div>
         </div>
 
@@ -103,9 +107,9 @@ function SummaryFlightRow({flight}) {
         </div>
 
         <div className="min-w-0 text-right">
-          <div className="font-[var(--font-display)] text-[22px] font-[800] leading-none text-secondary">{flight.arriveTime}</div>
-          <div className="mt-1 text-[16px] font-[800] leading-none text-secondary">{flight.toCode}</div>
-          <div className="mt-0.5 truncate text-[13px] font-[600] text-secondary">{flight.toCity}</div>
+          <div className="font-[var(--font-display)] text-[21px] font-[700] leading-none text-secondary">{flight.arriveTime}</div>
+          <div className="mt-1 text-[15px] font-[800] leading-none text-secondary">{flight.toCode}</div>
+          <div className="mt-1 truncate text-[13px] font-[500] text-muted">{flight.toCity}</div>
           <div className="mt-1 text-[12px] font-[500] text-tertiary">{flight.date}</div>
         </div>
       </div>
@@ -156,20 +160,20 @@ export function BookingPreview({messages, trip, selectedFlights, passengerDetail
   return (
     <aside className={`flex w-full justify-center lg:sticky lg:top-6 ${className}`}>
       <div className="w-full max-w-[420px] overflow-hidden rounded-[7px] border border-border bg-white">
-        <div className="bg-primary px-5 py-4 text-white md:px-6 md:py-5">
+        <div className="border-b border-[#EEF2F7] bg-white px-5 py-4 md:px-6 md:py-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-[11px] font-[800] uppercase tracking-[0.08em] text-white/60">{t(messages, 'book.summary.eyebrow')}</p>
-              <h2 className="mt-1 font-[var(--font-display)] text-[17px] font-[800]">{modeTitle || t(messages, 'book.summary.title')}</h2>
+              <p className="text-[11px] font-[500] uppercase tracking-[0.08em] text-tertiary">{t(messages, 'book.summary.eyebrow')}</p>
+              <h2 className="mt-1 text-[18px] font-[500] tracking-[-0.01em] text-secondary">{modeTitle || t(messages, 'book.summary.title')}</h2>
             </div>
-            <span className="rounded-full bg-success/20 px-3 py-1 text-[11px] font-[800] uppercase text-[#60f187]">{trip.type}</span>
+            <span className="rounded-full bg-primary/5 px-3 py-1 text-[11px] font-[500] uppercase text-primary">{trip.type}</span>
           </div>
         </div>
 
         <div className="grid grid-cols-[1fr_44px_1fr] items-start gap-3 px-5 py-5 md:grid-cols-[1fr_48px_1fr] md:px-6 md:py-6">
           <div className="min-w-0">
-            <div className="font-[var(--font-display)] text-[26px] font-[800] leading-none text-secondary md:text-[28px]">{trip.fromCode}</div>
-            <div className="mt-2 text-[13px] font-[500] text-tertiary">{trip.departDate}</div>
+            <div className="text-[26px] font-[500] leading-none tracking-[-0.025em] text-secondary md:text-[28px]">{trip.fromCode}</div>
+            <div className="mt-2 text-[13px] font-[400] text-tertiary">{trip.departDate}</div>
           </div>
 
           <div className="mt-1 grid place-items-center pt-2">
@@ -177,8 +181,8 @@ export function BookingPreview({messages, trip, selectedFlights, passengerDetail
           </div>
 
           <div className="min-w-0 text-right">
-            <div className="font-[var(--font-display)] text-[26px] font-[800] leading-none text-secondary md:text-[28px]">{trip.toCode}</div>
-            <div className="mt-2 text-[13px] font-[500] text-tertiary">{trip.returnDate || trip.departDate}</div>
+            <div className="text-[26px] font-[500] leading-none tracking-[-0.025em] text-secondary md:text-[28px]">{trip.toCode}</div>
+            <div className="mt-2 text-[13px] font-[400] text-tertiary">{trip.returnDate || trip.departDate}</div>
           </div>
         </div>
 
@@ -270,21 +274,6 @@ export function MobileOrderDetails({messages, open, onToggle}) {
 }
 
 export default function BookFlightPicker({messages, trip, flights, onBack, onContinue}) {
-  const modeOptions = [
-    {
-      value: 'standard',
-      title: t(messages, 'book.choice.options.standard.title'),
-      text: t(messages, 'book.choice.options.standard.text'),
-      price: t(messages, 'book.choice.options.standard.price'),
-    },
-    {
-      value: 'verifiable',
-      title: t(messages, 'book.choice.options.verifiable.title'),
-      text: t(messages, 'book.choice.options.verifiable.text'),
-      price: t(messages, 'book.choice.options.verifiable.price'),
-    },
-  ]
-  const [selectedMode, setSelectedMode] = useState('standard')
   const [selectedPairIndex, setSelectedPairIndex] = useState(null)
   const [showOrderDetails, setShowOrderDetails] = useState(false)
   const [autoAdvancing, setAutoAdvancing] = useState(false)
@@ -301,15 +290,10 @@ export default function BookFlightPicker({messages, trip, flights, onBack, onCon
     if (selectedPairIndex === null) return []
     return flightPairs[selectedPairIndex] || []
   }, [flightPairs, selectedPairIndex])
-  const selectedModeOption = modeOptions.find((option) => option.value === selectedMode) || modeOptions[0]
+  const standardTitle = t(messages, 'book.choice.options.standard.title')
+  const standardPrice = t(messages, 'book.choice.options.standard.price')
 
   useEffect(() => () => window.clearTimeout(autoAdvanceTimerRef.current), [])
-
-  useEffect(() => {
-    if (selectedMode === 'verifiable' && selectedPairIndex === null && flightPairs.length > 0) {
-      setSelectedPairIndex(0)
-    }
-  }, [flightPairs.length, selectedMode, selectedPairIndex])
 
   const handleSelectFlights = (pairIndex, pair) => {
     if (autoAdvancing) return
@@ -319,41 +303,22 @@ export default function BookFlightPicker({messages, trip, flights, onBack, onCon
     if (shouldAutoAdvanceOnMobile()) {
       setAutoAdvancing(true)
       setShowOrderDetails(false)
-      autoAdvanceTimerRef.current = window.setTimeout(() => onContinue?.(pair, selectedModeOption.price, selectedModeOption.title), MOBILE_AUTO_ADVANCE_DELAY_MS)
+      autoAdvanceTimerRef.current = window.setTimeout(() => onContinue?.(pair, standardPrice, standardTitle), MOBILE_AUTO_ADVANCE_DELAY_MS)
     }
   }
 
   return (
     <main className="min-h-screen bg-[#f4f7fb] text-secondary">
-      <BookingStepper messages={messages} activeIndex={1} onBack={onBack} />
+      <BookingStepper messages={messages} activeIndex={3} onBack={onBack} />
 
       <section className="mx-auto grid w-full max-w-[1220px] gap-6 px-5 pb-24 pt-7 md:px-8 md:pt-8 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start">
         <div className="min-w-0 lg:max-w-[820px]">
-          <div className="flex max-w-[820px] flex-col gap-5 text-center md:flex-row md:items-end md:justify-between md:text-left">
-            <div className="mx-auto md:mx-0">
+          <div className="w-full max-w-[820px] text-center">
+            <div className="mx-auto w-full">
               <h1 className="font-[var(--font-display)] text-[30px] font-[750] leading-tight text-secondary md:text-[38px]">
-                {t(messages, 'book.title')}
+                {t(messages, 'book.flight.title')}
               </h1>
-              <p className="mt-2 max-w-[560px] text-[15px] leading-7 text-muted">{t(messages, 'book.subtitle')}</p>
-            </div>
-            <div className="grid h-[54px] w-full grid-cols-2 rounded-[6px] bg-white p-1 md:w-[380px]">
-              {modeOptions.map((option) => {
-                const active = selectedMode === option.value
-                return (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => setSelectedMode(option.value)}
-                    aria-pressed={active}
-                    className={[
-                      'rounded-[5px] px-4 text-[14px] font-[800] transition md:text-[15px]',
-                      active ? 'bg-primary text-white' : 'text-muted hover:text-secondary',
-                    ].join(' ')}
-                  >
-                    {option.value === 'standard' ? 'Standard' : 'Verifiable'}
-                  </button>
-                )
-              })}
+              <p className="mx-auto mt-2 max-w-[560px] text-[15px] leading-7 text-muted">{t(messages, 'book.flight.subtitle')}</p>
             </div>
           </div>
 
@@ -370,10 +335,10 @@ export default function BookFlightPicker({messages, trip, flights, onBack, onCon
           </div>
         </div>
 
-        <BookingPreview messages={messages} trip={trip} selectedFlights={selectedFlights} modeTitle={selectedModeOption.title} price={selectedModeOption.price} className="hidden lg:flex" />
+        <BookingPreview messages={messages} trip={trip} selectedFlights={selectedFlights} modeTitle={standardTitle} price={standardPrice} className="hidden lg:flex" />
       </section>
 
-      <MobileOrderDetailsPanel messages={messages} trip={trip} selectedFlights={selectedFlights} modeTitle={selectedModeOption.title} price={selectedModeOption.price} open={showOrderDetails} />
+      <MobileOrderDetailsPanel messages={messages} trip={trip} selectedFlights={selectedFlights} modeTitle={standardTitle} price={standardPrice} open={showOrderDetails} />
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-5 py-4 backdrop-blur">
         <div className="mx-auto grid w-full max-w-[1220px] grid-cols-[auto_1fr] items-center gap-3 md:flex md:justify-between md:gap-4">
@@ -386,7 +351,7 @@ export default function BookFlightPicker({messages, trip, flights, onBack, onCon
             type="button"
             disabled={selectedPairIndex === null || autoAdvancing}
             onClick={() => {
-              if (selectedFlights.length > 0) onContinue?.(selectedFlights, selectedModeOption.price, selectedModeOption.title)
+              if (selectedFlights.length > 0) onContinue?.(selectedFlights, standardPrice, standardTitle)
             }}
             className="ml-auto inline-flex h-[48px] w-full min-w-0 items-center justify-center gap-2 rounded-[5px] bg-primary px-6 text-[15px] font-[700] text-white transition enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-surface-tint disabled:text-tertiary md:w-auto md:min-w-[158px] md:px-7"
           >

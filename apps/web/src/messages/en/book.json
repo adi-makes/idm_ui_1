@@ -5,6 +5,10 @@
       "description": "Choose a flight reservation and review your secure booking summary."
     },
     "steps": {
+      "journey": "Journey",
+      "passenger": "Passenger",
+      "reservation": "Reservation",
+      "review": "Review & Payment",
       "search": "Search",
       "flight": "Select Flight",
       "book": "Passenger Details"
@@ -13,8 +17,36 @@
     "subtitle": "Choose a reservation for your final PDF.",
     "loading": "Finding available reservations for your route.",
     "choice": {
-      "title": "Choose your ticket type",
-      "subtitle": "Select how you want this reservation prepared before we continue.",
+      "eyebrow": "Step 3 of 5",
+      "title": "Choose Your Reservation",
+      "subtitle": "Pick the type of reservation that fits your visa needs.",
+      "includes": "Includes",
+      "price": "Price",
+      "recommended": "Recommended",
+      "departure": "Departure",
+      "arrival": "Arrival",
+      "return": "Return",
+      "standardNote": "Instant delivery",
+      "deliveryLabel": "Delivery time",
+      "preferredDate": "Preferred delivery date",
+      "preferredTime": "Preferred delivery time",
+      "features": {
+        "instant": "Instant delivery",
+        "verifiedWithAirlines": "Verified with airlines",
+        "liveSchedule": "Live flight schedule",
+        "pdf": "PDF itinerary",
+        "noVerification": "Airline verification not included",
+        "airlineReservation": "Airline reservation",
+        "onlineVerification": "Online verification where supported",
+        "manual": "Prepared manually",
+        "bestForTravel": "Best for immigration and onward travel"
+      },
+      "delivery": {
+        "instant": "Instant delivery",
+        "within1to6": "Within 1–6 Hours",
+        "within6to12": "Within 6–12 Hours",
+        "schedule": "Schedule for Later"
+      },
       "panelTitle": "Select Ticket Type",
       "routeSummary": "Delhi (DEL) to Dubai (DXB) • 6 Jul 2026 — Return: 7 Jul 2026",
       "modalTitle": "What do you need?",
@@ -31,12 +63,18 @@
       },
       "options": {
         "standard": {
-          "title": "Standard Round Trip",
+          "title": "Standard Reservation",
+          "description": "Live flight itinerary based on your selected route. Ideal for visa applications.",
+          "compactDescription": "Instant itinerary based on your selected route.",
+          "cta": "Choose Standard",
           "text": "PDF itinerary, not verifiable online • Valid for 48 hrs",
           "price": "AED 55"
         },
         "verifiable": {
-          "title": "Verifiable Round Trip",
+          "title": "Verifiable Reservation",
+          "description": "A reservation prepared by our specialists using supported airlines for online verification where available.",
+          "compactDescription": "Verified reservation prepared by our travel specialists.",
+          "cta": "Choose Verifiable",
           "text": "Real PNR, CheckMyTrip verified • Valid for 48 hrs",
           "price": "AED 90"
         }
@@ -50,31 +88,57 @@
       "title": "Search your trip",
       "subtitle": "Enter the route and dates for your visa-ready reservation. You can choose a matching flight on the next step."
     },
+    "flight": {
+      "title": "Select Flight",
+      "subtitle": "Choose the live flight itinerary to include in your Standard Reservation.",
+      "loading": "Finding available flights for your route."
+    },
     "details": {
-      "title": "Passenger details",
+      "title": "Passenger Details",
       "subtitle": "Enter the passenger information exactly as it should appear on the reservation.",
+      "journey": "Your journey",
+      "journeyTitle": "Route summary",
+      "departure": "Departure",
+      "return": "Return",
+      "nextStep": "Next, choose between a Standard Reservation and a Verifiable Reservation.",
       "emailDelivery": "Email for ticket delivery",
       "traveler": "Traveler details",
+      "additionalTraveler": "Additional traveler",
+      "addTraveler": "Add traveler",
+      "removeTraveler": "Remove traveler",
       "submit": "Proceed to pay",
+      "continue": "Continue",
       "emailSuggestion": "Did you mean",
       "capitalizationSuggestion": "Did you mean",
       "requiredWarning": "Please fill in all passenger details before continuing.",
       "paymentReady": "Passenger details are ready. Continue to secure payment.",
       "fields": {
-        "email": "Email address",
+        "email": "Email Address",
         "title": "Title",
         "firstName": "First name",
         "lastName": "Last name",
         "dateOfBirth": "Date of birth",
-        "nationality": "Nationality"
+        "dateOfBirthPlaceholder": "Date of Birth (DD/MM/YYYY)",
+        "nationality": "Nationality",
+        "travelPurpose": "Purpose"
+      },
+      "travelPurposes": {
+        "visa": "Visa Application",
+        "onward": "Onward Travel",
+        "immigration": "Immigration",
+        "embassy": "Embassy Appointment",
+        "personal": "Personal",
+        "other": "Other"
       },
       "errors": {
         "email": "Email address is required.",
+        "invalidEmail": "Enter a valid email address, such as name@gmail.com.",
         "title": "Title is required.",
         "firstName": "First name is required.",
         "lastName": "Last name is required.",
         "dateOfBirth": "Date of birth is required.",
-        "nationality": "Nationality is required."
+        "nationality": "Nationality is required.",
+        "travelPurpose": "Purpose is required."
       }
     },
     "badges": {
@@ -103,8 +167,28 @@
       "back": "Back"
     },
     "review": {
-      "title": "Review your order",
+      "eyebrow": "Step 5 of 5",
+      "title": "Review & Payment",
       "subtitle": "Check the reservation and passenger details before payment.",
+      "journey": "Journey",
+      "route": "Route",
+      "dates": "Dates",
+      "reservation": "Reservation type",
+      "selectedFlight": "Selected flight",
+      "manualReservation": "Your specialists will prepare this verifiable reservation after payment.",
+      "delivery": "Estimated delivery",
+      "total": "Total",
+      "paymentTitle": "Payment summary",
+      "paymentMethods": "Payment methods",
+      "completePayment": "Complete Payment",
+      "paymentComplete": "Payment received. Your reservation is now being prepared.",
+      "secureNote": "Secure payment processed by Stripe",
+      "methods": {
+        "creditCard": "Credit Card",
+        "applePay": "Apple Pay",
+        "googlePay": "Google Pay",
+        "other": "Other"
+      },
       "passenger": "Passenger details",
       "name": "Name",
       "email": "Email",
