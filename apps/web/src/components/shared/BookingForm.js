@@ -171,7 +171,7 @@ export default function BookingForm({locale, onSubmit}) {
       {showPopup ? (
         <div
           role="alert"
-          className="fixed right-5 top-[104px] z-[10002] max-w-[320px] rounded-[6px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-[13px] font-[650] text-[#ff2f2f]"
+          className="fixed right-5 top-[104px] z-[10002] max-w-[320px] rounded-[5px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-[13px] font-[650] text-[#ff2f2f]"
         >
           {t(messages, 'home.form.requiredWarning')}
         </div>

@@ -1,7 +1,8 @@
 'use client'
 
 import {useState} from 'react'
-import {ArrowRight, ShieldCheck} from 'lucide-react'
+import {ArrowRight} from 'lucide-react'
+import BookingBottomBar from '@/components/book/BookingBottomBar'
 import BookingStepper from '@/components/book/BookingStepper'
 import {t} from '@/messages'
 
@@ -10,7 +11,7 @@ const VERIFIABLE_FEATURE_KEYS = ['airlineReservation', 'verifiedWithAirlines']
 
 function JourneyRouteCard({messages, trip}) {
   return (
-    <section className="mt-6 rounded-2xl border border-[#E7EDF6] bg-white px-5 py-4 text-left md:px-6">
+    <section className="mt-6 rounded-[5px] border border-[#E7EDF6] bg-white px-5 py-4 text-left md:px-6">
       <div className={`grid items-center gap-3 md:gap-5 ${trip.returnDate ? 'grid-cols-[minmax(0,1fr)_auto_auto_auto_minmax(0,1fr)]' : 'grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]'}`}>
         <div className="min-w-0">
           <p className="text-[11px] font-[400] text-tertiary">{t(messages, 'book.choice.departure')}</p>
@@ -38,14 +39,14 @@ function ReservationCard({messages, option, selected, onSelect}) {
   const featureKeys = isStandard ? STANDARD_FEATURE_KEYS : VERIFIABLE_FEATURE_KEYS
 
   return (
-    <article className={`rounded-2xl border bg-white p-5 text-left transition md:p-6 ${selected ? 'border-primary' : 'border-[#E7EDF6]'}`}>
+    <article className={`rounded-[5px] border bg-white p-5 text-left transition md:p-6 ${selected ? 'border-primary' : 'border-[#E7EDF6]'}`}>
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="font-[var(--font-display)] text-[17px] font-[500] leading-tight text-secondary md:text-[18px]">{title}</h2>
           <p className="mt-2 max-w-[270px] text-[13px] font-[400] leading-5 text-muted">{description}</p>
         </div>
         {!isStandard ? (
-          <span className="shrink-0 rounded-full bg-[#EFF6FF] px-2.5 py-1.5 text-[9px] font-[500] tracking-[0.04em] text-primary">
+          <span className="shrink-0 rounded-[5px] bg-[#EFF6FF] px-2.5 py-1.5 text-[9px] font-[500] tracking-[0.04em] text-primary">
             {t(messages, 'book.choice.recommended')}
           </span>
         ) : null}
@@ -65,7 +66,7 @@ function ReservationCard({messages, option, selected, onSelect}) {
         <button
           type="button"
           onClick={() => onSelect(option)}
-          className={`mt-5 inline-flex h-[48px] w-full items-center justify-center rounded-xl border px-5 text-[13px] font-[500] transition ${selected ? 'border-primary bg-primary text-white hover:bg-primary/90' : 'border-[#D7E0EC] bg-white text-secondary hover:border-primary hover:text-primary'}`}
+          className={`mt-5 inline-flex h-[48px] w-full items-center justify-center rounded-[5px] border px-5 text-[13px] font-[500] transition ${selected ? 'border-primary bg-primary text-white hover:bg-primary/90' : 'border-[#D7E0EC] bg-white text-secondary hover:border-primary hover:text-primary'}`}
         >
           {t(messages, `book.choice.options.${option}.cta`)}
         </button>
@@ -109,23 +110,7 @@ export default function BookReservationChoice({messages, trip, onBack, onChoose}
         </div>
       </section>
 
-      <footer className="fixed inset-x-0 bottom-0 z-30 border-t border-[#E7EDF6] bg-white px-6 py-3 md:px-[9.9vw]">
-        <div className="grid w-full grid-cols-[auto_1fr] items-center gap-3 md:grid-cols-[1fr_auto_auto] md:gap-7">
-          <div className="hidden min-w-0 items-center gap-3 md:flex">
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-success/10 text-success">
-              <ShieldCheck className="size-[16px]" aria-hidden="true" />
-            </span>
-            <span className="min-w-0 text-[13px] font-[500] text-secondary">{t(messages, 'book.summary.trusted')}</span>
-          </div>
-          <div className="text-right leading-tight">
-            <p className="text-[11px] font-[500] text-tertiary md:text-[12px]">{t(messages, 'book.summary.totalAmount')}</p>
-            <p className="mt-0.5 font-[var(--font-display)] text-[22px] font-[500] text-secondary md:text-[24px]">{selectedPrice}</p>
-          </div>
-          <button type="button" onClick={continueBooking} className="inline-flex h-[52px] min-w-[210px] items-center justify-center rounded-xl bg-primary px-6 text-[14px] font-[500] text-white transition hover:bg-primary/90">
-            {t(messages, 'book.summary.continue')}
-          </button>
-        </div>
-      </footer>
+      <BookingBottomBar messages={messages} onContinue={continueBooking} showPrice price={selectedPrice} />
     </main>
   )
 }

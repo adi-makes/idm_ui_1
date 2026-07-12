@@ -14,10 +14,10 @@ export default function BookingRouteSummaryCard({
 
   return (
     <aside className={`w-full ${className}`}>
-      <div className="rounded-2xl border border-[#E7EDF6] bg-white p-6 md:p-7">
+      <div className="rounded-[5px] border border-[#E7EDF6] bg-white p-6 md:p-7">
         <div className="flex items-center justify-between gap-3">
           <h2 className="font-[var(--font-display)] text-[18px] font-[500] text-[#0F172A]">{title}</h2>
-          {hasReturn ? <span className="rounded-full bg-[#EFF6FF] px-2.5 py-1 text-[11px] font-[500] text-primary">Round trip</span> : null}
+          {hasReturn ? <span className="rounded-[5px] bg-[#EFF6FF] px-2.5 py-1 text-[11px] font-[500] text-primary">Round trip</span> : null}
         </div>
 
         <div className="mt-8 grid grid-cols-[1fr_minmax(76px,1fr)_1fr] items-center gap-3">

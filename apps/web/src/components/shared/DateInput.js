@@ -209,7 +209,7 @@ export default function DateInput({
           />
           <div
             className={[
-              'relative z-[9999] max-h-[90vh] w-full overflow-y-auto rounded-t-[8px] bg-white transition-transform duration-300 ease-out md:max-h-none md:overflow-visible md:rounded-[5px] md:transition-[opacity,transform]',
+            'relative z-[9999] max-h-[90vh] w-full overflow-y-auto rounded-[5px] bg-white transition-transform duration-300 ease-out md:max-h-none md:overflow-visible md:transition-[opacity,transform]',
               visible
                 ? 'translate-y-0 md:opacity-100'
                 : 'translate-y-full md:translate-y-2 md:opacity-0',

@@ -1,8 +1,9 @@
 'use client'
 
 import {useEffect, useState} from 'react'
-import {CalendarDays, ChevronDown, Globe2, Mail, Plus, ShieldCheck, Trash2, UserRound} from 'lucide-react'
-import BookFlightPicker, {BookingPreview, MobileOrderDetails, MobileOrderDetailsPanel} from '@/components/book/BookFlightPicker'
+import {CalendarDays, ChevronDown, Globe2, Mail, ShieldCheck, Trash2, UserRound} from 'lucide-react'
+import BookingBottomBar from '@/components/book/BookingBottomBar'
+import BookFlightPicker from '@/components/book/BookFlightPicker'
 import BookReservationChoice from '@/components/book/BookReservationChoice'
 import BookReviewStep from '@/components/book/BookReviewStep'
 import BookingStepper from '@/components/book/BookingStepper'
@@ -144,10 +145,10 @@ export default function BookFlow({locale, messages}) {
       <BookingStepper messages={messages} activeIndex={0} onBack={goBackFromSearch} />
 
       <section className="mx-auto flex w-full max-w-[1160px] flex-col items-center px-5 pb-24 pt-10 text-center md:px-8 md:pt-14">
-        <h1 className="font-[var(--font-display)] text-[30px] font-[750] leading-tight text-secondary md:text-[38px]">
+        <h1 className="font-[var(--font-display)] text-[28px] font-[500] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
           {t(messages, 'book.search.title')}
         </h1>
-        <p className="mt-3 max-w-[560px] text-[14px] leading-6 text-muted">
+        <p className="mt-2 max-w-[560px] text-[13px] font-[400] leading-5 text-muted">
           {t(messages, 'book.search.subtitle')}
         </p>
 
@@ -234,7 +235,7 @@ function EmailField({messages, label, value, onChange, onBlur, error, onClearErr
         aria-label={label}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={errorId}
-        className={`h-[48px] w-full rounded-xl border bg-white px-5 text-[14px] font-[400] outline-none transition placeholder:text-tertiary ${value ? 'text-secondary' : 'text-muted'} ${
+        className={`h-[48px] w-full rounded-[5px] border bg-white px-5 text-[14px] font-[400] outline-none transition placeholder:text-tertiary ${value ? 'text-secondary' : 'text-muted'} ${
           error ? 'border-[#ff3b3b] focus:border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'
         }`}
       />
@@ -273,7 +274,7 @@ function DateOfBirthField({name = 'dateOfBirth', label, value, error, onChange, 
 
   return (
     <div className="text-left">
-      <div className={`flex h-[48px] items-center rounded-xl border bg-white px-4 transition focus-within:border-primary ${error ? 'border-[#ff3b3b] focus-within:border-[#ff3b3b]' : 'border-[#D7E0EC]'}`}>
+      <div className={`flex h-[48px] items-center rounded-[5px] border bg-white px-4 transition focus-within:border-primary ${error ? 'border-[#ff3b3b] focus-within:border-[#ff3b3b]' : 'border-[#D7E0EC]'}`}>
         <CalendarDays className="mr-3 size-[15px] shrink-0 text-tertiary" aria-hidden="true" />
         <input
           name={name}
@@ -290,7 +291,7 @@ function DateOfBirthField({name = 'dateOfBirth', label, value, error, onChange, 
           aria-label={label}
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={errorId}
-          className={`min-w-0 flex-1 bg-transparent text-[14px] font-[450] outline-none placeholder:text-tertiary ${value ? 'text-secondary' : 'text-muted'}`}
+          className={`min-w-0 flex-1 bg-transparent text-[14px] font-[400] outline-none placeholder:text-tertiary ${value ? 'text-secondary' : 'text-muted'}`}
         />
       </div>
       {error ? <p id={errorId} className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">{error}</p> : null}
@@ -332,7 +333,7 @@ function DetailField({
   return (
     <div className="relative block text-left">
       <div
-        className={`flex h-[48px] items-center rounded-xl border bg-white px-4 transition focus-within:border-primary ${
+        className={`flex h-[48px] items-center rounded-[5px] border bg-white px-4 transition focus-within:border-primary ${
           error ? 'border-[#ff3b3b]' : 'border-[#D7E0EC]'
         }`}
       >
@@ -399,7 +400,7 @@ function MobileReviewSummary({messages, trip, selectedFlights, passengerDetails}
     <div className="self-start rounded-[5px] bg-white p-4 md:hidden">
       <div className="grid grid-cols-[1fr_34px_1fr] items-start gap-3">
         <div>
-          <span className="inline-flex rounded-[3px] bg-surface-muted px-2.5 py-1 text-[10px] font-[600] text-secondary">
+          <span className="inline-flex rounded-[5px] bg-surface-muted px-2.5 py-1 text-[10px] font-[600] text-secondary">
             {trip.type}
           </span>
           <div className="mt-3 font-[var(--font-display)] text-[20px] font-[800] leading-none text-secondary">{trip.fromCode}</div>
@@ -426,7 +427,7 @@ function MobileReviewSummary({messages, trip, selectedFlights, passengerDetails}
                 {flight.fromCode} {flight.departTime} → {flight.toCode} {flight.arriveTime}
               </div>
             </div>
-            <span className="rounded-[4px] bg-surface-muted px-2 py-1 text-[10px] font-[700] text-secondary">{flight.kind}</span>
+            <span className="rounded-[5px] bg-surface-muted px-2 py-1 text-[10px] font-[700] text-secondary">{flight.kind}</span>
           </div>
         ))}
       </div>
@@ -455,7 +456,6 @@ function MobileReviewSummary({messages, trip, selectedFlights, passengerDetails}
 function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, initialPassengerDetails, onBack, onContinue}) {
   const [errors, setErrors] = useState({})
   const [showPopup, setShowPopup] = useState(false)
-  const [showOrderDetails, setShowOrderDetails] = useState(false)
   const [paymentReady, setPaymentReady] = useState(false)
   const [passengerDetails, setPassengerDetails] = useState(() => ({
     email: '',
@@ -557,7 +557,6 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
 
     setErrors({})
     setShowPopup(false)
-    setShowOrderDetails(false)
     setPaymentReady(false)
     onContinue?.(passengerDetails)
   }
@@ -591,7 +590,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
       {showPopup ? (
         <div
           role="alert"
-          className="fixed left-1/2 top-[64px] z-[10002] w-[calc(100%-40px)] max-w-[320px] -translate-x-1/2 rounded-[6px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-center text-[13px] font-[650] text-[#ff2f2f] min-[700px]:top-[114px] md:left-auto md:right-5 md:top-5 md:w-auto md:translate-x-0 md:text-left"
+          className="fixed left-1/2 top-[64px] z-[10002] w-[calc(100%-40px)] max-w-[320px] -translate-x-1/2 rounded-[5px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-center text-[13px] font-[650] text-[#ff2f2f] min-[700px]:top-[114px] md:left-auto md:right-5 md:top-5 md:w-auto md:translate-x-0 md:text-left"
         >
           {t(messages, 'book.details.requiredWarning')}
         </div>
@@ -612,7 +611,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
             id="passenger-details-form"
             noValidate
             onSubmit={handleSubmit}
-            className="mt-5 rounded-2xl border border-[#E7EDF6] bg-white p-5 md:p-6"
+            className="mt-5 rounded-[5px] border border-[#E7EDF6] bg-white p-5 md:p-6"
           >
             <div className="space-y-5">
               <div className="flex gap-4">
@@ -705,7 +704,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
                             clearFieldError('travelPurpose')
                           }}
                           aria-invalid={errors.travelPurpose ? 'true' : undefined}
-                          className={`h-[48px] w-full appearance-none rounded-xl border bg-white px-4 pr-11 text-[14px] outline-none transition ${errors.travelPurpose ? 'border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'} ${passengerDetails.travelPurpose ? 'font-[400] text-secondary' : 'font-[400] text-tertiary'}`}
+                          className={`h-[48px] w-full appearance-none rounded-[5px] border bg-white px-4 pr-11 text-[14px] outline-none transition ${errors.travelPurpose ? 'border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'} ${passengerDetails.travelPurpose ? 'font-[400] text-secondary' : 'font-[400] text-tertiary'}`}
                         >
                           <option value="">{t(messages, 'book.details.fields.travelPurpose')}</option>
                           {TRAVEL_PURPOSE_KEYS.map((purpose) => <option key={purpose} value={purpose}>{t(messages, `book.details.travelPurposes.${purpose}`)}</option>)}
@@ -795,7 +794,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
                                     clearFieldError(fieldName('travelPurpose'))
                                   }}
                                   aria-invalid={errors[fieldName('travelPurpose')] ? 'true' : undefined}
-                                  className={`h-[48px] w-full appearance-none rounded-xl border bg-white px-4 pr-11 text-[14px] outline-none transition ${errors[fieldName('travelPurpose')] ? 'border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'} ${traveler.travelPurpose ? 'font-[400] text-secondary' : 'font-[400] text-tertiary'}`}
+                                  className={`h-[48px] w-full appearance-none rounded-[5px] border bg-white px-4 pr-11 text-[14px] outline-none transition ${errors[fieldName('travelPurpose')] ? 'border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'} ${traveler.travelPurpose ? 'font-[400] text-secondary' : 'font-[400] text-tertiary'}`}
                                 >
                                   <option value="">{t(messages, 'book.details.fields.travelPurpose')}</option>
                                   {TRAVEL_PURPOSE_KEYS.map((purpose) => <option key={purpose} value={purpose}>{t(messages, `book.details.travelPurposes.${purpose}`)}</option>)}
@@ -811,9 +810,8 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
                       <button
                         type="button"
                         onClick={addTraveler}
-                        className="inline-flex h-[44px] items-center justify-center gap-2 self-start rounded-xl border border-[#D7E0EC] px-4 text-[13px] font-[500] text-secondary transition hover:border-primary hover:text-primary md:col-span-2"
+                        className="inline-flex h-[44px] items-center justify-center self-start rounded-[5px] border border-[#D7E0EC] px-4 text-[13px] font-[500] text-secondary transition hover:border-primary hover:text-primary md:col-span-2"
                       >
-                        <Plus className="size-[16px]" aria-hidden="true" />
                         {t(messages, 'book.details.addTraveler')}
                       </button>
                     </div>
@@ -831,33 +829,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
 
       </section>
 
-      <MobileOrderDetailsPanel messages={messages} trip={trip} selectedFlights={selectedFlights} passengerDetails={passengerDetails} modeTitle={modeTitle} price={price} open={showOrderDetails} />
-
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[#E7EDF6] bg-white/95 px-6 py-3 backdrop-blur md:px-[7.5vw]">
-        <div className="grid w-full grid-cols-[auto_1fr] items-center gap-3 md:grid-cols-[1fr_auto] md:gap-6">
-          <div className="hidden min-w-0 items-center gap-3 md:flex">
-            <span className="grid size-[42px] shrink-0 place-items-center rounded-full bg-success/10 text-success">
-              <ShieldCheck className="size-[17px]" aria-hidden="true" />
-            </span>
-            <span className="min-w-0">
-                <span className="block text-[14px] font-[500] text-secondary">{t(messages, 'book.summary.trusted')}</span>
-                <span className="mt-0.5 block text-[11px] font-[400] text-tertiary">{t(messages, 'book.summary.encrypted')}</span>
-            </span>
-          </div>
-          <MobileOrderDetails
-            messages={messages}
-            open={showOrderDetails}
-            onToggle={() => setShowOrderDetails((current) => !current)}
-          />
-          <button
-            type="submit"
-            form="passenger-details-form"
-            className="ml-auto inline-flex h-[52px] w-full min-w-0 items-center justify-center rounded-xl bg-primary px-5 text-[14px] font-[500] text-white transition hover:bg-primary/90 md:w-auto md:min-w-[220px] md:px-7"
-          >
-            {t(messages, 'book.details.continue')}
-          </button>
-        </div>
-      </div>
+      <BookingBottomBar messages={messages} form="passenger-details-form" />
     </main>
   )
 }
@@ -887,7 +859,7 @@ function SkeletonSegment() {
         </div>
 
         <div className="flex flex-col items-center">
-          <SkeletonLine className="size-[18px] rounded-[6px]" />
+          <SkeletonLine className="size-[18px] rounded-[5px]" />
           <SkeletonLine className="mt-2 h-[11px] w-[54px]" />
           <SkeletonLine className="mt-2 h-[11px] w-[68px]" />
         </div>
@@ -905,7 +877,7 @@ function SkeletonSegment() {
 
 function SkeletonTicket() {
   return (
-    <div className="overflow-hidden rounded-[6px] border border-border bg-white">
+    <div className="overflow-hidden rounded-[5px] border border-border bg-white">
       <SkeletonSegment />
       <div className="mx-4 h-px bg-border md:mx-5" aria-hidden="true" />
       <SkeletonSegment />
@@ -925,7 +897,7 @@ function SkeletonBookingPreview({className = ''}) {
             <SkeletonLine className="mt-2 h-[11px] w-[78px]" />
           </div>
           <div className="grid place-items-center pt-1">
-            <SkeletonLine className="size-[17px] rounded-[6px]" />
+            <SkeletonLine className="size-[17px] rounded-[5px]" />
           </div>
           <div className="flex flex-col items-end">
             <SkeletonLine className="h-[18px] w-[42px]" />
@@ -939,18 +911,16 @@ function SkeletonBookingPreview({className = ''}) {
 }
 
 function BookLoading({messages}) {
-  const [showOrderDetails, setShowOrderDetails] = useState(false)
-
   return (
     <main className="min-h-screen bg-[#f4f7fb] text-secondary">
        <BookingStepper messages={messages} activeIndex={3} />
 
       <section className="mx-auto grid w-full max-w-[1220px] gap-6 px-5 pb-24 pt-5 md:px-8 md:pt-6 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start">
         <div className="min-w-0 text-center md:text-left">
-          <h1 className="font-[var(--font-display)] text-[26px] font-[750] leading-tight text-secondary md:text-[32px]">
+          <h1 className="font-[var(--font-display)] text-[28px] font-[500] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
              {t(messages, 'book.flight.title')}
           </h1>
-          <p className="mx-auto mt-2 max-w-[520px] text-[13px] leading-6 text-muted md:mx-0">
+          <p className="mx-auto mt-2 max-w-[560px] text-[13px] font-[400] leading-5 text-muted md:mx-0">
              {t(messages, 'book.flight.loading')}
           </p>
 
@@ -963,26 +933,12 @@ function BookLoading({messages}) {
         <SkeletonBookingPreview className="hidden lg:flex" />
       </section>
 
-      <MobileOrderDetailsPanel messages={messages} selectedFlights={[]} open={showOrderDetails}>
-        <SkeletonBookingPreview className="mt-5" />
-      </MobileOrderDetailsPanel>
-
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-white/95 px-5 py-4 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-[1220px] items-center justify-between gap-4">
-          <MobileOrderDetails
-            messages={messages}
-            open={showOrderDetails}
-            onToggle={() => setShowOrderDetails((current) => !current)}
-          />
-          <button
-            type="button"
-            disabled
-            className="ml-auto inline-flex h-[46px] min-w-[142px] cursor-not-allowed items-center justify-center gap-2 rounded-[5px] bg-surface-tint px-6 text-[14px] font-[500] text-tertiary"
-          >
-            {t(messages, 'book.summary.continue')}
-          </button>
-        </div>
-      </div>
+      <BookingBottomBar
+        messages={messages}
+        showPrice
+        price={t(messages, 'book.choice.options.standard.price')}
+        continueDisabled
+      />
     </main>
   )
 }
