@@ -1,6 +1,6 @@
 'use client'
 
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {BadgeCheck, Clock3, FileText, Plane} from 'lucide-react'
 import BookingBottomBar from '@/components/book/BookingBottomBar'
 import BookingRouteSummaryCard from '@/components/book/BookingRouteSummaryCard'
@@ -63,6 +63,14 @@ function ReservationCard({messages, option, selected, onSelect}) {
 
       <div className="mt-auto pt-4 md:pt-5">
         <p className="font-[var(--font-display)] text-[24px] font-[400] leading-none text-secondary">{price}</p>
+        <button
+          type="button"
+          onClick={() => onSelect(option)}
+          aria-pressed={selected}
+          className={`relative z-20 mt-5 hidden h-[46px] w-full items-center justify-center rounded-[5px] border text-[13px] font-[500] transition md:inline-flex ${selected ? 'border-primary bg-primary text-white hover:bg-primary/90' : 'border-[#D7E0EC] bg-white text-secondary hover:border-primary hover:text-primary'}`}
+        >
+          {t(messages, `book.choice.options.${option}.cta`)}
+        </button>
       </div>
     </article>
   )
@@ -71,6 +79,16 @@ function ReservationCard({messages, option, selected, onSelect}) {
 export default function BookReservationChoice({messages, trip, onBack, onChoose}) {
   const [selectedOption, setSelectedOption] = useState(null)
   const selectedPrice = selectedOption ? t(messages, `book.choice.options.${selectedOption}.price`) : undefined
+
+  useEffect(() => {
+    if (!window.matchMedia('(min-width: 768px)').matches) return undefined
+
+    const frame = window.requestAnimationFrame(() => {
+      setSelectedOption((current) => current || 'verifiable')
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [])
 
   const continueBooking = () => {
     if (!selectedOption) return
