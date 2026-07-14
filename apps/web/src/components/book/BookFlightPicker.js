@@ -15,30 +15,30 @@ function SummaryFlightRow({flight}) {
       <div className="flex items-center justify-between gap-4">
         <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1">
           <AirlineLogo airline={flight.airline} />
-          <span className="text-[14px] font-[500] text-secondary">{flight.airline}</span>
-          <span className="text-[13px] font-[500] text-primary">{flight.flightNumber}</span>
+          <span className="text-[14px] font-[400] text-secondary">{flight.airline}</span>
+          <span className="text-[13px] font-[400] text-primary">{flight.flightNumber}</span>
         </div>
-        <span className="rounded-[5px] border border-primary/10 bg-primary/5 px-3 py-1 text-[12px] font-[500] text-primary">{flight.kind}</span>
+        <span className="rounded-[5px] border border-primary/10 bg-primary/5 px-3 py-1 text-[12px] font-[400] text-primary">{flight.kind}</span>
       </div>
 
       <div className="mt-4 grid grid-cols-[1fr_72px_1fr] items-center gap-3">
         <div className="min-w-0">
-          <div className="font-[var(--font-display)] text-[21px] font-[700] leading-none text-secondary">{flight.departTime}</div>
-          <div className="mt-1 text-[15px] font-[800] leading-none text-secondary">{flight.fromCode}</div>
-          <div className="mt-1 truncate text-[13px] font-[500] text-muted">{flight.fromCity}</div>
-          <div className="mt-1 text-[12px] font-[500] text-tertiary">{flight.date}</div>
+          <div className="font-[var(--font-display)] text-[21px] font-[400] leading-none text-secondary">{flight.departTime}</div>
+          <div className="mt-1 text-[15px] font-[400] leading-none text-secondary">{flight.fromCode}</div>
+          <div className="mt-1 truncate text-[13px] font-[400] text-muted">{flight.fromCity}</div>
+          <div className="mt-1 text-[12px] font-[400] text-tertiary">{flight.date}</div>
         </div>
 
         <div className="flex flex-col items-center text-center">
           <ArrowRight className="size-[17px] text-tertiary" aria-hidden="true" />
-          <span className="mt-1 text-[12px] font-[500] text-muted">{flight.duration}</span>
+          <span className="mt-1 text-[12px] font-[400] text-muted">{flight.duration}</span>
         </div>
 
         <div className="min-w-0 text-right">
-          <div className="font-[var(--font-display)] text-[21px] font-[700] leading-none text-secondary">{flight.arriveTime}</div>
-          <div className="mt-1 text-[15px] font-[800] leading-none text-secondary">{flight.toCode}</div>
-          <div className="mt-1 truncate text-[13px] font-[500] text-muted">{flight.toCity}</div>
-          <div className="mt-1 text-[12px] font-[500] text-tertiary">{flight.date}</div>
+          <div className="font-[var(--font-display)] text-[21px] font-[400] leading-none text-secondary">{flight.arriveTime}</div>
+          <div className="mt-1 text-[15px] font-[400] leading-none text-secondary">{flight.toCode}</div>
+          <div className="mt-1 truncate text-[13px] font-[400] text-muted">{flight.toCity}</div>
+          <div className="mt-1 text-[12px] font-[400] text-tertiary">{flight.date}</div>
         </div>
       </div>
     </div>
@@ -55,26 +55,26 @@ function PassengerSummary({messages, passengerDetails}) {
 
   return (
     <div className="mt-4 border-t border-border pt-4">
-      <h3 className="font-[var(--font-display)] text-[14px] font-[750] text-secondary">
+      <h3 className="font-[var(--font-display)] text-[14px] font-[400] text-secondary">
         {t(messages, 'book.review.passenger')}
       </h3>
       <dl className="mt-3 grid gap-2 text-[12px] leading-5">
         {fullName ? (
           <div className="flex items-start justify-between gap-4">
-            <dt className="font-[500] text-muted">{t(messages, 'book.review.name')}</dt>
-            <dd className="text-right font-[650] text-secondary">{fullName}</dd>
+            <dt className="font-[400] text-muted">{t(messages, 'book.review.name')}</dt>
+            <dd className="text-right font-[400] text-secondary">{fullName}</dd>
           </div>
         ) : null}
         {passengerDetails?.email ? (
           <div className="flex items-start justify-between gap-4">
-            <dt className="font-[500] text-muted">{t(messages, 'book.review.email')}</dt>
-            <dd className="min-w-0 break-all text-right font-[650] text-secondary">{passengerDetails.email}</dd>
+            <dt className="font-[400] text-muted">{t(messages, 'book.review.email')}</dt>
+            <dd className="min-w-0 break-all text-right font-[400] text-secondary">{passengerDetails.email}</dd>
           </div>
         ) : null}
         {nationality ? (
           <div className="flex items-start justify-between gap-4">
-            <dt className="font-[500] text-muted">{t(messages, 'book.review.nationality')}</dt>
-            <dd className="text-right font-[650] text-secondary">{nationality}</dd>
+            <dt className="font-[400] text-muted">{t(messages, 'book.review.nationality')}</dt>
+            <dd className="text-right font-[400] text-secondary">{nationality}</dd>
           </div>
         ) : null}
       </dl>
@@ -91,16 +91,16 @@ export function BookingPreview({messages, trip, selectedFlights, passengerDetail
         <div className="border-b border-[#EEF2F7] bg-white px-5 py-4 md:px-6 md:py-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-[11px] font-[500] uppercase tracking-[0.08em] text-tertiary">{t(messages, 'book.summary.eyebrow')}</p>
-              <h2 className="mt-1 text-[18px] font-[500] tracking-[-0.01em] text-secondary">{modeTitle || t(messages, 'book.summary.title')}</h2>
+              <p className="text-[11px] font-[400] uppercase tracking-[0.08em] text-tertiary">{t(messages, 'book.summary.eyebrow')}</p>
+              <h2 className="mt-1 text-[18px] font-[400] tracking-[-0.01em] text-secondary">{modeTitle || t(messages, 'book.summary.title')}</h2>
             </div>
-            <span className="rounded-[5px] bg-primary/5 px-3 py-1 text-[11px] font-[500] uppercase text-primary">{trip.type}</span>
+            <span className="rounded-[5px] bg-primary/5 px-3 py-1 text-[11px] font-[400] uppercase text-primary">{trip.type}</span>
           </div>
         </div>
 
         <div className="grid grid-cols-[1fr_44px_1fr] items-start gap-3 px-5 py-5 md:grid-cols-[1fr_48px_1fr] md:px-6 md:py-6">
           <div className="min-w-0">
-            <div className="text-[26px] font-[500] leading-none tracking-[-0.025em] text-secondary md:text-[28px]">{trip.fromCode}</div>
+            <div className="text-[26px] font-[400] leading-none tracking-[-0.025em] text-secondary md:text-[28px]">{trip.fromCode}</div>
             <div className="mt-2 text-[13px] font-[400] text-tertiary">{trip.departDate}</div>
           </div>
 
@@ -109,7 +109,7 @@ export function BookingPreview({messages, trip, selectedFlights, passengerDetail
           </div>
 
           <div className="min-w-0 text-right">
-            <div className="text-[26px] font-[500] leading-none tracking-[-0.025em] text-secondary md:text-[28px]">{trip.toCode}</div>
+            <div className="text-[26px] font-[400] leading-none tracking-[-0.025em] text-secondary md:text-[28px]">{trip.toCode}</div>
             <div className="mt-2 text-[13px] font-[400] text-tertiary">{trip.returnDate || trip.departDate}</div>
           </div>
         </div>
@@ -121,29 +121,29 @@ export function BookingPreview({messages, trip, selectedFlights, passengerDetail
             ))}
           </div>
         ) : (
-          <div className="mx-6 mb-5 rounded-[5px] border border-dashed border-border-strong bg-surface-muted px-4 py-3 text-center text-[13px] font-[600] leading-5 text-muted">
+          <div className="mx-6 mb-5 rounded-[5px] border border-dashed border-border-strong bg-surface-muted px-4 py-3 text-center text-[13px] font-[400] leading-5 text-muted">
             {t(messages, 'book.summary.selectPrompt')}
           </div>
         )}
 
         <div className="border-t border-border px-5 py-4 md:px-6">
-          <p className="text-[11px] font-[800] uppercase tracking-[0.08em] text-tertiary">{t(messages, 'book.summary.deliveryLabel')}</p>
-          <p className="mt-2 text-[14px] font-[600] text-secondary">{t(messages, 'book.summary.delivery')}</p>
+          <p className="text-[11px] font-[400] uppercase tracking-[0.08em] text-tertiary">{t(messages, 'book.summary.deliveryLabel')}</p>
+          <p className="mt-2 text-[14px] font-[400] text-secondary">{t(messages, 'book.summary.delivery')}</p>
         </div>
 
         {!compact ? (
           <div className="border-t border-border px-6 py-5">
-            <p className="text-[11px] font-[800] uppercase tracking-[0.08em] text-tertiary">{t(messages, 'book.summary.priceBreakdown')}</p>
+            <p className="text-[11px] font-[400] uppercase tracking-[0.08em] text-tertiary">{t(messages, 'book.summary.priceBreakdown')}</p>
             <div className="mt-3 flex items-center justify-between text-[14px] text-muted">
               <span>{t(messages, 'book.pricing.flight')}</span>
-              <span className="font-[600] text-secondary">{price}</span>
+              <span className="font-[400] text-secondary">{price}</span>
             </div>
-            <button type="button" className="mt-4 flex h-[46px] w-full items-center justify-center rounded-[5px] border border-primary text-[14px] font-[700] text-primary transition hover:bg-primary hover:text-white">
+            <button type="button" className="mt-4 flex h-[46px] w-full items-center justify-center rounded-[5px] border border-primary text-[14px] font-[500] text-primary transition hover:bg-primary hover:text-white">
               {t(messages, 'book.summary.coupon')}
             </button>
             <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
-              <span className="font-[var(--font-display)] text-[18px] font-[800] text-secondary">{t(messages, 'book.summary.total')}</span>
-              <span className="font-[var(--font-display)] text-[20px] font-[800] text-primary">{price}</span>
+              <span className="font-[var(--font-display)] text-[18px] font-[400] text-secondary">{t(messages, 'book.summary.total')}</span>
+              <span className="font-[var(--font-display)] text-[20px] font-[400] text-primary">{price}</span>
             </div>
           </div>
         ) : null}
@@ -151,7 +151,7 @@ export function BookingPreview({messages, trip, selectedFlights, passengerDetail
         {!compact ? <PassengerSummary messages={messages} passengerDetails={passengerDetails} /> : null}
 
         {!compact ? (
-          <div className="grid grid-cols-2 border-t border-border text-[13px] font-[700] text-secondary">
+          <div className="grid grid-cols-2 border-t border-border text-[13px] font-[400] text-secondary">
             <div className="flex items-center justify-center gap-2 border-r border-border px-3 py-3">
               <ShieldCheck className="size-[16px] text-success" aria-hidden="true" />
               {t(messages, 'book.summary.secure')}
@@ -207,7 +207,7 @@ export default function BookFlightPicker({messages, trip, flights, onBack, onCon
         <div className="min-w-0 lg:max-w-[820px]">
           <div className="w-full max-w-[820px] text-center">
             <div className="mx-auto w-full">
-              <h1 className="font-[var(--font-display)] text-[28px] font-[500] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
+              <h1 className="font-[var(--font-display)] text-[28px] font-[400] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
                 {t(messages, 'book.flight.title')}
               </h1>
               <p className="mx-auto mt-2 max-w-[560px] text-[13px] font-[400] leading-5 text-muted">{t(messages, 'book.flight.subtitle')}</p>

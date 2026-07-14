@@ -60,7 +60,7 @@ function readSavedBooking() {
   }
 }
 
-export default function BookingForm({locale, onSubmit}) {
+export default function BookingForm({locale, onSubmit, bookingMode = false}) {
   const messages = getMessages(locale)
   const [form, setForm] = useState(DEFAULT_FORM)
   const [activePopup, setActivePopup] = useState(null)
@@ -171,14 +171,14 @@ export default function BookingForm({locale, onSubmit}) {
       {showPopup ? (
         <div
           role="alert"
-          className="fixed right-5 top-[104px] z-[10002] max-w-[320px] rounded-[5px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-[13px] font-[650] text-[#ff2f2f]"
+          className={`fixed right-5 top-[104px] z-[10002] max-w-[320px] rounded-[5px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-[13px] text-[#ff2f2f] ${bookingMode ? 'font-[400]' : 'font-[650]'}`}
         >
           {t(messages, 'home.form.requiredWarning')}
         </div>
       ) : null}
 
       <div className="px-3 pb-3 pt-3 min-[700px]:px-7 min-[700px]:pb-5 min-[700px]:pt-8 md:px-[30px] md:pb-4 md:pt-[28px]">
-        <div className="mx-auto grid h-[48px] w-full max-w-[330px] min-w-0 grid-cols-2 rounded-[5px] bg-surface-tint p-[5px] text-center font-[var(--font-display)] text-[14px] font-[500] text-muted min-[700px]:h-[58px] min-[700px]:max-w-[380px] min-[700px]:text-[16px] md:h-[52px] md:text-[15px]">
+        <div className={`mx-auto grid h-[48px] w-full max-w-[330px] min-w-0 grid-cols-2 rounded-[5px] bg-surface-tint p-[5px] text-center font-[var(--font-display)] text-[14px] text-muted min-[700px]:h-[58px] min-[700px]:max-w-[380px] min-[700px]:text-[16px] md:h-[52px] md:text-[15px] ${bookingMode ? 'font-[400]' : 'font-[500]'}`}>
           {TRIP_TYPES.map((item) => {
             const active = tripType === item.value
             return (
@@ -191,7 +191,7 @@ export default function BookingForm({locale, onSubmit}) {
                 onClick={() => selectTripType(item.value)}
                 className={[
                   'min-w-0 rounded-[5px] px-2 transition-[background,color] duration-150',
-                  active ? 'bg-white font-[700] text-primary' : 'hover:text-secondary',
+                  active ? `bg-white ${bookingMode ? 'font-[500]' : 'font-[700]'} text-primary` : 'hover:text-secondary',
                 ].join(' ')}
               >
                 <span className="block truncate">{t(messages, item.labelKey)}</span>
@@ -260,7 +260,7 @@ export default function BookingForm({locale, onSubmit}) {
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="mx-auto flex h-[52px] w-full max-w-[620px] items-center justify-center rounded-[5px] bg-primary font-[var(--font-display)] text-[16px] font-[700] tracking-normal text-white transition-colors hover:bg-primary/90 min-[700px]:h-[58px] min-[700px]:text-[18px] md:h-[48px] md:text-[16px]"
+                className={`mx-auto flex h-[52px] w-full max-w-[620px] items-center justify-center rounded-[5px] bg-primary font-[var(--font-display)] text-[16px] tracking-normal text-white transition-colors hover:bg-primary/90 min-[700px]:h-[58px] min-[700px]:text-[18px] md:h-[48px] md:text-[16px] ${bookingMode ? 'font-[500]' : 'font-[700]'}`}
               >
                 {t(messages, 'home.form.cta')}
               </button>
@@ -270,7 +270,7 @@ export default function BookingForm({locale, onSubmit}) {
                 onClick={(event) => {
                   if (!handleSubmit()) event.preventDefault()
                 }}
-                className="mx-auto flex h-[52px] w-full max-w-[620px] items-center justify-center rounded-[5px] bg-primary font-[var(--font-display)] text-[16px] font-[700] tracking-normal text-white transition-colors hover:bg-primary/90 min-[700px]:h-[58px] min-[700px]:text-[18px] md:h-[48px] md:text-[16px]"
+                className={`mx-auto flex h-[52px] w-full max-w-[620px] items-center justify-center rounded-[5px] bg-primary font-[var(--font-display)] text-[16px] tracking-normal text-white transition-colors hover:bg-primary/90 min-[700px]:h-[58px] min-[700px]:text-[18px] md:h-[48px] md:text-[16px] ${bookingMode ? 'font-[500]' : 'font-[700]'}`}
               >
                 {t(messages, 'home.form.cta')}
               </Link>
@@ -279,7 +279,7 @@ export default function BookingForm({locale, onSubmit}) {
         </div>
       </div>
 
-      <div className="mx-3 mb-3 mt-1 grid min-h-[52px] min-w-0 grid-cols-1 overflow-hidden rounded-[5px] border border-border text-[10px] font-[500] leading-none text-muted min-[700px]:mx-0 min-[700px]:mb-0 min-[700px]:mt-0 min-[700px]:w-full min-[700px]:grid-cols-2 min-[700px]:rounded-none min-[700px]:border-0 min-[700px]:border-t min-[700px]:border-border min-[700px]:text-[11px] md:grid-cols-[1fr_1fr_1fr_1.35fr]">
+      <div className={`mx-3 mb-3 mt-1 grid min-h-[52px] min-w-0 grid-cols-1 overflow-hidden rounded-[5px] border border-border text-[10px] leading-none text-muted min-[700px]:mx-0 min-[700px]:mb-0 min-[700px]:mt-0 min-[700px]:w-full min-[700px]:grid-cols-2 min-[700px]:rounded-none min-[700px]:border-0 min-[700px]:border-t min-[700px]:border-border min-[700px]:text-[11px] md:grid-cols-[1fr_1fr_1fr_1.35fr] ${bookingMode ? 'font-[400]' : 'font-[500]'}`}>
         <div className="hidden min-w-0 items-center justify-center gap-1.5 border-b border-r border-border px-2 py-3 min-[700px]:flex min-[700px]:gap-2 min-[700px]:px-4 min-[700px]:border-r md:border-b-0">
           <Lock className="size-[14px] shrink-0 text-success" aria-hidden="true" />
           <span className="truncate min-[700px]:hidden">{t(messages, 'home.trust.sslMobile')}</span>
@@ -296,7 +296,7 @@ export default function BookingForm({locale, onSubmit}) {
           <span className="hidden truncate min-[700px]:block">{t(messages, 'home.trust.worldwide')}</span>
         </div>
         <div className="flex min-w-0 items-center justify-center gap-2 px-2 py-3 min-[700px]:col-span-1 min-[700px]:gap-3 min-[700px]:px-4">
-          <span className="shrink-0 text-[9px] font-[700] uppercase tracking-[0.06em] text-secondary">{t(messages, 'home.trust.payment')}</span>
+          <span className={`shrink-0 text-[9px] uppercase tracking-[0.06em] text-secondary ${bookingMode ? 'font-[500]' : 'font-[700]'}`}>{t(messages, 'home.trust.payment')}</span>
           <span className="flex min-w-0 items-center gap-3">
             <Image src="/payment_logo/apple_pay_logo.png" alt="Apple Pay" width={350} height={144} className="h-[14px] w-auto object-contain grayscale opacity-70" />
             <Image src="/payment_logo/paypal_logo.png" alt="PayPal" width={402} height={497} className="h-[18px] w-auto object-contain grayscale opacity-70" />

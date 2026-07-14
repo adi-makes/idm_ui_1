@@ -145,14 +145,14 @@ export default function BookFlow({locale, messages}) {
       <BookingStepper messages={messages} activeIndex={0} onBack={goBackFromSearch} />
 
       <section className="mx-auto flex w-full max-w-[1160px] flex-col items-center px-5 pb-24 pt-10 text-center md:px-8 md:pt-14">
-        <h1 className="font-[var(--font-display)] text-[28px] font-[500] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
+        <h1 className="font-[var(--font-display)] text-[28px] font-[400] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
           {t(messages, 'book.search.title')}
         </h1>
         <p className="mt-2 max-w-[560px] text-[13px] font-[400] leading-5 text-muted">
           {t(messages, 'book.search.subtitle')}
         </p>
 
-        <BookingForm locale={locale} onSubmit={goToPassenger} />
+        <BookingForm locale={locale} onSubmit={goToPassenger} bookingMode />
       </section>
     </main>
   )
@@ -400,18 +400,18 @@ function MobileReviewSummary({messages, trip, selectedFlights, passengerDetails}
     <div className="self-start rounded-[5px] bg-white p-4 md:hidden">
       <div className="grid grid-cols-[1fr_34px_1fr] items-start gap-3">
         <div>
-          <span className="inline-flex rounded-[5px] bg-surface-muted px-2.5 py-1 text-[10px] font-[600] text-secondary">
+          <span className="inline-flex rounded-[5px] bg-surface-muted px-2.5 py-1 text-[10px] font-[400] text-secondary">
             {trip.type}
           </span>
-          <div className="mt-3 font-[var(--font-display)] text-[20px] font-[800] leading-none text-secondary">{trip.fromCode}</div>
-          <div className="mt-1 text-[12px] font-[500] text-muted">{trip.fromCity}</div>
-          <div className="mt-1.5 text-[11px] font-[500] text-tertiary">{trip.departDate}</div>
+          <div className="mt-3 font-[var(--font-display)] text-[20px] font-[400] leading-none text-secondary">{trip.fromCode}</div>
+          <div className="mt-1 text-[12px] font-[400] text-muted">{trip.fromCity}</div>
+          <div className="mt-1.5 text-[11px] font-[400] text-tertiary">{trip.departDate}</div>
         </div>
         <div className="mt-11 grid place-items-center text-tertiary">→</div>
         <div className="text-right">
-          <div className="mt-8 font-[var(--font-display)] text-[20px] font-[800] leading-none text-secondary">{trip.toCode}</div>
-          <div className="mt-1 text-[12px] font-[500] text-muted">{trip.toCity}</div>
-          <div className="mt-1.5 text-[11px] font-[500] text-tertiary">{trip.returnDate || trip.departDate}</div>
+          <div className="mt-8 font-[var(--font-display)] text-[20px] font-[400] leading-none text-secondary">{trip.toCode}</div>
+          <div className="mt-1 text-[12px] font-[400] text-muted">{trip.toCity}</div>
+          <div className="mt-1.5 text-[11px] font-[400] text-tertiary">{trip.returnDate || trip.departDate}</div>
         </div>
       </div>
 
@@ -420,35 +420,101 @@ function MobileReviewSummary({messages, trip, selectedFlights, passengerDetails}
           <div key={`${flight.airline}-${flight.flightNumber}-${flight.kind}`} className="grid grid-cols-[1fr_auto] items-center gap-3">
             <div className="min-w-0">
               <div className="flex min-w-0 items-center gap-2">
-                <span className="text-[9px] font-[900] uppercase text-[#e11d48]">{flight.airline === 'Air India' ? 'AIR INDIA' : flight.airline}</span>
-                <span className="truncate text-[12px] font-[700] text-secondary">{flight.flightNumber}</span>
+                <span className="text-[9px] font-[500] uppercase text-[#e11d48]">{flight.airline === 'Air India' ? 'AIR INDIA' : flight.airline}</span>
+                <span className="truncate text-[12px] font-[400] text-secondary">{flight.flightNumber}</span>
               </div>
-              <div className="mt-1 text-[12px] font-[600] text-muted">
+              <div className="mt-1 text-[12px] font-[400] text-muted">
                 {flight.fromCode} {flight.departTime} → {flight.toCode} {flight.arriveTime}
               </div>
             </div>
-            <span className="rounded-[5px] bg-surface-muted px-2 py-1 text-[10px] font-[700] text-secondary">{flight.kind}</span>
+            <span className="rounded-[5px] bg-surface-muted px-2 py-1 text-[10px] font-[400] text-secondary">{flight.kind}</span>
           </div>
         ))}
       </div>
 
       <div className="mt-3 border-t border-border pt-3">
-        <h3 className="font-[var(--font-display)] text-[14px] font-[750] text-secondary">{t(messages, 'book.review.passenger')}</h3>
+        <h3 className="font-[var(--font-display)] text-[14px] font-[400] text-secondary">{t(messages, 'book.review.passenger')}</h3>
         <div className="mt-2 grid gap-1.5 text-[12px] leading-5">
           <div className="flex justify-between gap-3">
             <span className="text-muted">{t(messages, 'book.review.name')}</span>
-            <span className="text-right font-[700] text-secondary">{fullName}</span>
+            <span className="text-right font-[400] text-secondary">{fullName}</span>
           </div>
           <div className="flex justify-between gap-3">
             <span className="text-muted">{t(messages, 'book.review.email')}</span>
-            <span className="min-w-0 break-all text-right font-[700] text-secondary">{passengerDetails.email}</span>
+            <span className="min-w-0 break-all text-right font-[400] text-secondary">{passengerDetails.email}</span>
           </div>
           <div className="flex justify-between gap-3">
             <span className="text-muted">{t(messages, 'book.review.nationality')}</span>
-            <span className="text-right font-[700] text-secondary">{nationality}</span>
+            <span className="text-right font-[400] text-secondary">{nationality}</span>
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function TravelPurposeField({messages, id, name, value, error, onChange}) {
+  const [isOpen, setIsOpen] = useState(false)
+  const label = t(messages, 'book.details.fields.travelPurpose')
+
+  const selectPurpose = (purpose) => {
+    onChange(purpose)
+    setIsOpen(false)
+  }
+
+  return (
+    <div className="text-left md:col-span-2">
+      <input type="hidden" name={name} value={value} readOnly />
+      <div className="md:hidden">
+        <button
+          type="button"
+          onClick={() => setIsOpen((current) => !current)}
+          aria-label={label}
+          aria-expanded={isOpen}
+          aria-controls={`${id}-options`}
+          className={`flex h-[48px] w-full items-center justify-between rounded-[5px] border bg-white px-4 text-[14px] font-[400] outline-none transition ${error ? 'border-[#ff3b3b]' : isOpen ? 'border-primary' : 'border-[#D7E0EC]'} ${value ? 'text-secondary' : 'text-tertiary'}`}
+        >
+          <span>{value ? t(messages, `book.details.travelPurposes.${value}`) : label}</span>
+          <ChevronDown className={`size-[16px] text-tertiary transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+        </button>
+
+        {isOpen ? (
+          <div id={`${id}-options`} className="mt-2 overflow-hidden rounded-[5px] border border-[#D7E0EC] bg-white">
+            {TRAVEL_PURPOSE_KEYS.map((purpose) => {
+              const isSelected = value === purpose
+
+              return (
+                <button
+                  key={purpose}
+                  type="button"
+                  onClick={() => selectPurpose(purpose)}
+                  className={`flex min-h-[44px] w-full items-center px-4 text-left text-[14px] font-[400] transition first:border-t-0 border-t border-[#EEF2F7] ${isSelected ? 'bg-[#F1F6FF] text-primary' : 'text-muted hover:bg-[#F8FAFD] hover:text-secondary'}`}
+                >
+                  {t(messages, `book.details.travelPurposes.${purpose}`)}
+                </button>
+              )
+            })}
+          </div>
+        ) : null}
+      </div>
+
+      <div className="relative hidden md:block">
+        <label className="sr-only" htmlFor={id}>{label}</label>
+        <select
+          id={id}
+          name={name}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          aria-invalid={error ? 'true' : undefined}
+          className={`h-[48px] w-full appearance-none rounded-[5px] border bg-white px-4 pr-11 text-[14px] outline-none transition ${error ? 'border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'} ${value ? 'font-[400] text-secondary' : 'font-[400] text-tertiary'}`}
+        >
+          <option value="">{label}</option>
+          {TRAVEL_PURPOSE_KEYS.map((purpose) => <option key={purpose} value={purpose}>{t(messages, `book.details.travelPurposes.${purpose}`)}</option>)}
+        </select>
+        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-[16px] -translate-y-1/2 text-tertiary" aria-hidden="true" />
+      </div>
+
+      {error ? <p className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">{error}</p> : null}
     </div>
   )
 }
@@ -590,7 +656,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
       {showPopup ? (
         <div
           role="alert"
-          className="fixed left-1/2 top-[64px] z-[10002] w-[calc(100%-40px)] max-w-[320px] -translate-x-1/2 rounded-[5px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-center text-[13px] font-[650] text-[#ff2f2f] min-[700px]:top-[114px] md:left-auto md:right-5 md:top-5 md:w-auto md:translate-x-0 md:text-left"
+          className="fixed left-1/2 top-[64px] z-[10002] w-[calc(100%-40px)] max-w-[320px] -translate-x-1/2 rounded-[5px] border border-[#ff3b3b]/25 bg-white px-4 py-3 text-center text-[13px] font-[400] text-[#ff2f2f] min-[700px]:top-[114px] md:left-auto md:right-5 md:top-5 md:w-auto md:translate-x-0 md:text-left"
         >
           {t(messages, 'book.details.requiredWarning')}
         </div>
@@ -599,7 +665,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
       <section className="mx-auto flex w-full max-w-[960px] flex-col gap-6 px-5 pb-20 pt-6 md:px-8 md:pt-8">
         <div className="min-w-0">
           <div className="text-center">
-            <h1 className="font-[var(--font-display)] text-[28px] font-[500] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
+            <h1 className="font-[var(--font-display)] text-[28px] font-[400] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
               {t(messages, 'book.details.title')}
             </h1>
             <p className="mx-auto mt-2 max-w-[500px] text-[13px] font-[400] leading-5 text-muted">
@@ -617,7 +683,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
               <div className="flex gap-4">
                 <SectionMarker icon={Mail} />
                 <div className="min-w-0 flex-1">
-                    <p className="mb-2 text-[14px] font-[500] text-secondary">
+                    <p className="mb-2 text-[14px] font-[400] text-secondary">
                     {t(messages, 'book.details.emailDelivery')}
                   </p>
                   <div>
@@ -639,7 +705,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
                 <div className="flex gap-4">
                   <SectionMarker icon={UserRound} />
                   <div className="min-w-0 flex-1">
-                    <p className="mb-3 text-[14px] font-[500] text-secondary">
+                    <p className="mb-3 text-[14px] font-[400] text-secondary">
                       {t(messages, 'book.details.traveler')}
                     </p>
 
@@ -693,25 +759,17 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
                         suggestions={NATIONALITY_SUGGESTIONS}
                         required
                       />
-                      <div className="relative text-left md:col-span-2">
-                        <label className="sr-only" htmlFor="travelPurpose">{t(messages, 'book.details.fields.travelPurpose')}</label>
-                        <select
-                          id="travelPurpose"
-                          name="travelPurpose"
-                          value={passengerDetails.travelPurpose}
-                          onChange={(event) => {
-                            updatePassengerDetail('travelPurpose', event.target.value)
-                            clearFieldError('travelPurpose')
-                          }}
-                          aria-invalid={errors.travelPurpose ? 'true' : undefined}
-                          className={`h-[48px] w-full appearance-none rounded-[5px] border bg-white px-4 pr-11 text-[14px] outline-none transition ${errors.travelPurpose ? 'border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'} ${passengerDetails.travelPurpose ? 'font-[400] text-secondary' : 'font-[400] text-tertiary'}`}
-                        >
-                          <option value="">{t(messages, 'book.details.fields.travelPurpose')}</option>
-                          {TRAVEL_PURPOSE_KEYS.map((purpose) => <option key={purpose} value={purpose}>{t(messages, `book.details.travelPurposes.${purpose}`)}</option>)}
-                        </select>
-                        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-[16px] -translate-y-1/2 text-tertiary" aria-hidden="true" />
-                        {errors.travelPurpose ? <p className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">{errors.travelPurpose}</p> : null}
-                      </div>
+                      <TravelPurposeField
+                        messages={messages}
+                        id="travelPurpose"
+                        name="travelPurpose"
+                        value={passengerDetails.travelPurpose}
+                        error={errors.travelPurpose}
+                        onChange={(value) => {
+                          updatePassengerDetail('travelPurpose', value)
+                          clearFieldError('travelPurpose')
+                        }}
+                      />
 
                       {passengerDetails.additionalTravelers.map((traveler, index) => {
                         const travelerNumber = index + 2
@@ -720,13 +778,13 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
                         return (
                           <section key={`additional-traveler-${index}`} className="border-t border-[#EEF2F7] pt-5 md:col-span-2">
                             <div className="mb-3 flex items-center justify-between gap-4">
-                              <p className="text-[14px] font-[500] text-secondary">
+                              <p className="text-[14px] font-[400] text-secondary">
                                 {t(messages, 'book.details.additionalTraveler')} {travelerNumber}
                               </p>
                               <button
                                 type="button"
                                 onClick={() => removeTraveler(index)}
-                                className="inline-flex items-center gap-1.5 text-[12px] font-[500] text-tertiary transition hover:text-secondary"
+                                className="inline-flex items-center gap-1.5 text-[12px] font-[400] text-tertiary transition hover:text-secondary"
                               >
                                 <Trash2 className="size-[14px]" aria-hidden="true" />
                                 {t(messages, 'book.details.removeTraveler')}
@@ -781,27 +839,17 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
                                 suggestions={NATIONALITY_SUGGESTIONS}
                                 required
                               />
-                              <div className="relative text-left md:col-span-2">
-                                <label className="sr-only" htmlFor={fieldName('travelPurpose')}>
-                                  {t(messages, 'book.details.fields.travelPurpose')}
-                                </label>
-                                <select
-                                  id={fieldName('travelPurpose')}
-                                  name={fieldName('travelPurpose')}
-                                  value={traveler.travelPurpose}
-                                  onChange={(event) => {
-                                    updateAdditionalTraveler(index, 'travelPurpose', event.target.value)
-                                    clearFieldError(fieldName('travelPurpose'))
-                                  }}
-                                  aria-invalid={errors[fieldName('travelPurpose')] ? 'true' : undefined}
-                                  className={`h-[48px] w-full appearance-none rounded-[5px] border bg-white px-4 pr-11 text-[14px] outline-none transition ${errors[fieldName('travelPurpose')] ? 'border-[#ff3b3b]' : 'border-[#D7E0EC] focus:border-primary'} ${traveler.travelPurpose ? 'font-[400] text-secondary' : 'font-[400] text-tertiary'}`}
-                                >
-                                  <option value="">{t(messages, 'book.details.fields.travelPurpose')}</option>
-                                  {TRAVEL_PURPOSE_KEYS.map((purpose) => <option key={purpose} value={purpose}>{t(messages, `book.details.travelPurposes.${purpose}`)}</option>)}
-                                </select>
-                                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-[16px] -translate-y-1/2 text-tertiary" aria-hidden="true" />
-                                {errors[fieldName('travelPurpose')] ? <p className="mt-2 text-[12px] font-[500] text-[#ff2f2f]">{errors[fieldName('travelPurpose')]}</p> : null}
-                              </div>
+                              <TravelPurposeField
+                                messages={messages}
+                                id={fieldName('travelPurpose')}
+                                name={fieldName('travelPurpose')}
+                                value={traveler.travelPurpose}
+                                error={errors[fieldName('travelPurpose')]}
+                                onChange={(value) => {
+                                  updateAdditionalTraveler(index, 'travelPurpose', value)
+                                  clearFieldError(fieldName('travelPurpose'))
+                                }}
+                              />
                             </div>
                           </section>
                         )
@@ -821,7 +869,7 @@ function BookDetailsStep({messages, trip, selectedFlights, price, modeTitle, ini
             </div>
           </form>
           {paymentReady ? (
-            <p className="mt-4 max-w-[520px] rounded-[5px] border border-success/20 bg-success/10 px-4 py-3 text-[13px] font-[600] text-success">
+            <p className="mt-4 max-w-[520px] rounded-[5px] border border-success/20 bg-success/10 px-4 py-3 text-[13px] font-[400] text-success">
             {t(messages, 'book.details.paymentReady')}
             </p>
           ) : null}
@@ -917,7 +965,7 @@ function BookLoading({messages}) {
 
       <section className="mx-auto grid w-full max-w-[1220px] gap-6 px-5 pb-24 pt-5 md:px-8 md:pt-6 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start">
         <div className="min-w-0 text-center md:text-left">
-          <h1 className="font-[var(--font-display)] text-[28px] font-[500] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
+          <h1 className="font-[var(--font-display)] text-[28px] font-[400] leading-[1.1] tracking-[-0.03em] text-secondary md:text-[32px]">
              {t(messages, 'book.flight.title')}
           </h1>
           <p className="mx-auto mt-2 max-w-[560px] text-[13px] font-[400] leading-5 text-muted md:mx-0">

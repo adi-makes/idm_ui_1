@@ -211,14 +211,14 @@ export default function DateInput({
             className={[
             'relative z-[9999] max-h-[90vh] w-full overflow-y-auto rounded-[5px] bg-white transition-transform duration-300 ease-out md:max-h-none md:overflow-visible md:transition-[opacity,transform]',
               visible
-                ? 'translate-y-0 md:opacity-100'
+                ? 'translate-y-0 idt-calendar-sheet-enter md:opacity-100'
                 : 'translate-y-full md:translate-y-2 md:opacity-0',
             ].join(' ')}
           >
             <div className="flex h-[66px] items-center justify-between border-b border-border px-[14px] md:hidden">
-              <h2 className="text-[16px] font-[700] leading-none text-secondary">{title}</h2>
-              <button type="button" onClick={handleClose} className="flex size-[28px] items-center justify-center text-secondary" aria-label="Close calendar">
-                <X className="size-[19px]" aria-hidden="true" />
+              <h2 className="text-[15px] font-[400] leading-none text-secondary">{title}</h2>
+              <button type="button" onClick={handleClose} className="flex size-[26px] items-center justify-center text-secondary" aria-label="Close calendar">
+                <X className="size-[18px]" aria-hidden="true" />
               </button>
             </div>
 
@@ -228,19 +228,19 @@ export default function DateInput({
                 disabled={!canGoPrevious}
                 onClick={() => setCalendarMonth(previousMonth)}
                 className={[
-                  'flex size-[22px] items-center justify-center',
+                  'flex size-[20px] items-center justify-center',
                   canGoPrevious ? 'text-tertiary hover:text-secondary' : 'cursor-not-allowed text-slate-300',
                 ].join(' ')}
                 aria-label="Previous month"
               >
-                <ChevronLeft className="size-[20px]" aria-hidden="true" />
+                <ChevronLeft className="size-[18px]" aria-hidden="true" />
               </button>
               {quickSelect ? (
-                <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_84px] items-center gap-1 text-[20px] font-[500] leading-none text-secondary md:grid-cols-[1fr_86px] md:gap-2 md:text-[13px]">
+                <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_84px] items-center gap-1 text-[17px] font-[400] leading-none text-secondary md:grid-cols-[1fr_86px] md:gap-2 md:text-[13px]">
                   <select
                     value={calendarMonth.getMonth()}
                     onChange={(event) => updateCalendarMonth(Number(event.target.value))}
-                    className="h-[34px] min-w-0 rounded-[5px] border-0 bg-transparent px-1 text-center font-[500] text-secondary outline-none md:border md:border-border md:bg-white md:px-2 md:text-[13px] md:font-[600]"
+                    className="h-[34px] min-w-0 rounded-[5px] border-0 bg-transparent px-1 text-center font-[400] text-secondary outline-none md:border md:border-border md:bg-white md:px-2 md:text-[13px] md:font-[600]"
                     aria-label="Select month"
                   >
                     {MONTH_NAMES.map((month, index) => (
@@ -250,7 +250,7 @@ export default function DateInput({
                   <select
                     value={calendarMonth.getFullYear()}
                     onChange={(event) => updateCalendarMonth(calendarMonth.getMonth(), Number(event.target.value))}
-                    className="h-[34px] min-w-0 rounded-[5px] border-0 bg-transparent px-1 text-center font-[500] text-secondary outline-none md:border md:border-border md:bg-white md:px-2 md:text-[13px] md:font-[600]"
+                    className="h-[34px] min-w-0 rounded-[5px] border-0 bg-transparent px-1 text-center font-[400] text-secondary outline-none md:border md:border-border md:bg-white md:px-2 md:text-[13px] md:font-[600]"
                     aria-label="Select year"
                   >
                     {years.map((year) => (
@@ -259,7 +259,7 @@ export default function DateInput({
                   </select>
                 </div>
               ) : (
-                <div className="text-[20px] font-[500] leading-none text-secondary md:text-[16px]">
+                <div className="text-[17px] font-[400] leading-none text-secondary md:text-[16px]">
                   {MONTH_NAMES[calendarMonth.getMonth()]} {calendarMonth.getFullYear()}
                 </div>
               )}
@@ -268,18 +268,18 @@ export default function DateInput({
                 disabled={!canGoNext}
                 onClick={() => setCalendarMonth(nextMonth)}
                 className={[
-                  'flex size-[22px] items-center justify-center',
+                  'flex size-[20px] items-center justify-center',
                   canGoNext ? 'text-tertiary hover:text-secondary' : 'cursor-not-allowed text-slate-300',
                 ].join(' ')}
                 aria-label="Next month"
               >
-                <ChevronRight className="size-[20px]" aria-hidden="true" />
+                <ChevronRight className="size-[18px]" aria-hidden="true" />
               </button>
             </div>
 
             <div className="grid grid-cols-7 gap-y-[19px] px-[29px] pb-[91px] text-center md:gap-y-[15px] md:px-0 md:pb-0">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                <div key={day} className="text-[11px] font-[700] leading-none text-muted md:text-[13px] md:font-[400] md:text-muted">
+                <div key={day} className="text-[10px] font-[400] leading-none text-muted md:text-[13px] md:font-[400] md:text-muted">
                   {day}
                 </div>
               ))}
@@ -297,7 +297,7 @@ export default function DateInput({
                     disabled={disabledDay}
                     onClick={() => selectDate(day)}
                     className={[
-                      'mx-auto flex size-[20px] items-center justify-center rounded-[5px] text-[18px] font-[400] leading-none md:size-[20px] md:text-[13px]',
+                      'mx-auto flex size-[20px] items-center justify-center rounded-[5px] text-[16px] font-[400] leading-none md:size-[20px] md:text-[13px]',
                       disabledDay ? 'cursor-not-allowed text-slate-300' : 'text-secondary hover:border hover:border-secondary',
                       selected ? 'border-2 border-secondary text-secondary' : '',
                     ].join(' ')}

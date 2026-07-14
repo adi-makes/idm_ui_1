@@ -96,6 +96,22 @@ body {
   }
 }
 
+@keyframes idt-calendar-sheet-enter {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 767px) {
+  .idt-calendar-sheet-enter {
+    animation: idt-calendar-sheet-enter 320ms ease-out both;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .idt-airline-marquee {
     animation: none;
@@ -108,5 +124,9 @@ body {
 
   .idt-card-hover:hover {
     transform: none;
+  }
+
+  .idt-calendar-sheet-enter {
+    animation: none;
   }
 }

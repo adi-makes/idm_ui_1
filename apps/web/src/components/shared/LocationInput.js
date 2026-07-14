@@ -356,7 +356,7 @@ export default function LocationInput({
               <span className="min-w-0 flex-1">
                 <span className="mb-1 flex items-center justify-between gap-2">
                   <span className="flex min-w-0 flex-1 items-center gap-2">
-                    <span className="shrink-0 text-sm font-medium leading-none text-tertiary">{item.code}</span>
+                    <span className="shrink-0 text-sm font-normal leading-none text-tertiary">{item.code}</span>
                     <span className="min-w-0 truncate text-sm font-normal leading-none text-secondary">{item.city}</span>
                   </span>
                   <span className="shrink-0" aria-label={`${item.country} flag`}>
